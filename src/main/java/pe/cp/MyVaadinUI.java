@@ -5,6 +5,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import pe.cp.core.domain.Usuario;
+import pe.cp.core.service.IUsuarioService;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.Button;
@@ -22,6 +25,9 @@ public class MyVaadinUI extends UI
 	@Autowired
     private transient ApplicationContext applicationContext;
 	
+	@Autowired
+    private IUsuarioService usuarioservice;
+	
     @Override
     protected void init(VaadinRequest request) {
         final VerticalLayout layout = new VerticalLayout();
@@ -31,6 +37,14 @@ public class MyVaadinUI extends UI
         Button button = new Button("Click Me");
         button.addClickListener(new Button.ClickListener() {
             public void buttonClick(ClickEvent event) {
+            	Usuario usuario = new Usuario();
+            	usuario.setNombres("Juan");
+            	usuario.setApellidos("Trelles");
+            	usuario.setCargo("Consultor");
+            	usuario.setEmail("jtrelles@correo.com");
+            	usuario.setLogin("jtrelles");
+            	usuario.setPassword("jtrelles");
+            	usuarioservice.nuevo(usuario);
                 layout.addComponent(new Label("Thank you for clicking"));
             }
         });
