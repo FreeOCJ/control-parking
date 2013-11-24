@@ -12,8 +12,8 @@ import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.TipoEvento;
 
-@Repository(value = "tipoEventoDao")
-public class TipoEventoDAOImpl implements TipoEventoDAO {
+@Repository
+public class TipoEventoDaoImpl implements TipoEventoDao {
 	private SimpleJdbcInsert insertarTipoEvento;
 	
 	@Autowired
@@ -36,7 +36,7 @@ public class TipoEventoDAOImpl implements TipoEventoDAO {
 
 	@Override
 	public void eliminar(int idTipoEvento) {		
-		jdbcTemplate.update("DELETE from tipoevento where DESTIPOEVENTO= ?",idTipoEvento);
+		jdbcTemplate.update("DELETE from tipoevento where IDTIPOEVENTO= ?",idTipoEvento);
 	}	
 
 	@Override
