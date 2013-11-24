@@ -5,6 +5,7 @@ import java.util.Date;
 public class Incidencia {
 	private int id;
 	private String descripcion;
+	private TipoIncidencia tipoIncidencia;
 	private Date fechaIncidencia;
 	
 	public int getId() {
@@ -24,5 +25,11 @@ public class Incidencia {
 	}
 	public void setFechaIncidencia(Date fechaIncidencia) {
 		this.fechaIncidencia = fechaIncidencia;
+	}
+	public TipoIncidencia getTipoIncidencia() {
+		return tipoIncidencia;
+	}
+	public void setTipoIncidencia(TipoIncidencia tipoIncidencia) {
+		this.tipoIncidencia = tipoIncidencia;
 	}	
 }
