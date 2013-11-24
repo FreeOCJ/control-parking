@@ -6,7 +6,7 @@ public class Incidencia {
 	private int id;
 	private String descripcion;
 	private TipoIncidencia tipoIncidencia;
-	private Date fechaIncidencia;
+	private Date fechaIncidencia;	
 	
 	public int getId() {
 		return id;
