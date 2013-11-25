@@ -1,5 +1,7 @@
 package pe.cp.core.dao;
 
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,7 @@ import pe.cp.core.domain.Respuesta;
 import pe.cp.core.domain.Usuario;
 
 @Repository
-public class UsuarioDaoImpl implements IUsuarioDao{
+public class UsuarioDaoImpl implements UsuarioDao{
 
 	private JdbcTemplate jdbcTemplate;
 	
@@ -20,19 +22,19 @@ public class UsuarioDaoImpl implements IUsuarioDao{
 	}
 	
 	@Override
-	public Respuesta actualizar(Usuario usuario) {
+	public void actualizar(Usuario usuario) {
 		// TODO Auto-generated method stub
-		return null;
+		
 	}
 
 	@Override
-	public Respuesta existeUsuario(String login) {
+	public boolean existeUsuario(String login) {
 		// TODO Auto-generated method stub
-		return null;
+		return false;
 	}
 
 	@Override
-	public Respuesta nuevo(Usuario usuario) {
+	public int agregar(Usuario usuario) {
 		String sql = "insert into usuario(EMAIL,NOMBRES,APELLIDOS,CARGO,LOGIN,PASSWORD,IDCLIENTE) VALUES " + 
                 "(?,?,?,?,?,?,?)";
 		Object[] args = new Object[]{usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),1};
@@ -42,19 +44,18 @@ public class UsuarioDaoImpl implements IUsuarioDao{
 		rpta.setResultado(true);
 		rpta.setMensaje("Operación Exitosa");
 		rpta.setData(usuario);
-		return rpta;
+		return 0;
 	}
 
 	@Override
-	public Respuesta buscar(String nombre) {
+	public List<Usuario> buscar(String nombre) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Respuesta eliminar(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public void eliminar(int id) {
+		// TODO Auto-generated method stub		
 	}
 
 	

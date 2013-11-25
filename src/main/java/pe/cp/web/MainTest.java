@@ -10,7 +10,7 @@ public class MainTest {
 	
 	public static void main(String[] args) {
 		TipoEvento tipoEvento = new TipoEvento();
-		tipoEvento.setDescripcion("ORGANIZACION");
+		tipoEvento.setDescripcion("LOGIN");
 						
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 				"classpath:WEB-INF/spring/context.xml");
