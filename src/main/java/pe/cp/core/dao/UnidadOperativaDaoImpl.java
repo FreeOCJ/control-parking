@@ -36,6 +36,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 		parameters.put("DISTRITO", unidadOp.getDistrito());
 		parameters.put("HORAINICIO", unidadOp.getHoraInicio());
 		parameters.put("HORAFIN", unidadOp.getHoraFin());
+		parameters.put("IDCLIENTE", unidadOp.getCliente().getId());
 		Number key = insertarUnidadOperativa.executeAndReturnKey(parameters);
 		return key.intValue();
 	}

@@ -1,10 +1,14 @@
 package pe.cp.core.domain;
 
+import java.util.List;
+
 public class Cliente {
 	private int id;
 	private String ruc;
 	private String razonSocial;
 	private String nombreComercial;
+	private List<Usuario> usuarios;
+	private List<UnidadOperativa> unidadesOp;
 	
 	public int getId() {
 		return id;
@@ -29,5 +33,17 @@ public class Cliente {
 	}
 	public void setNombreComercial(String nombreComercial) {
 		this.nombreComercial = nombreComercial;
+	}
+	public List<UnidadOperativa> getUnidadesOp() {
+		return unidadesOp;
+	}
+	public void setUnidadesOp(List<UnidadOperativa> unidadesOp) {
+		this.unidadesOp = unidadesOp;
+	}
+	public List<Usuario> getUsuarios() {
+		return usuarios;
+	}
+	public void setUsuarios(List<Usuario> usuarios) {
+		this.usuarios = usuarios;
 	}	
 }

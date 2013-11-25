@@ -1,6 +1,7 @@
 package pe.cp.core.domain;
 
 import java.util.Date;
+import java.util.List;
 
 public class Operacion {
 	private int id;
@@ -20,6 +21,8 @@ public class Operacion {
 	private Date fechaActualizacion;
 	private String estado;
 	private int ajuste;
+	private List<DetallePorOperacion> detalles;
+	private List<OperacionPorTarifa> operacionesTarifa;
 	
 	public int getId() {
 		return id;
@@ -122,5 +125,26 @@ public class Operacion {
 	}
 	public void setAjuste(int ajuste) {
 		this.ajuste = ajuste;
+	}
+	public List<DetallePorOperacion> getDetalles() {
+		return detalles;
+	}
+	public void setDetalles(List<DetallePorOperacion> detalles) {
+		this.detalles = detalles;
+	}
+	public List<OperacionPorTarifa> getOperacionesTarifa() {
+		return operacionesTarifa;
+	}
+	public void setOperacionesTarifa(List<OperacionPorTarifa> operacionesTarifa) {
+		this.operacionesTarifa = operacionesTarifa;
 	}	
+	
+	public int getTotalIngresos(){
+		//TODO
+		return 0;
+	}
+	public int getTotalSalidas(){
+		//TODO
+		return 0;
+	}		
 }

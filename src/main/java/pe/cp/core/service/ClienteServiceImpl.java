@@ -34,4 +34,28 @@ public class ClienteServiceImpl implements ClienteService {
 		return cdao.buscar(nombreComercial);
 	}
 
+	@Override
+	public int agregarUsuario(int idCliente, int idUsuario) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int removerUsuario(int idCliente, int idUsuario) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int agregarUnidadOperativa(int idCliente, int idUnidadOperativa) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int removerUnidadOperativa(int idCliente, int idUnidadOperativa) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
