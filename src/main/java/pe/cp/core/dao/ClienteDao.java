@@ -9,4 +9,5 @@ public interface ClienteDao {
 	void actualizar(Cliente cliente);
 	void eliminar(int idCliente);
 	List<Cliente> buscar(String nombreComercial);
+	Cliente buscar(int idCliente);
 }
