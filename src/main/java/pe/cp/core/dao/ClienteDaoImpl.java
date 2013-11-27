@@ -8,14 +8,16 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.mapper.ClienteMapper;
 
 @Repository
 public class ClienteDaoImpl implements ClienteDao {
+	
+	
 	private SimpleJdbcInsert insertarCliente;
 
 	@Autowired
@@ -67,7 +69,11 @@ public class ClienteDaoImpl implements ClienteDao {
 		}
 	 
 		return clientes;*/
-		return null;
+		final String sql = "select * from cliente where NOMBRECOMERCIAL like ?";
+		List<Cliente> clientes = null;
+		Object[] args = { "%" + nombreComercial + "%"};
+		clientes = jdbcTemplate.query(sql, args, new ClienteMapper());
+		return clientes;
 	}
 
 }

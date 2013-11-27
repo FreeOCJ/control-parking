@@ -16,6 +16,7 @@ public class OperacionTest {
 	
 	@Test
 	public void probarInsertarUnidadOperativa() {
+		System.out.println("prueba junit");
 		/*Operacion op = new Operacion();
         member.setEmail("jane.doe@mailinator.com");
         member.setName("Jane Doe");
