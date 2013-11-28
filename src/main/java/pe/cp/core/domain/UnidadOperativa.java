@@ -17,6 +17,7 @@ public class UnidadOperativa {
 	private List<Usuario> aprobadores;
 	private List<Usuario> usuarios;
 	private List<Tarifa> tarifas;
+	private boolean eliminado;
 	
 	public int getId() {
 		return id;
@@ -95,5 +96,11 @@ public class UnidadOperativa {
 	}
 	public void setTarifas(List<Tarifa> tarifas) {
 		this.tarifas = tarifas;
+	}
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}	
 }

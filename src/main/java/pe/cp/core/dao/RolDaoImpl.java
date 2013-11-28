@@ -37,7 +37,8 @@ public class RolDaoImpl implements RolDao {
 	@Override
 	public int agregar(Rol rol) {
 		Map<String, Object> parameters = new HashMap<String, Object>(1);
-		parameters.put("DESROL", rol.getDescripcion());		
+		parameters.put("DESROL", rol.getDescripcion());
+		parameters.put("ELIMINADO", 'F');	
 		Number key = insertarRol.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
@@ -64,7 +65,8 @@ public class RolDaoImpl implements RolDao {
 							throws SQLException {
 						Rol rol = new Rol();
 						rol.setDescripcion(rs.getString("DESROL"));
-						rol.setId(rs.getInt("IDROL"));						
+						rol.setId(rs.getInt("IDROL"));	
+						rol.setEliminado(rs.getString("ELIMINADO").equals("F") ? true : false);
 						return rol;
 					}
 				});

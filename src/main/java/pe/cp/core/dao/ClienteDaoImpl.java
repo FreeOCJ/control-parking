@@ -41,10 +41,11 @@ public class ClienteDaoImpl implements ClienteDao {
 	
 	@Override
 	public int agregar(Cliente cliente) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
+		Map<String, Object> parameters = new HashMap<String, Object>(4);
 		parameters.put("RAZONSOCIAL", cliente.getRazonSocial());	
 		parameters.put("RUC", cliente.getRuc());
 		parameters.put("NOMBRECOMERCIAL", cliente.getNombreComercial());
+		parameters.put("ELIMINADO", 'F');
 		Number key = insertarCliente.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
@@ -98,6 +99,7 @@ public class ClienteDaoImpl implements ClienteDao {
 						cliente.setNombreComercial(rs.getString("NOMBRECOMERCIAL"));
 						cliente.setRazonSocial(rs.getString("RAZONSOCIAL"));
 						cliente.setRuc(rs.getString("RUC"));
+						cliente.setEliminado(rs.getString("ELIMINADO").equals("F") ? true : false);
 						return cliente;
 					}
 				});

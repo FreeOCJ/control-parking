@@ -28,9 +28,10 @@ public class TarifaDaoImpl implements TarifaDao {
 	
 	@Override
 	public int agregar(Tarifa tarifa) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
+		Map<String, Object> parameters = new HashMap<String, Object>(3);
 		parameters.put("MONTOTARIFA", tarifa.getMonto());
 		parameters.put("CATEGORIA", tarifa.getCategoria());
+		parameters.put("ELIMINADO", 'F');
 		Number key = insertarTarifa.executeAndReturnKey(parameters);
 		return key.intValue();
 	}

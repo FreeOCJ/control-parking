@@ -3,6 +3,7 @@ package pe.cp.core.domain;
 public class Rol {
 	private int id;
 	private String descripcion;
+	private boolean eliminado;
 	
 	public int getId() {
 		return id;
@@ -15,6 +16,12 @@ public class Rol {
 	}
 	public void setDescripcion(String descripcion) {
 		this.descripcion = descripcion;
+	}
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}
 		
 }

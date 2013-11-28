@@ -7,6 +7,7 @@ public class Cliente {
 	private String ruc;
 	private String razonSocial;
 	private String nombreComercial;
+	private boolean eliminado;
 	private List<Usuario> usuarios;
 	private List<UnidadOperativa> unidadesOp;
 	
@@ -45,5 +46,11 @@ public class Cliente {
 	}
 	public void setUsuarios(List<Usuario> usuarios) {
 		this.usuarios = usuarios;
+	}
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}	
 }

@@ -27,7 +27,7 @@ public class OperacionDaoImpl implements OperacionDao {
 	}
 	@Override
 	public int agregar(Operacion op) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
+		Map<String, Object> parameters = new HashMap<String, Object>(17);
 		parameters.put("FECOPERACION", op.getFechaTransaccion());
 		parameters.put("DESOFERTA", op.getOferta());
 		parameters.put("VEHICULOSENTRADA", op.getCantidadVehiculosEntrada());
@@ -45,6 +45,7 @@ public class OperacionDaoImpl implements OperacionDao {
 		parameters.put("FECHAACTUALIZA", op.getFechaActualizacion());
 		parameters.put("ESTADO", op.getEstado());
 		parameters.put("AJUSTE", op.getAjuste());
+		parameters.put("ELIMINADO", 'F');
 					
 		Number key = insertarOperacion.executeAndReturnKey(parameters);
 		return key.intValue();

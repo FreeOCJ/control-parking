@@ -4,6 +4,7 @@ public class Tarifa {
 	private int id;
 	private double monto;
 	private String categoria;
+	private boolean eliminado;
 	
 	public int getId() {
 		return id;
@@ -22,5 +23,11 @@ public class Tarifa {
 	}
 	public void setCategoria(String categoria) {
 		this.categoria = categoria;
+	}
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}	
 }

@@ -23,6 +23,7 @@ public class Operacion {
 	private int ajuste;
 	private List<DetallePorOperacion> detalles;
 	private List<OperacionPorTarifa> operacionesTarifa;
+	private boolean eliminado;
 	
 	public int getId() {
 		return id;
@@ -146,5 +147,11 @@ public class Operacion {
 	public int getTotalSalidas(){
 		//TODO
 		return 0;
+	}
+	public boolean isEliminado() {
+		return eliminado;
+	}
+	public void setEliminado(boolean eliminado) {
+		this.eliminado = eliminado;
 	}		
 }

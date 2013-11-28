@@ -28,8 +28,9 @@ public class TipoIncidenciaDaoImpl implements TipoIncidenciaDao {
 	
 	@Override
 	public int agregar(TipoIncidencia tipoIncidencia) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
-		parameters.put("DESCTIPOINC", tipoIncidencia.getDescripcion());		
+		Map<String, Object> parameters = new HashMap<String, Object>(2);
+		parameters.put("DESCTIPOINC", tipoIncidencia.getDescripcion());
+		parameters.put("ELIMINADO", 'F');
 		Number key = insertarTipoIncidencia.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
