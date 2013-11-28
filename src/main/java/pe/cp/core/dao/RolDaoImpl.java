@@ -66,7 +66,7 @@ public class RolDaoImpl implements RolDao {
 						Rol rol = new Rol();
 						rol.setDescripcion(rs.getString("DESROL"));
 						rol.setId(rs.getInt("IDROL"));	
-						rol.setEliminado(rs.getString("ELIMINADO").equals("F") ? true : false);
+						rol.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
 						return rol;
 					}
 				});

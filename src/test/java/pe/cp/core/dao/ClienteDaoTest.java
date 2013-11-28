@@ -37,6 +37,7 @@ public class ClienteDaoTest {
 		Assert.assertEquals("PLAZA VEA", nuevoCliente.getNombreComercial());
 		Assert.assertEquals("SUPERMERCADOS PERUANOS S.A.", nuevoCliente.getRazonSocial());
 		Assert.assertEquals("09000234343", nuevoCliente.getRuc());
+		Assert.assertEquals(false, nuevoCliente.isEliminado());
 		Assert.assertEquals(idCliente.toString(), String.valueOf(nuevoCliente.getId()));
 		
 		return;

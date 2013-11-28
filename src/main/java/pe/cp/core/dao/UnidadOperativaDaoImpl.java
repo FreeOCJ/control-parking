@@ -46,6 +46,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 		parameters.put("HORAINICIO", unidadOp.getHoraInicio());
 		parameters.put("HORAFIN", unidadOp.getHoraFin());
 		parameters.put("IDCLIENTE", unidadOp.getCliente().getId());
+		parameters.put("ELIMINADO", "F");
 		Number key = insertarUnidadOperativa.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
@@ -79,7 +80,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 						unidadOp.setHoraInicio(rs.getDate("HORAINICIO"));
 						unidadOp.setHoraFin(rs.getDate("HORAFIN"));
 						unidadOp.setNumeroCajones(rs.getInt("NROCAJONES"));
-						unidadOp.setEliminado(rs.getString("ELIMINADO").equals("F") ? true : false);
+						unidadOp.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
 												
 						return unidadOp;
 					}

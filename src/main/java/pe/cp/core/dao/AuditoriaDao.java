@@ -4,4 +4,5 @@ import pe.cp.core.domain.Auditoria;
 
 public interface AuditoriaDao {
 	int agregar(Auditoria auditoria);
+	Auditoria buscar(int idAuditoria);
 }

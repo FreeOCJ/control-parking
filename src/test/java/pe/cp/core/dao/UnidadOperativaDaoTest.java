@@ -30,7 +30,7 @@ public class UnidadOperativaDaoTest {
 	
 	@Test
 	public void probarInsertarUnidadOperativa() {
-		Cliente cliente = cDao.buscar(4);		
+		Cliente cliente = cDao.buscar(2);		
 		
 		Date horaInicio = new GregorianCalendar(2013, 12, 01, 8, 00, 00).getTime();
 		Date horaFin = new GregorianCalendar(2013, 12, 01, 23, 00, 00).getTime();
@@ -56,6 +56,7 @@ public class UnidadOperativaDaoTest {
 		/*Assert.assertEquals(horaInicio, nuevaUnidadOp.getHoraInicio());
 		Assert.assertEquals(horaFin, nuevaUnidadOp.getHoraFin());*/
 		Assert.assertEquals(20, nuevaUnidadOp.getNumeroCajones());
+		Assert.assertEquals(false, nuevaUnidadOp.isEliminado());
 		Assert.assertEquals(idUnidad.toString(), String.valueOf(nuevaUnidadOp.getId()));
 		
 		return;

@@ -6,4 +6,5 @@ public interface TipoEventoDao {
 	int agregar(TipoEvento tipoevento);
 	void actualizar(TipoEvento tipoevento);
 	void eliminar(int idTipoEvento);
+	TipoEvento buscar(int idTipoEvento);
 }

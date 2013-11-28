@@ -6,4 +6,5 @@ public interface TarifaDao {
 	int agregar(Tarifa tarifa);
 	void actualizar(Tarifa tarifa);
 	void eliminar(int idTarifa);
+	Tarifa buscar(int idTarifa);
 }

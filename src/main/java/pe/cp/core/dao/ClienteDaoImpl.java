@@ -99,7 +99,7 @@ public class ClienteDaoImpl implements ClienteDao {
 						cliente.setNombreComercial(rs.getString("NOMBRECOMERCIAL"));
 						cliente.setRazonSocial(rs.getString("RAZONSOCIAL"));
 						cliente.setRuc(rs.getString("RUC"));
-						cliente.setEliminado(rs.getString("ELIMINADO").equals("F") ? true : false);
+						cliente.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
 						return cliente;
 					}
 				});

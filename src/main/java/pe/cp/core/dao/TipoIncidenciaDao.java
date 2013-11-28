@@ -6,4 +6,5 @@ public interface TipoIncidenciaDao {
 	int agregar(TipoIncidencia tipoIncidencia);
 	void modificar(TipoIncidencia tipoIncidencia);
 	void eliminar(int idTipoIncidencia);
+	TipoIncidencia buscar(int idTipoIncidencia);
 }
