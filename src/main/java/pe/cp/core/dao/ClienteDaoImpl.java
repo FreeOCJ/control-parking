@@ -63,23 +63,7 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public List<Cliente> buscar(String nombreComercial) {
-		/*final String sql = "select * from cliente where NOMBRECOMERCIAL like '%?'";
-		SqlParameterSource namedParameters = 
-				new MapSqlParameterSource("nombreComercial", nombreComercial);
-	 
-		List<Cliente> clientes = new ArrayList<Cliente>();
-		 
-		List<Map> rows = jdbcTemplate.queryForList(sql);
-		for (Map row : rows) {
-			Customer customer = new Customer();
-			customer.setCustId((Long)(row.get("CUST_ID")));
-			customer.setName((String)row.get("NAME"));
-			customer.setAge((Integer)row.get("AGE"));
-			customers.add(customer);
-		}
-	 
-		return clientes;*/
-		final String sql = "select * from cliente where NOMBRECOMERCIAL like ?";
+		final String sql = "SELECT * FROM CLIENTE WHERE NOMBRECOMERCIAL LIKE ? ";
 		List<Cliente> clientes = null;
 		Object[] args = { "%" + nombreComercial + "%"};
 		clientes = jdbcTemplate.query(sql, args, new ClienteMapper());
