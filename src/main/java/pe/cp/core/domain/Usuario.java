@@ -8,6 +8,7 @@ public class Usuario {
 	private String email;
 	private String login;
 	private String password;
+	private int id_cliente;
 	
 	public int getId() {
 		return id;
@@ -50,6 +51,12 @@ public class Usuario {
 	}
 	public void setPassword(String password) {
 		this.password = password;
+	}
+	public int getId_cliente() {
+		return id_cliente;
+	}
+	public void setId_cliente(int id_cliente) {
+		this.id_cliente = id_cliente;
 	}
 	
 	

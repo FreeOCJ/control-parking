@@ -1,7 +1,6 @@
 package pe.cp.core.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,15 +9,11 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Cliente;
-import pe.cp.core.domain.Rol;
 import pe.cp.core.mapper.ClienteMapper;
 
 @Repository
@@ -58,7 +53,7 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public void eliminar(int idCliente) {
-		jdbcTemplate.update("DELETE from cliente where IDCLIENTE= ?",idCliente);
+		jdbcTemplate.update("UPDATE cliente SET ELIMINADO = 'Y' WHERE IDCLIENTE = ?",idCliente);
 	}
 
 	@Override
@@ -72,21 +67,11 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public Cliente buscar(int idCliente) {
-		final String sql = "select * from cliente where IDCLIENTE = :idCliente";
-		SqlParameterSource namedParameters = new MapSqlParameterSource("idCliente", idCliente);
-		return namedParameterJdbcTemplate.queryForObject(sql, namedParameters,
-				new RowMapper<Cliente>() {
-					public Cliente mapRow(ResultSet rs, int rowNum)
-							throws SQLException {
-						Cliente cliente = new Cliente();
-						cliente.setId(rs.getInt("IDCLIENTE"));
-						cliente.setNombreComercial(rs.getString("NOMBRECOMERCIAL"));
-						cliente.setRazonSocial(rs.getString("RAZONSOCIAL"));
-						cliente.setRuc(rs.getString("RUC"));
-						cliente.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
-						return cliente;
-					}
-				});
+		final String sql = "SELECT * FROM CLIENTE WHERE IDCLIENTE = ? ";
+		Cliente cliente= null;
+		Object[] args = {idCliente};
+		cliente = jdbcTemplate.queryForObject(sql, args, new ClienteMapper());
+		return cliente;
 	}
 
 }
