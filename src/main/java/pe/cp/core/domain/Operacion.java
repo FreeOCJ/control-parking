@@ -24,6 +24,7 @@ public class Operacion {
 	private List<DetallePorOperacion> detalles;
 	private List<OperacionPorTarifa> operacionesTarifa;
 	private boolean eliminado;
+	private UnidadOperativa unidadoperativa;
 	
 	public int getId() {
 		return id;
@@ -153,5 +154,12 @@ public class Operacion {
 	}
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
+	}
+	public UnidadOperativa getUnidadoperativa() {
+		return unidadoperativa;
+	}
+	public void setUnidadoperativa(UnidadOperativa unidadoperativa) {
+		this.unidadoperativa = unidadoperativa;
 	}		
+	
 }

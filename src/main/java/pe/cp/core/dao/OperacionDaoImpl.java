@@ -11,6 +11,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Operacion;
+import pe.cp.core.mapper.OperacionMapper;
 
 @Repository
 public class OperacionDaoImpl implements OperacionDao {
@@ -38,7 +39,7 @@ public class OperacionDaoImpl implements OperacionDao {
 		parameters.put("CANTIDADPERSONAS", op.getCantidadPersonas());
 		parameters.put("PERNOCTADOSINICIO", op.getCantidadPernoctadosInicio());
 		parameters.put("PERNOCTADOSFIN", op.getCantidadPernoctadosFin());
-		//parameters.put("IDUNIDAD", op.get); TODO
+		parameters.put("IDUNIDAD", op.getUnidadoperativa().getId()); 
 		parameters.put("CREADOPOR", op.getCreador());
 		parameters.put("ACTUALIZADOPOR", op.getUltimoModificador());
 		parameters.put("FECHACREACION", op.getFechaCreacion());
@@ -53,14 +54,36 @@ public class OperacionDaoImpl implements OperacionDao {
 
 	@Override
 	public void modificar(Operacion op) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("UPDATE OPERACION SET FECOPERACION = ?,DESOFERTA = ?," +
+				"VEHICULOSENTRADA = ?,VEHICULOSALIDA = ?,TICKETINICIO = ?, " +
+				"TICKETFIN = ?,CONDUCTORESRAUDOS = ?,CANTIDADPERSONAS = ?," +
+				"PERNOCTADOSINICIO = ?, PERNOCTADOSFIN = ?,IDUNIDAD = ?," +
+				"CREADOPOR = ?, ACTUALIZADOPOR = ?,FECHACREACION = ?," +
+				"FECHAACTUALIZA = ?, ESTADO = ?, AJUSTE = ? WHERE IDOPERACION = ?",
+				op.getFechaTransaccion(),op.getOferta(),op.getCantidadVehiculosEntrada(),
+				op.getCantidadVehiculosSalida(),op.getNumeroTicketInicio(),
+				op.getNumeroTicketFin(),op.getCantidadRaudos(),op.getCantidadPersonas(),
+				op.getCantidadPernoctadosInicio(),op.getCantidadPernoctadosFin(),
+				op.getUnidadoperativa().getId(),op.getCreador(),op.getUltimoModificador(),
+				op.getFechaCreacion(),op.getFechaActualizacion(),op.getEstado(),
+				op.getAjuste(),op.getId());
 
 	}
 
 	@Override
 	public void eliminar(int idOperacion) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("UPDATE OPERACION SET ELIMINADO = 'T' WHERE IDOPERACION = ?", idOperacion);
 
+	}
+	
+	
+	@Override
+	public Operacion buscar(int idOperacion) {
+		final String sql = "SELECT * FROM OPERACION WHERE IDOPERACION = ? ";
+		Operacion operacion = null;
+		Object[] args = {idOperacion};
+		operacion = jdbcTemplate.queryForObject(sql, args,new OperacionMapper());
+		return operacion;
 	}
 
 }

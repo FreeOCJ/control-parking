@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.service.ClienteService;
-import pe.cp.core.service.IUsuarioService;
+import pe.cp.core.service.UsuarioService;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.server.VaadinRequest;
@@ -30,7 +30,7 @@ public class MyVaadinUI extends UI
     private transient ApplicationContext applicationContext;
 	
 	@Autowired
-    private IUsuarioService usuarioservice;
+    private UsuarioService usuarioservice;
 	
 	@Autowired
 	private ClienteService clienteservice;

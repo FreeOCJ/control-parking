@@ -53,13 +53,19 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 
 	@Override
 	public void actualizar(UnidadOperativa unidadOp) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("UPDATE UNIDADOPERATIVA SET NROCAJONES = ?,DIRECCION = ?, " +
+				"DEPARTAMENTO= ?,PROVINCIA= ?, DISTRITO = ?,  HORAINICIO = ?, " +
+				"HORAFIN= ?,IDCLIENTE = ? WHERE IDUNIDAD = ?",unidadOp.getNumeroCajones(),
+				unidadOp.getDireccion(),unidadOp.getDepartamento(),unidadOp.getProvincia(),
+				unidadOp.getDistrito(),unidadOp.getHoraInicio(),unidadOp.getHoraFin(),
+				unidadOp.getCliente().getId(),unidadOp.getId());
+		
 
 	}
 
 	@Override
 	public void eliminar(int idUnidadOp) {
-		// TODO Auto-generated method stub
+		jdbcTemplate.update("UPDATE UNIDADOPERATIVA SET ELIMINADO = 'T' WHERE IDUNIDAD = ?",idUnidadOp);
 
 	}
 

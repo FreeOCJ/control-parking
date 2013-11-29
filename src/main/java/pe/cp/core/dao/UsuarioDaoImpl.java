@@ -43,7 +43,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 							"IDCLIENTE = ? WHERE IDUSUARIO = ?",
 				            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
 				            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
-				            usuario.getId_cliente(),usuario.getId());
+				            usuario.getCliente().getId(),usuario.getId());
 		
 	}	
 
@@ -56,7 +56,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		parameters.put("CARGO", usuario.getCargo());
 		parameters.put("LOGIN", usuario.getLogin());
 		parameters.put("PASSWORD",usuario.getPassword());
-		parameters.put("IDCLIENTE", usuario.getId_cliente());
+		parameters.put("IDCLIENTE", usuario.getCliente().getId());
 		parameters.put("ELIMINADO", 'N');
 		Number key = insertarUsuario.executeAndReturnKey(parameters);
 		return key.intValue();
@@ -73,13 +73,13 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public void eliminar(int id) {
-		final String sql = "UPDATE USUARIO SET ELIMINADO = 'Y' WHERE IDUSUARIO = ?";		
+		final String sql = "UPDATE USUARIO SET ELIMINADO = 'T' WHERE IDUSUARIO = ?";		
 		jdbcTemplate.update(sql,id);		
 	}
 
 	@Override
 	public Usuario buscar(int idUsuario) {
-		final String sql = "SELECT * FROM USUARIO WHERE IDUSUARIO = ? AND ELIMINADO = 'N'";
+		final String sql = "SELECT * FROM USUARIO WHERE IDUSUARIO = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {idUsuario};
 		usuario = jdbcTemplate.queryForObject(sql, args, new UsuarioMapper());
@@ -88,7 +88,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public Usuario buscarPorLogin(String login) {
-		final String sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND ELIMINADO = 'N'";
+		final String sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {login};
 		usuario = jdbcTemplate.queryForObject(sql, args, new UsuarioMapper());
