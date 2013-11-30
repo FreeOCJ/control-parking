@@ -16,6 +16,7 @@ public class ClienteMapper implements RowMapper<Cliente>{
 		cliente.setNombreComercial(rs.getString("NOMBRECOMERCIAL"));
 		cliente.setRazonSocial(rs.getString("RAZONSOCIAL"));
 		cliente.setRuc(rs.getString("RUC"));
+		cliente.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
 		return cliente;
 	}
 
