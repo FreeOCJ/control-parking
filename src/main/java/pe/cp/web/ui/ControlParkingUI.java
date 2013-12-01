@@ -2,6 +2,8 @@ package pe.cp.web.ui;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import pe.cp.web.ui.view.configuracion.ConfigView;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.LoginController;
 import pe.cp.web.ui.view.login.LoginViewImpl;
+import pe.cp.web.ui.view.main.IMain;
+import pe.cp.web.ui.view.main.MainImpl;
 import pe.cp.web.ui.view.operaciones.IOperacionesView;
 import pe.cp.web.ui.view.operaciones.OperacionesView;
 import pe.cp.web.ui.view.reportes.IReportesView;
@@ -28,8 +32,12 @@ import com.vaadin.ui.UI;
 @Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
+
 public class ControlParkingUI extends UI {
 
+	@Autowired
+    private transient ApplicationContext applicationContext;	
+	
 	public static final String OPERACIONES = "operaciones";
 	public static final String REPORTES = "reportes";
 	public static final String CONFIGURACION = "configuracion";
@@ -51,12 +59,12 @@ public class ControlParkingUI extends UI {
 		navigator.addView("", loginView);
 		
 		//Create navigation
-		IOperacionesView operacionesView = new OperacionesView();
+		IMain mainView = new MainImpl();
 		IReportesView reportesView = new ReportesView();
 		IConfigView configuracionView = new ConfigView();
 		IAuditoriaView auditoriaView = new AuditoriaView();
 		
-		navigator.addView(MAIN, operacionesView);
+		navigator.addView(MAIN, mainView);
 		navigator.addView(REPORTES, reportesView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);

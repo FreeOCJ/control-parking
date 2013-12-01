@@ -1,5 +1,8 @@
 package pe.cp.web.ui.view.login;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.ILoginViewHandler;
@@ -21,11 +24,14 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@Component
 @SuppressWarnings("serial")
 @Theme("controlparking")
 public class LoginViewImpl extends CssLayout implements ILoginView {
 		
+	@Autowired
 	private ILoginViewHandler handler;
+	
 	VerticalLayout loginLayout;
 	private TextField txtUsername;
 	private PasswordField txtPassword;
@@ -55,6 +61,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 		loginLayout = new VerticalLayout();
         loginLayout.setSizeFull();
         loginLayout.addStyleName("login-layout");
+        
         addComponent(loginLayout);
                                 
         //Panel que contiene la informacion del login
@@ -131,7 +138,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 
 	@Override
 	public void afterSuccessfulLogin() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.MAIN);
 	}
 
 	@Override
