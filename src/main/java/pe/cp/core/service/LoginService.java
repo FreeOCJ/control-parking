@@ -1,9 +1,11 @@
 package pe.cp.core.service;
 
 import pe.cp.core.domain.Usuario;
+import pe.cp.core.service.messages.LoginRequest;
+import pe.cp.core.service.messages.LoginResponse;
 
 public interface LoginService {
-	boolean login(Usuario usuario);
+	LoginResponse login(LoginRequest request);
 	void actualizarContrasena(Usuario usuario, String nuevaContrasena);
 	void recuperarContrasena(String login, String contrasena);
 	String generarContrasenaTemporal(String login);

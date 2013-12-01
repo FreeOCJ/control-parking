@@ -1,16 +1,37 @@
 package pe.cp.core.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Usuario;
+import pe.cp.core.domain.filters.UsuarioFilter;
+import pe.cp.core.service.messages.LoginRequest;
+import pe.cp.core.service.messages.LoginResponse;
 
 @Service
 public class LoginServiceImpl implements LoginService {
 
+	@Autowired
+	UsuarioDao usuarioDao;
+	
 	@Override
-	public boolean login(Usuario usuario) {
-		// TODO Auto-generated method stub
-		return false;
+	public LoginResponse login(LoginRequest request) {
+		LoginResponse response = new LoginResponse();
+		UsuarioFilter filtro = new UsuarioFilter();
+		filtro.setLogin(request.getLoginName());
+		
+		Usuario usuario = usuarioDao.buscarPorLogin(request.getLoginName());
+		if (usuario.getPassword().equals(request.getPassword())){
+			response.setResultadoEjecucion(true);
+			response.setAutorizado(true);
+			response.setUsuario(usuario);			
+		}else{
+			response.setResultadoEjecucion(true);
+			response.setAutorizado(false);					
+		}
+		
+		return response;
 	}
 
 	@Override
