@@ -34,7 +34,7 @@ public class ControlParkingUI extends UI {
 	public static final String REPORTES = "reportes";
 	public static final String CONFIGURACION = "configuracion";
 	public static final String AUDITORIA = "auditoria";
-	
+	public static final String MAIN = "main";
 	/*@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
@@ -56,7 +56,7 @@ public class ControlParkingUI extends UI {
 		IConfigView configuracionView = new ConfigView();
 		IAuditoriaView auditoriaView = new AuditoriaView();
 		
-		navigator.addView(OPERACIONES, operacionesView);
+		navigator.addView(MAIN, operacionesView);
 		navigator.addView(REPORTES, reportesView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);

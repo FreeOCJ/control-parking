@@ -22,14 +22,21 @@ public class LoginServiceImpl implements LoginService {
 		filtro.setLogin(request.getLoginName());
 		
 		Usuario usuario = usuarioDao.buscarPorLogin(request.getLoginName());
-		if (usuario.getPassword().equals(request.getPassword())){
-			response.setResultadoEjecucion(true);
-			response.setAutorizado(true);
-			response.setUsuario(usuario);			
+		if (usuario != null){
+			if (usuario.getPassword().equals(request.getPassword())){
+				response.setResultadoEjecucion(true);
+				response.setAutorizado(true);
+				response.setUsuario(usuario);			
+			}else{
+				response.setResultadoEjecucion(false);
+				response.setAutorizado(false);	
+				response.setMensaje("El password es incorrecto");
+			}
 		}else{
-			response.setResultadoEjecucion(true);
-			response.setAutorizado(false);					
-		}
+			response.setResultadoEjecucion(false);
+			response.setAutorizado(false);	
+			response.setMensaje("El usuario no existe");
+		}		
 		
 		return response;
 	}

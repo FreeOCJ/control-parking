@@ -1,5 +1,5 @@
 package pe.cp.web.ui.view.login;
 
 public interface ILoginViewHandler {
-	void Login();
+	void Login(String username,String login);
 }

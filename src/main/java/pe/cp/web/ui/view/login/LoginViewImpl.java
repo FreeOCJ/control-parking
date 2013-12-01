@@ -91,7 +91,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
         btnLogin.addClickListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				handler.Login();			
+				handler.Login(txtUsername.getValue().trim(),txtPassword.getValue().trim());			
 			}
 		});        
         
