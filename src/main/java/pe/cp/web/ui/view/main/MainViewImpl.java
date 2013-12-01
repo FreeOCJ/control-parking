@@ -7,36 +7,37 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 
 @SuppressWarnings("serial")
-public class MainImpl extends HorizontalLayout implements IMain {
-
-	private CssLayout base;
+public class MainViewImpl extends HorizontalLayout implements IMain {
+	
 	private CssLayout contenido;
+
+	public MainViewImpl(){
+		init();
+	}
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void init() {
 		construirBase();
-		addComponent(base);
 	}
 	
-	private void construirBase(){
-		base = new CssLayout();
-		base.setSizeFull();		
-		base.addStyleName("main-view");
+	private void construirBase(){		
+		setSizeFull();		
+		addStyleName("main-view");
 		
 		SideBar barraControl = new SideBar();
-		base.addComponent(barraControl);
+		addComponent(barraControl);
 		
 		// Content
 		contenido = new CssLayout();
-        base.addComponent(contenido);
+        addComponent(contenido);
         contenido.setSizeFull();
-        contenido.addStyleName("view-content");
+        contenido.addStyleName("view-content");       
         setExpandRatio(contenido, 1);
         
         //Agregar Default

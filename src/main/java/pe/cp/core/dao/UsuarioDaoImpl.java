@@ -1,5 +1,7 @@
 package pe.cp.core.dao;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,17 +10,16 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-
-
+import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
-import pe.cp.core.mapper.UsuarioMapper;
 
 @Repository
 public class UsuarioDaoImpl implements UsuarioDao{
@@ -29,8 +30,8 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	@Autowired 
-	private UsuarioMapper mapper;
+	@Autowired
+	private ClienteDao clienteDao;
 	
 	private SimpleJdbcInsert insertarUsuario;	
 	private SimpleJdbcInsert insertarRolPorUsuario;
@@ -75,7 +76,13 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre";		
 		List<Usuario> usuarios = null;
 		SqlParameterSource args = new MapSqlParameterSource("nombre","%" + nombre + "%");		
-		usuarios = namedParameterJdbcTemplate.query(sql, args, mapper);
+		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){
+			@Override
+			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return userMapRow(rs, rowNum);
+			}
+			
+		} );
 		return usuarios;
 	}
 
@@ -90,7 +97,13 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE IDUSUARIO = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {idUsuario};
-		usuario = jdbcTemplate.queryForObject(sql, args, mapper);
+		usuario = jdbcTemplate.queryForObject(sql, args, new RowMapper<Usuario>(){
+			@Override
+			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return userMapRow(rs, rowNum);
+			}
+			
+		} );
 		return usuario;
 	}
 
@@ -99,7 +112,13 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {login};
-		usuario = jdbcTemplate.queryForObject(sql, args, new UsuarioMapper());
+		usuario = jdbcTemplate.queryForObject(sql, args, new RowMapper<Usuario>(){
+			@Override
+			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return userMapRow(rs, rowNum);
+			}
+			
+		} );
 		return usuario;
 	}
 
@@ -121,5 +140,20 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	public List<Usuario> buscarOr(UsuarioFilter filtro) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	public Usuario userMapRow(ResultSet rs, int n) throws SQLException {
+		Usuario usuario = new Usuario();
+		usuario.setId(rs.getInt("IDUSUARIO"));
+		usuario.setEmail(rs.getString("EMAIL"));
+		usuario.setNombres(rs.getString("NOMBRES"));
+		usuario.setApellidos(rs.getString("APELLIDOS"));
+		usuario.setCargo(rs.getString("CARGO"));
+		usuario.setLogin(rs.getString("LOGIN"));
+		usuario.setPassword(rs.getString("PASSWORD"));
+		
+		Cliente cliente = clienteDao.buscar(rs.getInt("IDCLIENTE"));
+		usuario.setCliente(cliente);
+		return usuario;
 	}
 }
