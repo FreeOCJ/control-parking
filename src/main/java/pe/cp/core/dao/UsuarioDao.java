@@ -11,5 +11,6 @@ public interface UsuarioDao {
 	List<Usuario> buscar(String nombre);
 	Usuario buscar(int idUsuario);
 	Usuario buscarPorLogin(String login);
-	
+	void agregarRol(int idUsuario, int idRol);
+	void removerTodosRoles(int idUsuario);
 }

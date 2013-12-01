@@ -27,13 +27,20 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
-	private SimpleJdbcInsert insertarUsuario;
+	@Autowired 
+	private UsuarioMapper mapper;
+	
+	private SimpleJdbcInsert insertarUsuario;	
+	private SimpleJdbcInsert insertarRolPorUsuario;
 	
 	@Autowired
 	public UsuarioDaoImpl(DataSource dataSource){
 		this.insertarUsuario = new SimpleJdbcInsert(dataSource)
 		.withTableName("usuario")
 		.usingGeneratedKeyColumns("IDUSUARIO");
+		
+		this.insertarRolPorUsuario = new SimpleJdbcInsert(dataSource)
+		.withTableName("rolxusuario");
 	}
 	
 	@Override
@@ -43,8 +50,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 							"IDCLIENTE = ? WHERE IDUSUARIO = ?",
 				            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
 				            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
-				            usuario.getCliente().getId(),usuario.getId());
-		
+				            usuario.getCliente().getId(),usuario.getId());		
 	}	
 
 	@Override
@@ -57,7 +63,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		parameters.put("LOGIN", usuario.getLogin());
 		parameters.put("PASSWORD",usuario.getPassword());
 		parameters.put("IDCLIENTE", usuario.getCliente().getId());
-		parameters.put("ELIMINADO", 'N');
+		parameters.put("ELIMINADO", 'F');
 		Number key = insertarUsuario.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
@@ -67,7 +73,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre";		
 		List<Usuario> usuarios = null;
 		SqlParameterSource args = new MapSqlParameterSource("nombre","%" + nombre + "%");		
-		usuarios = namedParameterJdbcTemplate.query(sql, args, new UsuarioMapper());
+		usuarios = namedParameterJdbcTemplate.query(sql, args, mapper);
 		return usuarios;
 	}
 
@@ -82,7 +88,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE IDUSUARIO = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {idUsuario};
-		usuario = jdbcTemplate.queryForObject(sql, args, new UsuarioMapper());
+		usuario = jdbcTemplate.queryForObject(sql, args, mapper);
 		return usuario;
 	}
 
@@ -95,5 +101,17 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		return usuario;
 	}
 
-	
+	@Override
+	public void agregarRol(int idUsuario, int idRol) {
+		Map<String, Object> parameters = new HashMap<String, Object>(2);
+		parameters.put("IDUSUARIO", idUsuario);	
+		parameters.put("IDROL", idRol);
+		insertarRolPorUsuario.execute(parameters);		
+	}
+
+	@Override
+	public void removerTodosRoles(int idUsuario) {
+		final String sql = "DELETE FROM usuarioxrol where IDUSUARIO = ?";		
+		jdbcTemplate.update(sql,idUsuario);	
+	}
 }

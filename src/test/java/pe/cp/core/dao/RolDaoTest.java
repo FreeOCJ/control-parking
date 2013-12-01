@@ -24,13 +24,13 @@ public class RolDaoTest {
 	@Test
 	public void probarInsertarRol() {
 		Rol rol = new Rol();
-		rol.setDescripcion("rolTest");
+		rol.setDescripcion("Operador");
 		
 		Integer idRol = rolDao.agregar(rol);
 		Assert.assertNotNull(idRol);
 		
 		Rol nuevoRol = rolDao.buscar(idRol);
-		Assert.assertEquals("rolTest", nuevoRol.getDescripcion());
+		Assert.assertEquals("Operador", nuevoRol.getDescripcion());
 		Assert.assertEquals(idRol.toString(), String.valueOf(nuevoRol.getId()));
 		
 		return;

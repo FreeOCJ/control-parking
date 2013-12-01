@@ -21,7 +21,7 @@ public class ClienteDaoTest {
 		cdao = ac.getBean(ClienteDao.class);
 	}
 	
-	@Test
+/*	@Test
 	//TestCase: Insertar un nuevo cliente. Antes de agregarle
 	//usuarios o unidades operativas
 	public void probarInsertarCliente() {
@@ -41,5 +41,11 @@ public class ClienteDaoTest {
 		Assert.assertEquals(idCliente.toString(), String.valueOf(nuevoCliente.getId()));
 		
 		return;
+	}*/
+	
+	@Test
+	public void probarBuscarCliente(){
+		Cliente cliente = cdao.buscar(2);
+		Assert.assertNotNull(cliente);
 	}
 }

@@ -1,5 +1,7 @@
 package pe.cp.core.domain;
 
+import java.util.List;
+
 public class Usuario {
 	private int id;
 	private String nombres;
@@ -9,6 +11,7 @@ public class Usuario {
 	private String login;
 	private String password;
 	private Cliente cliente;
+	private List<Rol> roles;
 	
 	public int getId() {
 		return id;
@@ -57,6 +60,12 @@ public class Usuario {
 	}
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+	public List<Rol> getRoles() {
+		return roles;
+	}
+	public void setRoles(List<Rol> roles) {
+		this.roles = roles;
 	}
 	
 	
