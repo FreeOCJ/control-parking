@@ -6,7 +6,7 @@
 	    <servlet-class>ru.xpoft.vaadin.SpringVaadinServlet</servlet-class>
 	    <init-param>
 	        <param-name>beanName</param-name>
-	        <param-value>myVaadinUI</param-value>
+	        <param-value>ControlParkingUI</param-value>
 	    </init-param>
 	</servlet>
 	

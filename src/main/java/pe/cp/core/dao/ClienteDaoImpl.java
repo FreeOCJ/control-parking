@@ -14,12 +14,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.filters.ClienteFilter;
 import pe.cp.core.mapper.ClienteMapper;
 
 @Repository
 public class ClienteDaoImpl implements ClienteDao {
 		
-	private SimpleJdbcInsert insertarCliente;
+	private SimpleJdbcInsert insertarCliente;	
 
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -30,8 +31,8 @@ public class ClienteDaoImpl implements ClienteDao {
 	@Autowired
 	private void setDataSource(DataSource dataSource) {
 		this.insertarCliente = new SimpleJdbcInsert(dataSource)
-				.withTableName("cliente")
-				.usingGeneratedKeyColumns("IDCLIENTE");
+									.withTableName("cliente")
+									.usingGeneratedKeyColumns("IDCLIENTE");		
 	}
 	
 	@Override
@@ -74,4 +75,9 @@ public class ClienteDaoImpl implements ClienteDao {
 		return cliente;
 	}
 
+	@Override
+	public List<Cliente> buscarOr(ClienteFilter filtro) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

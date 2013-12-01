@@ -52,7 +52,7 @@ public class MyVaadinUI extends UI
             	usuario.setLogin("jtrelles");
             	usuario.setPassword("jtrelles");
             	usuarioservice.nuevo(usuario);**/
-            	List<Cliente> clientes = clienteservice.buscar("Free");
+            	/*List<Cliente> clientes = clienteservice.buscar("Free");
             	if (clientes!=null && clientes.size()>0){
             		for(Cliente cliente:clientes){
             			System.out.println("nombre: " + cliente.getRazonSocial());
@@ -60,7 +60,7 @@ public class MyVaadinUI extends UI
             	}else{
             		System.out.println("null");
             	}
-                layout.addComponent(new Label("Thank you for clicking"));
+                layout.addComponent(new Label("Thank you for clicking"));*/
             }
         });
         layout.addComponent(button);

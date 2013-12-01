@@ -28,4 +28,6 @@
 		class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
 		<constructor-arg index="0" ref="dataSource" />
 	</bean>
+	
+	<bean id="ControlParkingUI" class="pe.cp.web.ui.ControlParkingUI"></bean>
 </beans>

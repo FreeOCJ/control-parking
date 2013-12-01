@@ -15,7 +15,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 
+
 import pe.cp.core.domain.Usuario;
+import pe.cp.core.domain.filters.UsuarioFilter;
 import pe.cp.core.mapper.UsuarioMapper;
 
 @Repository
@@ -113,5 +115,11 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	public void removerTodosRoles(int idUsuario) {
 		final String sql = "DELETE FROM usuarioxrol where IDUSUARIO = ?";		
 		jdbcTemplate.update(sql,idUsuario);	
+	}
+
+	@Override
+	public List<Usuario> buscarOr(UsuarioFilter filtro) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

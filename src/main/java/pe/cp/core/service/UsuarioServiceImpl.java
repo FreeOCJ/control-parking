@@ -7,10 +7,12 @@ import org.springframework.stereotype.Service;
 
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.dao.UsuarioDao;
-import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Usuario;
+import pe.cp.core.domain.filters.UsuarioFilter;
 import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
+import pe.cp.core.service.messages.BuscarUsuarioRequest;
+import pe.cp.core.service.messages.BuscarUsuarioResponse;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
 
@@ -94,8 +96,24 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public List<Usuario> buscar(String nombre) {
-		return usuariodao.buscar(nombre);
+	public BuscarUsuarioResponse buscarOr(BuscarUsuarioRequest request) {
+		BuscarUsuarioResponse response = new BuscarUsuarioResponse();
+		
+		UsuarioFilter filter = new UsuarioFilter();
+		filter.setNombres(request.getNombresApellidos());
+		filter.setApellidos(request.getNombresApellidos());
+		
+		List<Usuario> usuarios =  usuariodao.buscarOr(filter);
+		
+		if (usuarios.size() > 0)
+			response.setMensaje("Se encontraron " + usuarios.size() + " registros");
+		else
+			response.setMensaje("No se encontraron coincidencias");
+		
+		response.setUsuariosEncontrados(usuarios);
+		response.setResultadoEjecucion(true);
+		
+		return response;
 	}
 
 	@Override

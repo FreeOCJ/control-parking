@@ -1,16 +1,18 @@
 package pe.cp.core.service;
 
-import java.util.List;
-
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.service.messages.ActualizarClienteRequest;
+import pe.cp.core.service.messages.ActualizarClienteResponse;
+import pe.cp.core.service.messages.BuscarClienteRequest;
+import pe.cp.core.service.messages.BuscarClienteResponse;
+import pe.cp.core.service.messages.InsertarClienteRequest;
+import pe.cp.core.service.messages.InsertarClienteResponse;
 
 public interface ClienteService {
-	int agregar(Cliente cliente);
-	void actualizar(Cliente cliente);
+	InsertarClienteResponse agregar(InsertarClienteRequest request);
+	ActualizarClienteResponse actualizar(ActualizarClienteRequest request);
 	void eliminar(int idCliente);
-	List<Cliente> buscar(String nombreComercial);
-	int agregarUsuario(int idCliente, int idUsuario);
-	int removerUsuario(int idCliente, int idUsuario);
-	int agregarUnidadOperativa(int idCliente, int idUnidadOperativa);
-	int removerUnidadOperativa(int idCliente, int idUnidadOperativa);
+	BuscarClienteResponse buscar(BuscarClienteRequest request);
+	boolean validarNuevoCliente(Cliente cliente);
+	boolean validarModificarCliente(Cliente cliente, Cliente clienteMod);	
 }

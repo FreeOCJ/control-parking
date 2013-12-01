@@ -7,6 +7,13 @@ import org.springframework.stereotype.Service;
 
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.filters.ClienteFilter;
+import pe.cp.core.service.messages.ActualizarClienteRequest;
+import pe.cp.core.service.messages.ActualizarClienteResponse;
+import pe.cp.core.service.messages.BuscarClienteRequest;
+import pe.cp.core.service.messages.BuscarClienteResponse;
+import pe.cp.core.service.messages.InsertarClienteRequest;
+import pe.cp.core.service.messages.InsertarClienteResponse;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -15,13 +22,52 @@ public class ClienteServiceImpl implements ClienteService {
 	private ClienteDao cdao;
 	
 	@Override
-	public int agregar(Cliente cliente) {
-		return cdao.agregar(cliente);				
+	public InsertarClienteResponse agregar(InsertarClienteRequest request) {
+		InsertarClienteResponse response = new InsertarClienteResponse();
+		
+		Cliente cliente = new Cliente();
+		cliente.setNombreComercial(request.getNombreComercial());
+		cliente.setRazonSocial(request.getRazonSocial());
+		cliente.setRuc(request.getRuc());
+		
+		if (validarNuevoCliente(cliente)){
+			Integer idCliente = cdao.agregar(cliente);
+			if (idCliente != null){
+				response.setMensaje("Se insertó al usuario exitosamente");
+				response.setResultadoEjecucion(true);
+			}						
+		}else{
+			response.setMensaje("Error de validación");
+			response.setResultadoEjecucion(false);
+		}
+				
+		return response;
 	}
 
 	@Override
-	public void actualizar(Cliente cliente) {
-		cdao.actualizar(cliente);		
+	public ActualizarClienteResponse actualizar(ActualizarClienteRequest request) {
+		ActualizarClienteResponse response = new ActualizarClienteResponse();
+				
+		Cliente cliente = cdao.buscar(request.getIdCliente());
+		Cliente clienteMod = new Cliente();
+		clienteMod.setNombreComercial(request.getNombreComercial());
+		clienteMod.setRazonSocial(request.getRazonSocial());
+		clienteMod.setRuc(request.getRuc());
+		
+		if (validarModificarCliente(cliente, clienteMod)){
+			cliente.setNombreComercial(request.getNombreComercial());
+			cliente.setRazonSocial(request.getRazonSocial());
+			cliente.setRuc(request.getRuc());
+			cdao.actualizar(cliente);	
+			
+			response.setResultadoEjecucion(true);
+			response.setMensaje("Se actulizaron los datos del cliente exitosamente");
+		}else{
+			response.setResultadoEjecucion(false);
+			response.setMensaje("Error al validar los datos del cliente");
+		}
+		
+		return response;
 	}
 
 	@Override
@@ -30,32 +76,34 @@ public class ClienteServiceImpl implements ClienteService {
 	}
 
 	@Override
-	public List<Cliente> buscar(String nombreComercial) {
-		return cdao.buscar(nombreComercial);
+	public BuscarClienteResponse buscar(BuscarClienteRequest request) {
+		BuscarClienteResponse response = new BuscarClienteResponse();
+		ClienteFilter filtro = new ClienteFilter();
+		
+		filtro.setNombreComercial(request.getNombreComercial());		
+		List<Cliente> clientes = cdao.buscarOr(filtro);
+		
+		if (clientes.size() > 0)
+			response.setMensaje("Se encontraron " + clientes.size() + " registros");
+		else
+			response.setMensaje("No se encontraron coincidencias");
+		
+		response.setClientesEncontrados(clientes);
+		response.setResultadoEjecucion(true);
+				
+		return response;
 	}
 
 	@Override
-	public int agregarUsuario(int idCliente, int idUsuario) {
+	public boolean validarNuevoCliente(Cliente cliente) {
 		// TODO Auto-generated method stub
-		return 0;
+		return false;
 	}
 
 	@Override
-	public int removerUsuario(int idCliente, int idUsuario) {
+	public boolean validarModificarCliente(Cliente cliente, Cliente clienteMod) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int agregarUnidadOperativa(int idCliente, int idUnidadOperativa) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int removerUnidadOperativa(int idCliente, int idUnidadOperativa) {
-		// TODO Auto-generated method stub
-		return 0;
+		return false;
 	}
 
 }

@@ -17,9 +17,9 @@ public class MainTest {
 		//tipoEvento.setDescripcion("LOGIN");
 		ApplicationContext context = new ClassPathXmlApplicationContext(
 		                          "classpath:WEB-INF/spring/context.xml");
-		ClienteService clienteservice = context.getBean(ClienteService.class);
+		/*ClienteService clienteservice = context.getBean(ClienteService.class);
 		List<Cliente> lista = clienteservice.buscar("Free");
-		System.out.println("Resultados : " + lista.size());
+		System.out.println("Resultados : " + lista.size());*/
 	}
 
 }
