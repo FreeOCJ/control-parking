@@ -52,11 +52,13 @@ public class SideBar extends VerticalLayout {
         addComponent(new CssLayout() {
             {
                 addStyleName("branding");
+                Image imgLogo = new Image(null, new ThemeResource("img/logo-controlparking.png"));
                 Label logo = new Label(
-                        "<span>ControlParking</span> Dashboard",
+                        "<span>ControlParking</span>",
                         ContentMode.HTML);
                 logo.setSizeUndefined();
                 addComponent(logo);
+                addComponent(imgLogo);
             }
         });
         
@@ -107,8 +109,8 @@ public class SideBar extends VerticalLayout {
         });
         
         
-        for (final String view : new String[] { "dashboard", "sales",
-                "transactions", "reports", "schedule" }) {
+        for (final String view : new String[] { "operaciones", "reportes",
+                "configuracion", "auditoria"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
             b.addStyleName("icon-" + view);
@@ -119,29 +121,7 @@ public class SideBar extends VerticalLayout {
                 }
             });
 
-            if (view.equals("reports")) {
-                // Add drop target to reports button
-                DragAndDropWrapper reports = new DragAndDropWrapper(b);
-                reports.setDragStartMode(DragStartMode.NONE);
-                reports.setDropHandler(new DropHandler() {
-
-                    @Override
-                    public void drop(DragAndDropEvent event) {
-                        
-                    }
-
-                    @Override
-                    public AcceptCriterion getAcceptCriterion() {
-                        return AcceptItem.ALL;
-                    }
-
-                });
-                menu.addComponent(reports);
-                menu.addStyleName("no-vertical-drag-hints");
-                menu.addStyleName("no-horizontal-drag-hints");
-            } else {
-                menu.addComponent(b);
-            }
+            menu.addComponent(b);            
 
 //            viewNameToMenuButton.put("/" + view, b);
             menu.addStyleName("menu");

@@ -1,5 +1,7 @@
 package pe.cp.web.ui.view.main;
 
+import pe.cp.web.ui.view.operaciones.OperacionesComponent;
+
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
@@ -35,7 +37,11 @@ public class MainImpl extends HorizontalLayout implements IMain {
         base.addComponent(contenido);
         contenido.setSizeFull();
         contenido.addStyleName("view-content");
-        setExpandRatio(contenido, 1);		
+        setExpandRatio(contenido, 1);
+        
+        //Agregar Default
+        OperacionesComponent op = new OperacionesComponent();
+        contenido.addComponent(op);
 	}
 
 }

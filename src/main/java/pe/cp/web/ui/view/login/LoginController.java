@@ -2,6 +2,7 @@ package pe.cp.web.ui.view.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import pe.cp.core.service.LoginService;
@@ -10,6 +11,7 @@ import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.ILoginViewHandler;
 
 @Component
+@Scope("prototype")
 public class LoginController implements ILoginViewHandler {
 
 	private ILoginView view;

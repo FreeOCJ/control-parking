@@ -1,11 +1,13 @@
 package pe.cp.web.ui.view.login;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.ILoginViewHandler;
+
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.ThemeResource;
@@ -25,6 +27,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
 @Component
+@Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
 public class LoginViewImpl extends CssLayout implements ILoginView {

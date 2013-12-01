@@ -42,6 +42,10 @@
 	  margin-left: .3em;
 	}
 	
+	@include icon(operaciones, '\21c4');
+	@include icon(configuracion, '\2302');
+	@include icon(reportes, '\e7a2');	
+	@include icon(auditoria, '\1f4c5');
 	@include icon(transactions, '\21c4');
 	@include icon(dashboard, '\2302');
 	@include icon(reports, '\e7a2');	
