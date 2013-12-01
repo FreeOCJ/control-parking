@@ -98,7 +98,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
         VerticalLayout passwordUtilsContainer = new VerticalLayout();
         passwordUtilsContainer.setSizeFull();                
         Link lrecoverPassword = new Link();
-        lrecoverPassword.setCaption("Recuperar Contrase�a");
+        lrecoverPassword.setCaption("Recuperar Contraseña");
         passwordUtilsContainer.addComponent(lrecoverPassword);
         passwordUtilsContainer.setComponentAlignment(lrecoverPassword, Alignment.TOP_RIGHT);        
         

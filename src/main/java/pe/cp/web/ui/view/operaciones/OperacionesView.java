@@ -1,5 +1,6 @@
 package pe.cp.web.ui.view.operaciones;
 
+import pe.cp.web.ui.view.main.SideBar;
 import pe.cp.web.ui.view.operaciones.IOperacionesView;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -19,7 +20,10 @@ public class OperacionesView extends VerticalLayout implements IOperacionesView 
 	}
 	
 	public OperacionesView(){
-
+		
+		SideBar sideBar = new SideBar();
+		addComponent(sideBar);
+		addComponent(sideBar);		
 	}
 
 }
