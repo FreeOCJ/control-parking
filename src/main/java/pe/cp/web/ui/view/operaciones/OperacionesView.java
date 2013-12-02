@@ -19,8 +19,7 @@ public class OperacionesView extends VerticalLayout implements IOperacionesView 
 
 	}
 	
-	public OperacionesView(){
-		
+	public OperacionesView(){		
 		SideBar sideBar = new SideBar();
 		addComponent(sideBar);
 		addComponent(sideBar);		

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import pe.cp.web.ui.view.auditoria.IAuditoriaView;
 import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.IConfigView;
-import pe.cp.web.ui.view.configuracion.ConfigView;
+import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.LoginController;
 import pe.cp.web.ui.view.login.LoginViewImpl;
@@ -61,10 +61,10 @@ public class ControlParkingUI extends UI {
 		//Create navigation
 		IMain mainView = new MainViewImpl();
 		IReportesView reportesView = new ReportesView();
-		IConfigView configuracionView = new ConfigView();
+		IConfigView configuracionView = new ConfigViewImpl();
 		IAuditoriaView auditoriaView = new AuditoriaView();
 		
-		navigator.addView(MAIN, mainView);
+		navigator.addView(OPERACIONES, mainView);
 		navigator.addView(REPORTES, reportesView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);

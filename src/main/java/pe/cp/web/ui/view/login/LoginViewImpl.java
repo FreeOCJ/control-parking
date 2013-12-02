@@ -141,7 +141,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 
 	@Override
 	public void afterSuccessfulLogin() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.MAIN);
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 	}
 
 	@Override

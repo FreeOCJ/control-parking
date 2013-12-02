@@ -4,4 +4,8 @@ import com.vaadin.navigator.View;
 
 public interface IConfigView extends View {
 
+	void init();	
+	void setHandler(IConfigViewHandler handler);
+	void irConfiguracionClientes();
+	void irConfiguracionUsuarios();
 }

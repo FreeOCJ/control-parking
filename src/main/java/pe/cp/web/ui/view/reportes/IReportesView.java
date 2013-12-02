@@ -4,4 +4,6 @@ import com.vaadin.navigator.View;
 
 public interface IReportesView extends View {
 
+	void init();
+
 }

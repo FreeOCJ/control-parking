@@ -4,4 +4,6 @@ import com.vaadin.navigator.View;
 
 public interface IAuditoriaView extends View {
 
+	void init();
+
 }

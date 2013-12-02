@@ -1,22 +1,22 @@
-package pe.cp.web.ui.view.reportes;
+package pe.cp.web.ui.view.configuracion.usuario;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import pe.cp.web.ui.view.main.SideBar;
-import pe.cp.web.ui.view.operaciones.OperacionesComponent;
-import pe.cp.web.ui.view.reportes.IReportesView;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.CssLayout;
+import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.VerticalLayout;
 
 @Component
 @Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
-public class ReportesView extends HorizontalLayout implements IReportesView {
+public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsuarioView {
 
 	private CssLayout contenido;
 	
@@ -25,35 +25,35 @@ public class ReportesView extends HorizontalLayout implements IReportesView {
 		// TODO Auto-generated method stub
 
 	}
-	
-	public ReportesView(){
-		init();
-	}
 
-	
 	@Override
-	public void init() {		
-        System.out.println("init reportes");
-		construirBase();
-	}
-	
-	private void construirBase(){		
+	public void init() {
 		setSizeFull();		
 		addStyleName("main-view");
 		
 		SideBar barraControl = new SideBar();
 		addComponent(barraControl);
 		
-		// Content
 		contenido = new CssLayout();
         addComponent(contenido);
         contenido.setSizeFull();
         contenido.addStyleName("view-content");       
         setExpandRatio(contenido, 1);
         
-        //Agregar Default
-        OperacionesComponent op = new OperacionesComponent();
-        contenido.addComponent(op);
+        contenido.addComponent(cargarFormularioNuevoUsuario());
+	}
+
+	private FormLayout cargarFormularioNuevoUsuario(){
+		FormLayout formulario = new FormLayout();
+		
+		
+		return formulario;
+	}
+	
+	@Override
+	public void setHandler() {
+		// TODO Auto-generated method stub
+
 	}
 
 }

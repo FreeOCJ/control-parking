@@ -74,7 +74,7 @@ public class SideBar extends VerticalLayout {
                 Image profilePic = new Image(null, new ThemeResource("img/profile-pic.png"));
                 profilePic.setWidth("34px");
                 addComponent(profilePic);
-                Label userName = new Label("Omar Espinoza Barney");
+                Label userName = new Label("Omar Barney");
                 userName.setSizeUndefined();
                 addComponent(userName);
 
@@ -110,14 +110,18 @@ public class SideBar extends VerticalLayout {
         
         
         for (final String view : new String[] { "operaciones", "reportes",
-                "configuracion", "auditoria"}) {
+                								"configuracion", "auditoria"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));
             b.addStyleName("icon-" + view);
             b.addClickListener(new ClickListener() {
                 @Override
                 public void buttonClick(ClickEvent event) {
-            		//TODO
+                	event.getButton().addStyleName("selected");
+                    if (!UI.getCurrent().getNavigator().getState().equals("/" + view)){
+                    	System.out.println("View> " + view);
+                    	UI.getCurrent().getNavigator().navigateTo(view);
+                    }
                 }
             });
 
