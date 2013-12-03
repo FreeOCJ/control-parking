@@ -11,6 +11,8 @@ import pe.cp.web.ui.view.auditoria.IAuditoriaView;
 import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
+import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
+import pe.cp.web.ui.view.configuracion.usuario.IBuscarUsuarioView;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.LoginController;
 import pe.cp.web.ui.view.login.LoginViewImpl;
@@ -43,6 +45,8 @@ public class ControlParkingUI extends UI {
 	public static final String CONFIGURACION = "configuracion";
 	public static final String AUDITORIA = "auditoria";
 	public static final String MAIN = "main";
+	public static final String BUSCARUSUARIOS = "buscar_usuarios";
+	public static final String BUSCARCLIENTES = "buscar_clientes";
 	/*@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
@@ -63,11 +67,14 @@ public class ControlParkingUI extends UI {
 		IReportesView reportesView = new ReportesView();
 		IConfigView configuracionView = new ConfigViewImpl();
 		IAuditoriaView auditoriaView = new AuditoriaView();
+		IBuscarUsuarioView buscarUsuarioView = new BuscarUsuarioViewImpl();		 
 		
 		navigator.addView(OPERACIONES, mainView);
 		navigator.addView(REPORTES, reportesView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);
+		navigator.addView(BUSCARUSUARIOS, buscarUsuarioView);
+		navigator.addView(BUSCARCLIENTES, buscarUsuarioView);
 		setNavigator(navigator);
 		navigator.navigateTo("");
     }

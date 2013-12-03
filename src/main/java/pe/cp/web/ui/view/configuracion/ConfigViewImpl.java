@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.login.ILoginViewHandler;
+import pe.cp.web.ui.view.login.LoginController;
 import pe.cp.web.ui.view.main.SideBar;
 import pe.cp.web.ui.view.operaciones.OperacionesComponent;
 
@@ -18,6 +19,8 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
 @Component
 @Scope("prototype")
@@ -32,11 +35,10 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		handler = new ConfigController(this);
 	}
 
-	public ConfigViewImpl(){
+	public ConfigViewImpl(){		
 		init();
 	}
 	
@@ -80,6 +82,19 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	    configLayout.addComponent(btnConfigUsuarios);
 	    configLayout.addComponent(btnConfigClientes);
 	    
+	    btnConfigUsuarios.addClickListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.irConfiguracionUsuarios();		
+			}
+		});
+	    
+	    btnConfigClientes.addClickListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.irConfiguracionClientes();		
+			}
+		});
 		
 	    areaPrincipal.addComponent(configLayout);
 	    areaPrincipal.setExpandRatio(configLayout, 1);
@@ -89,15 +104,5 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	@Override
 	public void setHandler(IConfigViewHandler handler) {
 		this.handler = handler;		
-	}
-
-	@Override
-	public void irConfiguracionClientes() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);		
-	}
-
-	@Override
-	public void irConfiguracionUsuarios() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);		
 	}
 }
