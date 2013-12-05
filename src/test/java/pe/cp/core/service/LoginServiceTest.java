@@ -26,8 +26,9 @@ public class LoginServiceTest {
 	@Test
 	public void probarLogin() {
 		System.out.println("test");
-		LoginRequest request = new LoginRequest("oespinoza", "123456789");
+		LoginRequest request = new LoginRequest("jtrelles", "123456789");
 		LoginResponse response = loginservice.login(request);
+		System.out.println(response.getMensaje());
 		Assert.assertNotNull(response);
 	}
 }

@@ -112,13 +112,15 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		final String sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {login};
-		usuario = jdbcTemplate.queryForObject(sql, args, new RowMapper<Usuario>(){
-			@Override
-			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
-				return userMapRow(rs, rowNum);
-			}
-			
-		} );
+		try{
+			usuario = jdbcTemplate.queryForObject(sql, args, new RowMapper<Usuario>(){
+				@Override
+				public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+					return userMapRow(rs, rowNum);
+				}
+				
+			} );
+		}catch(Exception e){}		
 		return usuario;
 	}
 

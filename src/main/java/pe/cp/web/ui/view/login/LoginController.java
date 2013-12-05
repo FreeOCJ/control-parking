@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
+
 import pe.cp.core.service.LoginService;
 import pe.cp.core.service.messages.LoginRequest;
 import pe.cp.core.service.messages.LoginResponse;
@@ -33,13 +38,20 @@ public class LoginController implements ILoginViewHandler {
 		LoginRequest request = new LoginRequest(username, password);
 		LoginResponse response = loginservice.login(request);
 		
+		Notification notification = null;
 		if (response.isResultadoEjecucion()){
-			if (response.isAutorizado()){ 
-				System.out.println("login Successfull");
-				view.afterSuccessfulLogin();
+			if (!response.isAutorizado()){ 
+				notification = new Notification(response.getMensaje(),Type.WARNING_MESSAGE);
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());				
 			}else{
-				System.out.println("Password o Usuario Incorrecto");
-			}	
+				view.afterSuccessfulLogin();
+			}			
+			
+		}else{
+			notification = new Notification(response.getMensaje(),Type.WARNING_MESSAGE);
+			notification.setPosition(Position.TOP_CENTER);
+			notification.show(Page.getCurrent());
 		}		
 	}
 

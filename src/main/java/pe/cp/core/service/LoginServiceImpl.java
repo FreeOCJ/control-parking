@@ -30,12 +30,12 @@ public class LoginServiceImpl implements LoginService {
 			}else{
 				response.setResultadoEjecucion(false);
 				response.setAutorizado(false);	
-				response.setMensaje("El password es incorrecto");
+				response.setMensaje("El password ingresado es incorrecto");
 			}
 		}else{
 			response.setResultadoEjecucion(false);
 			response.setAutorizado(false);	
-			response.setMensaje("El usuario no existe");
+			response.setMensaje("El usuario ingresado no existe");
 		}		
 		
 		return response;
