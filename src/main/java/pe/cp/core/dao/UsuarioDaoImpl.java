@@ -140,8 +140,19 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscarOr(UsuarioFilter filtro) {
-		// TODO Auto-generated method stub
-		return null;
+		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos";		
+		List<Usuario> usuarios = null;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("nombres", "%" +  filtro.getNombres() + "%");
+		args.put("apellidos", "%" +  filtro.getApellidos() + "%");
+		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){
+			@Override
+			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return userMapRow(rs, rowNum);
+			}
+			
+		} );
+		return usuarios;
 	}
 	
 	public Usuario userMapRow(ResultSet rs, int n) throws SQLException {
@@ -156,6 +167,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		
 		Cliente cliente = clienteDao.buscar(rs.getInt("IDCLIENTE"));
 		usuario.setCliente(cliente);
+		
 		return usuario;
 	}
 }

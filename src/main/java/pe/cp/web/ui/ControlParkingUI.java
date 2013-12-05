@@ -11,6 +11,7 @@ import pe.cp.web.ui.view.auditoria.IAuditoriaView;
 import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
+import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioController;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.IBuscarUsuarioView;
 import pe.cp.web.ui.view.login.ILoginView;
@@ -67,7 +68,10 @@ public class ControlParkingUI extends UI {
 		IReportesView reportesView = new ReportesView();
 		IConfigView configuracionView = new ConfigViewImpl();
 		IAuditoriaView auditoriaView = new AuditoriaView();
-		IBuscarUsuarioView buscarUsuarioView = new BuscarUsuarioViewImpl();		 
+		IBuscarUsuarioView buscarUsuarioView = new BuscarUsuarioViewImpl();
+		BuscarUsuarioController buscarUsuarioController = new BuscarUsuarioController(buscarUsuarioView);		
+		buscarUsuarioView.setHandler(buscarUsuarioController);
+		buscarUsuarioView.init();
 		
 		navigator.addView(OPERACIONES, mainView);
 		navigator.addView(REPORTES, reportesView);

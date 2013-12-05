@@ -28,8 +28,8 @@ import com.vaadin.ui.Button.ClickEvent;
 
 @Component
 @Scope("prototype")
-@SuppressWarnings("serial")
 @Theme("controlparking")
+@SuppressWarnings("serial")
 public class LoginViewImpl extends CssLayout implements ILoginView {
 		
 	@Autowired
@@ -42,6 +42,10 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+	}
+	
+	public LoginViewImpl(){
+		init();
 	}
 
 	@Override

@@ -4,7 +4,7 @@ public class BuscarUsuarioRequest {
 	private String nombresApellidos;
 
 	public String getNombresApellidos() {
-		return nombresApellidos;
+		return nombresApellidos; 
 	}
 
 	public void setNombresApellidos(String nombresApellidos) {

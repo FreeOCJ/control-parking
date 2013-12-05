@@ -4,5 +4,5 @@ import com.vaadin.navigator.View;
 
 public interface IBuscarUsuarioView extends View {
 	void init();	
-	void setHandler();
+	void setHandler(IBuscarUsuarioViewHandler handler);
 }

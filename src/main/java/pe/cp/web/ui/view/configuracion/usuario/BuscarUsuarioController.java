@@ -1,20 +1,93 @@
 package pe.cp.web.ui.view.configuracion.usuario;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.data.Container;
+import com.vaadin.data.Item;
+import com.vaadin.data.util.IndexedContainer;
+
+
+
+import pe.cp.core.domain.Usuario;
+import pe.cp.core.service.UsuarioService;
+import pe.cp.core.service.messages.BuscarUsuarioRequest;
+import pe.cp.core.service.messages.BuscarUsuarioResponse;
+
 
 @Component
 @Scope("prototype")
+@SuppressWarnings("unchecked")
 public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	ApplicationContext ac;
-	private IBuscarUsuarioView view;	
+	private IBuscarUsuarioView view;
+	private Container container;
+	
+	@Autowired
+	private UsuarioService usuarioservice;
 	
 	public BuscarUsuarioController(IBuscarUsuarioView view){		
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
-				
+		usuarioservice = ac.getBean(UsuarioService.class);		
 		this.view = view;
+	}
+
+	@Override
+	public void  buscarpornombre(String nombresApellidos) {
+		System.out.println("buscarpornombre");
+		BuscarUsuarioRequest request = new BuscarUsuarioRequest();
+		request.setNombresApellidos(nombresApellidos);	
+		        
+        BuscarUsuarioResponse response = usuarioservice.buscarOr(request);
+		try {
+			List<Usuario> usuarios = response.getUsuariosEncontrados();
+	        if(usuarios != null && usuarios.size() > 0){
+	        	for(Usuario usuario:usuarios){
+	        		UsuarioView usuarioview = ViewMapper(usuario);
+	        		System.out.println(usuarioview.getNombres());
+	        		 Item newItem = container.getItem(container.addItem());
+	        		 newItem.getItemProperty("Código").setValue(usuarioview.getId());
+	        		 newItem.getItemProperty("Nombre Completo").setValue(usuarioview.getNombres() + " " + usuarioview.getApellidos());  
+	        		 newItem.getItemProperty("Usuario").setValue(usuarioview.getLogin());
+	        		 newItem.getItemProperty("Roles").setValue(usuarioview.getRolesAsString());
+	        		 newItem.getItemProperty("Cargo").setValue(usuarioview.getCargo());
+	        	}        
+	        }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+		
+	}
+
+	@Override
+	public Container setHeaderTable() {
+		System.out.println("setHeader");
+		container = new IndexedContainer(); 
+		container.addContainerProperty("Código",Integer.class, 0);
+        container.addContainerProperty("Nombre Completo",String.class, "");
+        container.addContainerProperty("Usuario",String.class, "");
+        container.addContainerProperty("Roles",String.class, "");
+        container.addContainerProperty("Cargo",String.class, "");
+		return container;
+	}
+	
+	private UsuarioView ViewMapper(Usuario usuario){
+		UsuarioView usuarioview = new UsuarioView();
+		usuarioview.setId(usuario.getId());
+		usuarioview.setNombres(usuario.getNombres());
+		usuarioview.setApellidos(usuario.getApellidos());
+		usuarioview.setCargo(usuario.getCargo());
+		usuarioview.setRoles(usuario.getRoles());
+		usuarioview.setEmail(usuario.getEmail());
+		usuarioview.setLogin(usuario.getLogin());
+		usuarioview.setPassword(usuario.getPassword());
+		usuarioview.setCliente(usuario.getCliente());
+		return usuarioview;
 	}
 }
