@@ -1,5 +1,6 @@
 package pe.cp.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,8 @@ import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
+import pe.cp.core.service.domain.UsuarioView;
+import pe.cp.core.service.domain.WrapperDomain;
 import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
@@ -104,13 +107,17 @@ public class UsuarioServiceImpl implements UsuarioService{
 		filter.setApellidos(request.getNombresApellidos());
 		
 		List<Usuario> usuarios =  usuariodao.buscarOr(filter);
+		List<UsuarioView> usuariosview = new ArrayList<UsuarioView>();
+		if (usuarios.size() > 0){
+			for(Usuario usuario:usuarios){
+				UsuarioView usuarioview = WrapperDomain.ViewMapper(usuario);
+				usuariosview.add(usuarioview);
+			}
+			response.setMensaje("Se encontraron " + usuarios.size() + " registros");		    
+		}else{
+			response.setMensaje("No se encontraron coincidencias");}
 		
-		if (usuarios.size() > 0)
-			response.setMensaje("Se encontraron " + usuarios.size() + " registros");
-		else
-			response.setMensaje("No se encontraron coincidencias");
-		
-		response.setUsuariosEncontrados(usuarios);
+		response.setUsuariosEncontrados(usuariosview);
 		response.setResultadoEjecucion(true);
 		
 		return response;

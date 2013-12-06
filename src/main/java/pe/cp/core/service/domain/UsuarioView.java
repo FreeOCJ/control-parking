@@ -1,4 +1,4 @@
-package pe.cp.web.ui.view.configuracion.usuario;
+package pe.cp.core.service.domain;
 
 import java.util.List;
 
