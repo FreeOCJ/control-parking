@@ -65,7 +65,8 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		parameters.put("CARGO", usuario.getCargo());
 		parameters.put("LOGIN", usuario.getLogin());
 		parameters.put("PASSWORD",usuario.getPassword());
-		parameters.put("IDCLIENTE", usuario.getCliente().getId());
+		if (usuario.getCliente() != null && usuario.getCliente().getId() > 0)
+			parameters.put("IDCLIENTE", usuario.getCliente().getId());
 		parameters.put("ELIMINADO", 'F');
 		Number key = insertarUsuario.executeAndReturnKey(parameters);
 		return key.intValue();
@@ -165,9 +166,12 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		usuario.setLogin(rs.getString("LOGIN"));
 		usuario.setPassword(rs.getString("PASSWORD"));
 		
-		Cliente cliente = clienteDao.buscar(rs.getInt("IDCLIENTE"));
-		usuario.setCliente(cliente);
-		
+		Integer idCliente = rs.getInt("IDCLIENTE");
+		if (idCliente != 0){
+			Cliente cliente = clienteDao.buscar(rs.getInt("IDCLIENTE"));
+			usuario.setCliente(cliente);
+		}else
+			usuario.setCliente(null);
 		return usuario;
 	}
 }

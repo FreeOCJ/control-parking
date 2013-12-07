@@ -3,6 +3,7 @@ package pe.cp.core.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -16,7 +17,9 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
+import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Rol;
+import pe.cp.core.domain.Usuario;
 
 @Repository
 public class RolDaoImpl implements RolDao {
@@ -70,6 +73,31 @@ public class RolDaoImpl implements RolDao {
 						return rol;
 					}
 				});
+	}
+
+	@Override
+	public List<Rol> obtenerTodos() {
+		final String sql = "SELECT * FROM rol WHERE ELIMINADO = 'F'";			
+		List<Rol> roles = null;
+		
+		Map<String, Object> args = new HashMap<String, Object>();		
+		roles = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Rol>(){
+			@Override
+			public Rol mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rolMapRow(rs, rowNum);
+			}
+			
+		} );
+		return roles;
+	}
+	
+	public Rol rolMapRow(ResultSet rs, int n) throws SQLException {
+		Rol rol = new Rol();
+		rol.setId(rs.getInt("IDROL"));
+		rol.setDescripcion(rs.getString("DESROL"));
+		rol.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);				
+		
+		return rol;
 	}
 
 }

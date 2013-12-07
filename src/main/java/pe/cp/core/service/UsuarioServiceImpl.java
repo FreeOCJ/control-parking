@@ -73,7 +73,10 @@ public class UsuarioServiceImpl implements UsuarioService{
 			usuario.setEmail(request.getEmail());
 			usuario.setLogin(request.getLogin());
 			usuario.setNombres(request.getNombres());
-			usuario.setCliente(clientedao.buscar(request.getIdCliente()));
+			if (request.getIdCliente() > 0)				
+				usuario.setCliente(clientedao.buscar(request.getIdCliente()));
+			else
+				usuario.setCliente(null);
 			usuario.setPassword(generarContrasenaTemporal());
 		
 		if (validarNuevoUsuario(usuario)){
@@ -136,13 +139,13 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Override
 	public boolean validarNuevoUsuario(Usuario usuario) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override

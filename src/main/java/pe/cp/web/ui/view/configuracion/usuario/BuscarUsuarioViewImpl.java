@@ -1,21 +1,38 @@
 package pe.cp.web.ui.view.configuracion.usuario;
 
+import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 
+
+
+
+
+
+
+
+
+
+
 import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Property;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -67,8 +84,12 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	    areaPrincipal.addComponent(header);
 	        
 	    Label title = new Label("Configuración de Usuarios");
-	    title.addStyleName("h1");         
+	    title.addStyleName("h1");  
+	    Button btnNuevoUsuario = new Button("Nuevo Usuario");
+	    btnNuevoUsuario.addStyleName("default");
 	    header.addComponent(title); 
+	    header.addComponent(btnNuevoUsuario);
+	    header.setComponentAlignment(btnNuevoUsuario, Alignment.MIDDLE_RIGHT);
 		
         //Crear Tools Busqueda
 	    txtUsuario = new TextField();
@@ -81,6 +102,34 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
         tblusuarios = new Table();
         tblusuarios.setSizeFull();      
         tblusuarios.setContainerDataSource(handler.setHeaderTable());
+        tblusuarios.setSelectable(true);
+        tblusuarios.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				Button button = new Button("Editar");				 
+			    button.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        handler.irEditarUsuario(idUsuario);
+			      }
+			    });
+			 
+			    return button;
+			}
+		} );
+        tblusuarios.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				Button button = new Button("Eliminar");				 
+			    button.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	
+			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();			       
+			      }
+			    });
+			 
+			    return button;
+			}
+		} );
         
      // Define the properties (columns)
     /** container.addContainerProperty("name", String.class, "noname");
@@ -102,8 +151,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
         toolbar.addStyleName("toolbar");
         areaPrincipal.addComponent(toolbar);
         areaPrincipal.addComponent(tblusuarios);
-        
-        
+                
         toolbar.addComponent(txtUsuario);
         toolbar.addComponent(btnBuscar);        
         toolbar.setComponentAlignment(txtUsuario, Alignment.MIDDLE_LEFT);        
@@ -114,6 +162,13 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 			@Override
 			public void buttonClick(ClickEvent event) {
 				handler.buscarpornombre(txtUsuario.getValue());			
+			}
+		});
+        
+        btnNuevoUsuario.addClickListener(new ClickListener() {			
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.irAgregarNuevoUsuario();			
 			}
 		});      
         

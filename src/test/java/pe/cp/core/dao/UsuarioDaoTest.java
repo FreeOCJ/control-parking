@@ -59,28 +59,28 @@ public class UsuarioDaoTest {
 		return;
 	}*/
 	
-	@Test
+	/*@Test
 	public void probarAgregarRolPorUsuario(){
 		Usuario usuario = usuariodao.buscar(1);
 		int idRol = 2;
 		usuariodao.agregarRol(usuario.getId(), idRol);
 	}
 	
-/*	@Test
+	@Test
 	public void probarBuscarUsuarios() {
 		List<Usuario> usuarios = usuariodao.buscar("Juan");
 		System.out.println("usuarios: " + usuarios.size());
 		Assert.assertEquals(1,usuarios.size());
-	}
+	}*/
 	
 	@Test
 	public void probarBuscarUsuarioxId() {
-		Usuario usuario = usuariodao.buscar(3);
+		Usuario usuario = usuariodao.buscar(6);
 		System.out.println("Nombre: " + usuario.getNombres());
 		Assert.assertEquals("Juan",usuario.getNombres());
 	}
 	
-	@Test
+	/*@Test
 	public void probarEliminarUsuarioxId() {
 		usuariodao.eliminar(3);
 		System.out.println("eliminado");

@@ -1,5 +1,7 @@
 package pe.cp.core.dao;
 
+import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +25,7 @@ public class RolDaoTest {
 	
 	@Test
 	public void probarInsertarRol() {
-		Rol rol = new Rol();
+		/*Rol rol = new Rol();
 		rol.setDescripcion("Operador");
 		
 		Integer idRol = rolDao.agregar(rol);
@@ -32,6 +34,14 @@ public class RolDaoTest {
 		Rol nuevoRol = rolDao.buscar(idRol);
 		Assert.assertEquals("Operador", nuevoRol.getDescripcion());
 		Assert.assertEquals(idRol.toString(), String.valueOf(nuevoRol.getId()));
+		
+		return;*/
+	}
+	
+	@Test
+	public void probarObtenerTodos() {
+		List<Rol> roles = rolDao.obtenerTodos();				
+		Assert.assertNotNull(roles);				
 		
 		return;
 	}

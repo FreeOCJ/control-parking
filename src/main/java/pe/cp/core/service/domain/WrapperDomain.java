@@ -1,5 +1,7 @@
 package pe.cp.core.service.domain;
 
+import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Usuario;
 
 public class WrapperDomain {
@@ -14,7 +16,18 @@ public class WrapperDomain {
 		usuarioview.setEmail(usuario.getEmail());
 		usuarioview.setLogin(usuario.getLogin());
 		usuarioview.setPassword(usuario.getPassword());
-		usuarioview.setCliente(usuario.getCliente());
+		if (usuario.getCliente() != null)
+			usuarioview.setCliente(usuario.getCliente());
+		else
+			usuarioview.setCliente(new Cliente());
 		return usuarioview;
+	}
+	
+	public static RolView ViewMapper(Rol rol){
+		RolView rolView = new RolView();
+		rolView.setId(rol.getId());
+		rolView.setNombre(rol.getDescripcion());
+		
+		return rolView;
 	}
 }

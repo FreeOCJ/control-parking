@@ -14,10 +14,13 @@ import com.vaadin.data.util.IndexedContainer;
 
 
 
+import com.vaadin.ui.UI;
+
 import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.domain.UsuarioView;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
+import pe.cp.web.ui.ControlParkingUI;
 
 
 @Component
@@ -59,9 +62,7 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	        }
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-        
-		
+		}      	
 	}
 
 	@Override
@@ -74,6 +75,16 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
         container.addContainerProperty("Roles",String.class, "");
         container.addContainerProperty("Cargo",String.class, "");
 		return container;
+	}
+
+	@Override
+	public void irAgregarNuevoUsuario() {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.NUEVOUSUARIO);			
+	}
+
+	@Override
+	public void irEditarUsuario(int idUsuario) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARUSUARIO + "/" + String.valueOf(idUsuario));	
 	}
 	
 	
