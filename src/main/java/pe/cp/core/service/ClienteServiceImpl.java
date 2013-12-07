@@ -1,5 +1,6 @@
 package pe.cp.core.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.filters.ClienteFilter;
+import pe.cp.core.service.domain.ClienteView;
+import pe.cp.core.service.domain.WrapperDomain;
 import pe.cp.core.service.messages.ActualizarClienteRequest;
 import pe.cp.core.service.messages.ActualizarClienteResponse;
 import pe.cp.core.service.messages.BuscarClienteRequest;
@@ -78,17 +81,18 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public BuscarClienteResponse buscar(BuscarClienteRequest request) {
 		BuscarClienteResponse response = new BuscarClienteResponse();
-		ClienteFilter filtro = new ClienteFilter();
 		
-		filtro.setNombreComercial(request.getNombreComercial());		
-		List<Cliente> clientes = cdao.buscarOr(filtro);
+		List<Cliente> clientes = cdao.buscar(request.getNombreComercial());
 		
 		if (clientes.size() > 0)
 			response.setMensaje("Se encontraron " + clientes.size() + " registros");
 		else
 			response.setMensaje("No se encontraron coincidencias");
 		
-		response.setClientesEncontrados(clientes);
+		response.setClientesEncontrados(new ArrayList<ClienteView>());
+		for (Cliente cliente : clientes) {
+			response.getClientesEncontrados().add(WrapperDomain.ViewMapper(cliente));
+		}		
 		response.setResultadoEjecucion(true);
 				
 		return response;

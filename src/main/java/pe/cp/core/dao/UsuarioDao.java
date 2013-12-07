@@ -2,6 +2,7 @@ package pe.cp.core.dao;
 
 import java.util.List;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
 
@@ -15,4 +16,5 @@ public interface UsuarioDao {
 	Usuario buscarPorLogin(String login);
 	void agregarRol(int idUsuario, int idRol);
 	void removerTodosRoles(int idUsuario);
+	List<Rol> obtenerRoles(int idUsuario);
 }

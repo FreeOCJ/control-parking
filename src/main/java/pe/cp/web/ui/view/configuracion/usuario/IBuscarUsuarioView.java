@@ -5,4 +5,5 @@ import com.vaadin.navigator.View;
 public interface IBuscarUsuarioView extends View {
 	void init();	
 	void setHandler(IBuscarUsuarioViewHandler handler);
+	void limpiarTabla();
 }

@@ -30,4 +30,14 @@ public class WrapperDomain {
 		
 		return rolView;
 	}
+	
+	public static ClienteView ViewMapper(Cliente cliente){
+		ClienteView clienteView = new ClienteView();
+		clienteView.setId(cliente.getId());
+		clienteView.setNombreComercial(cliente.getNombreComercial());
+		clienteView.setRazonSocial(cliente.getRazonSocial());
+		clienteView.setRuc(cliente.getRuc());
+		
+		return clienteView;
+	}
 }

@@ -1,68 +1,47 @@
-package pe.cp.web.ui.view.configuracion.usuario;
+package pe.cp.web.ui.view.configuracion.cliente;
 
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-
-
-
-
-
-
-
-
-
-
-
 import org.vaadin.dialogs.ConfirmDialog;
 
+import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioController;
 import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.Page;
-import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 @Component
 @Scope("prototype")
 @Theme("controlparking")
 @SuppressWarnings("serial")
-public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUsuarioView {
+public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarClientesView {
 
-	ApplicationContext ac;
+	private CssLayout contenido;
+	private Table tblClientes;
+	private TextField txtFiltroCliente;
 	
 	@Autowired
-	private IBuscarUsuarioViewHandler handler;
-	
-	private CssLayout contenido;
-	private Table tblusuarios;
-	private TextField txtUsuario;
+	private IBuscarClienteHandler handler;
 	
 	@Override
-	public void enter(ViewChangeEvent event) {		
-		handler = new BuscarUsuarioController(this);
-		init();
-		//limpiarTabla();		
+	public void enter(ViewChangeEvent event) {
+		handler = new BuscarClienteController(this);
+		init();		
 	}
-		
+
 	@Override
 	public void init() {
 		setSizeFull();		
@@ -87,27 +66,27 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	    header.setWidth("100%");
 	    areaPrincipal.addComponent(header);
 	        
-	    Label title = new Label("Configuración de Usuarios");
+	    Label title = new Label("Configuración de Clientes");
 	    title.addStyleName("h1");  
-	    Button btnNuevoUsuario = new Button("Nuevo Usuario");
+	    Button btnNuevoUsuario = new Button("Nuevo Cliente");
 	    btnNuevoUsuario.addStyleName("default");
 	    header.addComponent(title); 
 	    header.addComponent(btnNuevoUsuario);
 	    header.setComponentAlignment(btnNuevoUsuario, Alignment.MIDDLE_RIGHT);
 		
         //Crear Tools Busqueda
-	    txtUsuario = new TextField();
-	    txtUsuario.setInputPrompt("Nombres/Apellidos");
-	    txtUsuario.setWidth("300px");               
+	    txtFiltroCliente = new TextField();
+	    txtFiltroCliente.setInputPrompt("Nombre Comercial");
+	    txtFiltroCliente.setWidth("300px");               
         Button btnBuscar = new Button("Buscar");
         btnBuscar.addStyleName("default");
         
         //Crear Tabla
-        tblusuarios = new Table();
-        tblusuarios.setSizeFull();      
-        tblusuarios.setContainerDataSource(handler.setHeaderTable());
-        tblusuarios.setSelectable(true);
-        tblusuarios.addGeneratedColumn("", new ColumnGenerator() {			
+        tblClientes = new Table();
+        tblClientes.setSizeFull();      
+        tblClientes.setContainerDataSource(handler.obtenerHeadersContainer());
+        tblClientes.setSelectable(true);
+        tblClientes.addGeneratedColumn("", new ColumnGenerator() {			
 			@Override
 			public Object generateCell(final Table source, final Object itemId, Object columnId) {
 				HorizontalLayout botonesAccion = new HorizontalLayout();
@@ -115,8 +94,8 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 				Button btnEditar = new Button("Editar");				 
 				btnEditar.addClickListener(new ClickListener() {			 
 			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-			        handler.irEditarUsuario(idUsuario);
+			        Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        handler.irEditarCliente(idCliente);
 			      }
 			    });
 				
@@ -129,7 +108,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 				            public void onClose(ConfirmDialog dialog) {
 				                if (dialog.isConfirmed()) {
 				                    // Confirmed to continue
-				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
 				                	System.out.println("eliminar");
 				                } else {
 				                    // User did not confirm
@@ -144,20 +123,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 				botonesAccion.addComponent(btnEliminar);
 			    return botonesAccion;
 			}
-		} );
-        
-     // Define the properties (columns)
-    /** container.addContainerProperty("name", String.class, "noname");
-     container.addContainerProperty("volume", Double.class, -1.0d);
-
-     // Add some items
-     Object content[][] = {{"jar", 2.0}, {"bottle", 0.75},
-                           {"can", 1.5}};
-     for (Object[] row: content) {
-         Item newItem = container.getItem(container.addItem());
-         newItem.getItemProperty("name").setValue(row[0]);
-         newItem.getItemProperty("volume").setValue(row[1]);
-     }**/
+		} );       
                 
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.setWidth("100%");
@@ -165,45 +131,44 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
         toolbar.setMargin(true);
         toolbar.addStyleName("toolbar");
         areaPrincipal.addComponent(toolbar);
-        areaPrincipal.addComponent(tblusuarios);
+        areaPrincipal.addComponent(tblClientes);
                 
-        toolbar.addComponent(txtUsuario);
+        toolbar.addComponent(txtFiltroCliente);
         toolbar.addComponent(btnBuscar);        
-        toolbar.setComponentAlignment(txtUsuario, Alignment.MIDDLE_LEFT);        
+        toolbar.setComponentAlignment(txtFiltroCliente, Alignment.MIDDLE_LEFT);        
         toolbar.setComponentAlignment(btnBuscar, Alignment.BOTTOM_LEFT);
         toolbar.setExpandRatio(btnBuscar, 1);
         
         btnBuscar.addClickListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {				
-				handler.buscarpornombre(txtUsuario.getValue());			
+				handler.buscar();			
 			}
 		});
         
         btnNuevoUsuario.addClickListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				handler.irAgregarNuevoUsuario();			
+				handler.irAgregarNuevoCliente();			
 			}
 		});      
         
 		return areaPrincipal;
 	}
 
-	
-	public void setHandler(IBuscarUsuarioViewHandler handler) {
-		this.handler = handler;
+	@Override
+	public TextField getFiltroNombreComercial() {
+		return txtFiltroCliente;
+	}
+
+	@Override
+	public Table getResultados() {
+		return tblClientes;
 	}
 
 	@Override
 	public void limpiarTabla() {
-		tblusuarios.removeAllItems();
-		//tblusuarios.setVisibleColumns(new Object[]{});
-		//tblusuarios.setColumnHeaders(new String[]{});		
+		tblClientes.removeAllItems();		
 	}
-	
-	
-
-
 
 }

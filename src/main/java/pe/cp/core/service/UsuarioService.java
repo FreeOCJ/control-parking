@@ -7,13 +7,15 @@ import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioResponse;
 
 public interface UsuarioService {
 	ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request);
 	InsertarUsuarioResponse agregar(InsertarUsuarioRequest request);
 	void eliminar(int id);
 	BuscarUsuarioResponse buscarOr(BuscarUsuarioRequest request);
-	Usuario buscar(int idUsuario);
+	ObtenerUsuarioResponse buscar(ObtenerUsuarioRequest request);
 	Usuario buscarPorLogin(String login);
 	boolean validarNuevoUsuario(Usuario usuario);
 	boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado);

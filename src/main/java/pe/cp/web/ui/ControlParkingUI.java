@@ -11,9 +11,13 @@ import pe.cp.web.ui.view.auditoria.IAuditoriaView;
 import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
+import pe.cp.web.ui.view.configuracion.cliente.BuscarClienteViewImpl;
+import pe.cp.web.ui.view.configuracion.cliente.IBuscarClientesView;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioController;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
+import pe.cp.web.ui.view.configuracion.usuario.EditarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.IBuscarUsuarioView;
+import pe.cp.web.ui.view.configuracion.usuario.IEditarUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.INuevoUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.NuevoUsuarioViewImpl;
 import pe.cp.web.ui.view.login.ILoginView;
@@ -74,17 +78,17 @@ public class ControlParkingUI extends UI {
 		IAuditoriaView auditoriaView = new AuditoriaView();
 		IBuscarUsuarioView buscarUsuarioView = new BuscarUsuarioViewImpl();
 		INuevoUsuarioView nuevoUsuarioView = new NuevoUsuarioViewImpl();
-		BuscarUsuarioController buscarUsuarioController = new BuscarUsuarioController(buscarUsuarioView);		
-		buscarUsuarioView.setHandler(buscarUsuarioController);
-		buscarUsuarioView.init();
+		IEditarUsuarioView editarUsuarioView = new EditarUsuarioViewImpl();
+		IBuscarClientesView buscarClientesView = new BuscarClienteViewImpl();
 		
 		navigator.addView(OPERACIONES, mainView);
 		navigator.addView(REPORTES, reportesView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);
 		navigator.addView(BUSCARUSUARIOS, buscarUsuarioView);
-		navigator.addView(BUSCARCLIENTES, buscarUsuarioView);
+		navigator.addView(BUSCARCLIENTES, buscarClientesView);
 		navigator.addView(NUEVOUSUARIO, nuevoUsuarioView);
+		navigator.addView(EDITARUSUARIO, editarUsuarioView);
 		setNavigator(navigator);
 		navigator.navigateTo("");
     }

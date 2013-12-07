@@ -74,10 +74,4 @@ public class ClienteDaoImpl implements ClienteDao {
 		cliente = jdbcTemplate.queryForObject(sql, args, new ClienteMapper());
 		return cliente;
 	}
-
-	@Override
-	public List<Cliente> buscarOr(ClienteFilter filtro) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

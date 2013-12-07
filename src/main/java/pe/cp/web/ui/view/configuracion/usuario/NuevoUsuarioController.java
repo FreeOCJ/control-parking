@@ -60,7 +60,7 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		request.setApellidos(view.getApellidos().getValue().trim());
 		request.setCargo(view.getCargo().getValue().trim());
 		request.setEmail(view.getCorreoElectronico().getValue().trim());
-		request.setLogin(view.getLogin().getValue().trim());
+		request.setLogin(view.getLogin().getValue().trim().toLowerCase());
 		request.setNombres(view.getNombres().getValue().trim());
 		request.setIdRoles(new ArrayList<Integer>());
 				

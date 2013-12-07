@@ -26,7 +26,7 @@ public class ConfigController implements IConfigViewHandler {
 
 	@Override
 	public void irConfiguracionClientes() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);	
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARCLIENTES);	
 	}
 
 }

@@ -1,32 +1,26 @@
 package pe.cp.web.ui.view.configuracion.usuario;
 
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import pe.cp.web.ui.view.configuracion.ConfigController;
 import pe.cp.web.ui.view.main.SideBar;
 
-import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 
-@Component
-@Scope("prototype")
 @SuppressWarnings("serial")
-@Theme("controlparking")
-public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsuarioView {
-
+public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUsuarioView {
+	
+	private int idUsuario;
 	private CssLayout contenido;
 	private TextField txtLogin;
 	private TextField txtNombres;
@@ -34,20 +28,20 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	private TextField txtCargo;
 	private TextField txtCorreoElectronico;
 	private TwinColSelect selectRoles;
-	private ComboBox cbClientes;
-	
-	private INuevoUsuarioViewHandler handler;
+	private IEditarUsuarioViewHandler handler;
+	private Notification notification = null;	
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		System.out.println("nuevo usuario view");
-		handler = new NuevoUsuarioController(this);
+		handler = new EditarUsuarioController(this);
+		
+		String fragment = UI.getCurrent().getPage().getUriFragment();
+		String id = fragment.substring(fragment.indexOf("/") + 1);
+		idUsuario = Integer.valueOf(id);
+		init();		
+		handler.cargar();
 	}
 
-	public NuevoUsuarioViewImpl(){		
-		init();
-	}
-	
 	@Override
 	public void init() {
 		setSizeFull();		
@@ -62,10 +56,10 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
         contenido.addStyleName("view-content");       
         setExpandRatio(contenido, 1);
         
-        contenido.addComponent(cargarFormularioNuevoUsuario());       
+        contenido.addComponent(cargarFormularioEditarUsuario());  
 	}
 
-	private VerticalLayout cargarFormularioNuevoUsuario(){
+	private VerticalLayout cargarFormularioEditarUsuario(){
 		VerticalLayout areaPrincipal = new VerticalLayout();
 		areaPrincipal.addStyleName("transactions");
 		
@@ -73,7 +67,7 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	    header.setWidth("100%");
 	    areaPrincipal.addComponent(header);
 	        
-	    Label title = new Label("Nuevo Usuario");
+	    Label title = new Label("Editar Usuario");
 	    title.addStyleName("h1");  	    
 	    header.addComponent(title);
 	    
@@ -101,8 +95,7 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 		selectRoles.setLeftColumnCaption("Disponibles");
 		selectRoles.setRightColumnCaption("Asignados");
 		selectRoles.setItemCaptionPropertyId("nombre");	
-		cbClientes = new ComboBox();
-		cbClientes.setCaption("Cliente");
+			
 		
 		HorizontalLayout buttons = new HorizontalLayout();
 		Button btnGuardarUsuario = new Button("Guardar");
@@ -126,7 +119,7 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 		btnGuardarUsuario.addClickListener(new ClickListener() {		
 			@Override
 			public void buttonClick(ClickEvent event) {
-				handler.guardar();				
+				handler.actualizar();				
 			}
 		});
 		
@@ -138,6 +131,11 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 		});
 		
 		return areaPrincipal;
+	}
+	
+	@Override
+	public int getIdUsuario() {
+		return idUsuario;
 	}
 
 	@Override
@@ -168,6 +166,16 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	@Override
 	public TwinColSelect getRoles() {
 		return selectRoles;
+	}
+
+	@Override
+	public Notification getNotification() {
+		return notification;
+	}
+
+	@Override
+	public void setNotification(Notification notification) {
+		this.notification  = notification;		
 	}
 
 }

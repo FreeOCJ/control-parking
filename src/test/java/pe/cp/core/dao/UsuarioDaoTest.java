@@ -75,7 +75,7 @@ public class UsuarioDaoTest {
 	
 	@Test
 	public void probarBuscarUsuarioxId() {
-		Usuario usuario = usuariodao.buscar(6);
+		Usuario usuario = usuariodao.buscar(4);
 		System.out.println("Nombre: " + usuario.getNombres());
 		Assert.assertEquals("Juan",usuario.getNombres());
 	}

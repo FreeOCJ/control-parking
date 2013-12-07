@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.dao.UsuarioDao;
+import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
+import pe.cp.core.service.domain.RolView;
 import pe.cp.core.service.domain.UsuarioView;
 import pe.cp.core.service.domain.WrapperDomain;
 import pe.cp.core.service.messages.ActualizarUsuarioRequest;
@@ -18,6 +20,8 @@ import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioResponse;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
@@ -127,8 +131,25 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public Usuario buscar(int idUsuario) {
-		return usuariodao.buscar(idUsuario);
+	public ObtenerUsuarioResponse buscar(ObtenerUsuarioRequest request) {
+		ObtenerUsuarioResponse response = new ObtenerUsuarioResponse();
+		Usuario usuario = usuariodao.buscar(request.getIdUsuario());
+		
+		if (usuario != null){
+			response.setUsuarioView(WrapperDomain.ViewMapper(usuario));
+			response.setRolesView(new ArrayList<RolView>());
+			for (Rol rol : usuario.getRoles()) {
+				response.getRolesView().add(WrapperDomain.ViewMapper(rol));
+			}
+			
+			response.setMensaje("Se encontró un usuario");
+			response.setResultadoEjecucion(true);
+		}else{
+			response.setMensaje("No se encontró un usuario");
+			response.setResultadoEjecucion(false);
+		}
+		
+		return response;
 	}
 
 	@Override

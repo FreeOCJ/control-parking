@@ -41,10 +41,10 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	}
 
 	@Override
-	public void  buscarpornombre(String nombresApellidos) {
-		System.out.println("buscarpornombre");
+	public void  buscarpornombre(String nombresApellidos) {		
 		BuscarUsuarioRequest request = new BuscarUsuarioRequest();
 		request.setNombresApellidos(nombresApellidos);	
+		view.limpiarTabla();		
 		        
         BuscarUsuarioResponse response = usuarioservice.buscarOr(request);
 		try {

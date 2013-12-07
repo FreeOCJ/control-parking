@@ -10,6 +10,5 @@ public interface ClienteDao {
 	void actualizar(Cliente cliente);
 	void eliminar(int idCliente);
 	List<Cliente> buscar(String nombreComercial);
-	List<Cliente> buscarOr(ClienteFilter filtro);
 	Cliente buscar(int idCliente);
 }

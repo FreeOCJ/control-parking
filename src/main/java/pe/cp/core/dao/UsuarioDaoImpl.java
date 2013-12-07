@@ -2,6 +2,7 @@ package pe.cp.core.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
 
@@ -32,6 +34,9 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	
 	@Autowired
 	private ClienteDao clienteDao;
+	
+	@Autowired
+	private RolDao rolDao;
 	
 	private SimpleJdbcInsert insertarUsuario;	
 	private SimpleJdbcInsert insertarRolPorUsuario;
@@ -48,12 +53,20 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	
 	@Override
 	public void actualizar(Usuario usuario) {
-		jdbcTemplate.update("UPDATE USUARIO SET EMAIL = ?,NOMBRES = ?," +
-							"APELLIDOS = ?,CARGO = ?,LOGIN = ?,PASSWORD = ?," +
-							"IDCLIENTE = ? WHERE IDUSUARIO = ?",
-				            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
-				            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
-				            usuario.getCliente().getId(),usuario.getId());		
+		if (usuario.getCliente() != null && usuario.getCliente().getId() > 0)
+			jdbcTemplate.update("UPDATE USUARIO SET EMAIL = ?,NOMBRES = ?," +
+								"APELLIDOS = ?,CARGO = ?,LOGIN = ?,PASSWORD = ?," +
+								"IDCLIENTE = ? WHERE IDUSUARIO = ?",
+					            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
+					            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
+					            usuario.getCliente().getId(),usuario.getId());
+		else
+			jdbcTemplate.update("UPDATE USUARIO SET EMAIL = ?,NOMBRES = ?," +
+					"APELLIDOS = ?,CARGO = ?,LOGIN = ?,PASSWORD = ? " +
+					"WHERE IDUSUARIO = ?",
+		            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
+		            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
+		            usuario.getId());
 	}	
 
 	@Override
@@ -135,7 +148,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public void removerTodosRoles(int idUsuario) {
-		final String sql = "DELETE FROM usuarioxrol where IDUSUARIO = ?";		
+		final String sql = "DELETE FROM rolxusuario where IDUSUARIO = ?";		
 		jdbcTemplate.update(sql,idUsuario);	
 	}
 
@@ -156,6 +169,25 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		return usuarios;
 	}
 	
+	@Override
+	public List<Rol> obtenerRoles(int idUsuario){
+		List<Rol> roles = new ArrayList<Rol>();
+		final String sql = "SELECT * FROM rolxusuario WHERE IDUSUARIO = :idUsuario";
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("idUsuario", idUsuario);
+		
+		roles = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Rol>(){
+			@Override
+			public Rol mapRow(ResultSet rs, int rowNum) throws SQLException {
+				Rol rol = rolDao.buscar(rs.getInt("IDROL"));								
+				return rol;
+			}
+			
+		} );
+				
+		return roles;
+	}
+	
 	public Usuario userMapRow(ResultSet rs, int n) throws SQLException {
 		Usuario usuario = new Usuario();
 		usuario.setId(rs.getInt("IDUSUARIO"));
@@ -172,6 +204,8 @@ public class UsuarioDaoImpl implements UsuarioDao{
 			usuario.setCliente(cliente);
 		}else
 			usuario.setCliente(null);
+		
+		usuario.setRoles(obtenerRoles(usuario.getId()));
 		return usuario;
 	}
 }
