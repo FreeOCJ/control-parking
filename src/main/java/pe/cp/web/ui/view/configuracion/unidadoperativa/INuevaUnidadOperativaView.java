@@ -1,5 +1,7 @@
 package pe.cp.web.ui.view.configuracion.unidadoperativa;
 
+import org.vaadin.thomas.timefield.TimeField;
+
 import com.vaadin.navigator.View;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Table;
@@ -10,15 +12,17 @@ public interface INuevaUnidadOperativaView extends View {
 	void init();
 	TextField getNombre();
 	TextField getDireccion();
-	TextField getNombreComercialCliente();
+	TextField getNombreComercialCliente();	
 	ComboBox getDepartamento();
 	ComboBox getProvincia();
 	ComboBox getDistrito();
 	TextField getNumeroCajones();
-	TextField getHoraApertura();
-	TextField getHoraCierre();	
+	TimeField getHoraApertura();
+	TimeField getHoraCierre();	
 	Table getCategorias();
 	TwinColSelect getOperadores();
 	TwinColSelect getAprobadores();
 	TwinColSelect getUsuarios();
+	int getIdCliente();
+	int getIdUnidadOperativa();
 }

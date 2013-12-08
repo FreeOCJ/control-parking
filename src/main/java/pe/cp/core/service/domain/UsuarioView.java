@@ -15,6 +15,7 @@ public class UsuarioView {
 	private String password;
 	private Cliente cliente;
 	private List<Rol> roles;
+	private String nombreCompleto;
 	
 	public int getId() {
 		return id;
@@ -78,6 +79,12 @@ public class UsuarioView {
 			}
 		}
 		return rolesAsString;
+	}
+	public String getNombreCompleto() {
+		return nombreCompleto;
+	}
+	public void setNombreCompleto(String nombreCompleto) {
+		this.nombreCompleto = nombreCompleto;
 	}
 	
 	

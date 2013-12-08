@@ -17,4 +17,8 @@ public interface UsuarioDao {
 	void agregarRol(int idUsuario, int idRol);
 	void removerTodosRoles(int idUsuario);
 	List<Rol> obtenerRoles(int idUsuario);
+	List<Usuario> obtenerRevisores(int idUnidadOperativa);
+	List<Usuario> obtenerOperadores(int idUnidadOperativa);
+	List<Usuario> obtenerUsuariosCliente(int idUnidadOperativa);
+	List<Usuario> obtenerUsuariosSistema();
 }

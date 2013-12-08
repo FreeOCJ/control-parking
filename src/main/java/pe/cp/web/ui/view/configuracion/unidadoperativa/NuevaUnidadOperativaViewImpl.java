@@ -3,6 +3,7 @@ package pe.cp.web.ui.view.configuracion.unidadoperativa;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.vaadin.dialogs.ConfirmDialog;
+import org.vaadin.thomas.timefield.TimeField;
 
 import pe.cp.web.ui.view.configuracion.cliente.EditarClienteController;
 import pe.cp.web.ui.view.main.SideBar;
@@ -34,7 +35,6 @@ import com.vaadin.ui.Table.ColumnGenerator;
 @Component
 @Scope("prototype")
 @Theme("controlparking")
-@SuppressWarnings("serial")
 public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements INuevaUnidadOperativaView {
 
 	private CssLayout contenido;
@@ -45,8 +45,8 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	private ComboBox cbProvincia;
 	private ComboBox cbDistrito;
 	private TextField txtNumeroCajones;
-	private TextField txtHoraApertura;
-	private TextField txtHoraCierre;	
+	private TimeField txtHoraApertura;
+	private TimeField txtHoraCierre;	
 	private Table tblCategorias;
 	private TwinColSelect tcsOperadores;
 	private TwinColSelect tcsAprobadores;
@@ -57,6 +57,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	private VerticalLayout tabAprobadores;
 	private VerticalLayout tabUsuarios;
 	private int idUnidadOperativa;
+	private int idCliente;
 	
 	IUnidadOperativaHandler handler;
 	
@@ -64,18 +65,26 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	public void enter(ViewChangeEvent event) {		
 		removeAllComponents();
 		handler = new UnidadOperativaController(this);				
-		
-		String fragment = UI.getCurrent().getPage().getUriFragment();
-		String id = fragment.substring(fragment.indexOf("/") + 1);
-		if (id.contains(""))
-			idUnidadOperativa = 0;
-		else
-			idUnidadOperativa = Integer.valueOf(id);
-		
+		getParams();			
 		init();	
 		handler.cargar();
 	}
 
+	private void getParams(){
+		String fragment = UI.getCurrent().getPage().getUriFragment();
+		int firstSlash = fragment.indexOf('/');
+		int lastSlash = fragment.lastIndexOf('/');
+		
+		String strIdCliente = fragment.substring(firstSlash + 1, lastSlash);
+		String strIdUnidadOperativa = fragment.substring(lastSlash + 1);
+		
+		idCliente = Integer.valueOf(strIdCliente);
+		if (strIdUnidadOperativa.equals(""))
+			idUnidadOperativa = 0;
+		else
+			idUnidadOperativa = Integer.valueOf(strIdUnidadOperativa);
+	}
+	
 	@Override
 	public void init() {
 		setSizeFull();		
@@ -148,10 +157,10 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		txtNumeroCajones = new TextField();
 		txtNumeroCajones.setCaption("Nro. Cajones");
 		txtNumeroCajones.setWidth("50px");
-		txtHoraApertura = new TextField();
+		txtHoraApertura = new TimeField();
 		txtHoraApertura.setCaption("Hora Apertura");
 		txtHoraApertura.setWidth("200px");
-		txtHoraCierre= new TextField();
+		txtHoraCierre= new TimeField();
 		txtHoraCierre.setCaption("Hora Cierre");
 		txtHoraCierre.setWidth("200px");			
 				
@@ -174,13 +183,14 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		formulario.addComponent(cbProvincia);
 		formulario.addComponent(cbDistrito);
 		formulario.addComponent(txtHoraApertura);
-		formulario.addComponent(txtHoraCierre);				
+		formulario.addComponent(txtHoraCierre);	
+		formulario.addComponent(txtNumeroCajones);
 		formulario.addComponent(buttons);
 		
 		btnGuardarUsuario.addClickListener(new ClickListener() {		
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//handler.guardar();				
+				handler.guardar();				
 			}
 		});
 		
@@ -294,7 +304,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsOperadores = new TwinColSelect();
 		tcsOperadores.setLeftColumnCaption("Disponibles");
 		tcsOperadores.setRightColumnCaption("Seleccionados");
-		tcsOperadores.setItemCaptionPropertyId("nombrecompleto");
+		tcsOperadores.setItemCaptionPropertyId("nombreCompleto");
 		
 		tabOperadores.addComponent(tcsOperadores);
 	}
@@ -305,7 +315,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsAprobadores = new TwinColSelect();
 		tcsAprobadores.setLeftColumnCaption("Disponibles");
 		tcsAprobadores.setRightColumnCaption("Seleccionados");
-		tcsAprobadores.setItemCaptionPropertyId("nombrecompleto");
+		tcsAprobadores.setItemCaptionPropertyId("nombreCompleto");
 		
 		tabAprobadores.addComponent(tcsAprobadores);
 	}
@@ -316,7 +326,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsUsuarios = new TwinColSelect();
 		tcsUsuarios.setLeftColumnCaption("Disponibles");
 		tcsUsuarios.setRightColumnCaption("Seleccionados");
-		tcsUsuarios.setItemCaptionPropertyId("nombrecompleto");
+		tcsUsuarios.setItemCaptionPropertyId("nombreCompleto");
 		
 		tabUsuarios.addComponent(tcsUsuarios);
 	}
@@ -372,17 +382,27 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	}
 
 	@Override
-	public TextField getHoraApertura() {
+	public TimeField getHoraApertura() {
 		return txtHoraApertura;
 	}
 
 	@Override
-	public TextField getHoraCierre() {
+	public TimeField getHoraCierre() {
 		return txtHoraCierre;
 	}
 
 	@Override
 	public TextField getNombreComercialCliente() {
 		return txtNombreComercialCliente;
+	}
+
+	@Override
+	public int getIdCliente() {
+		return idCliente;
+	}
+
+	@Override
+	public int getIdUnidadOperativa() {
+		return idUnidadOperativa;
 	}
 }

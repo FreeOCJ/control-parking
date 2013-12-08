@@ -5,6 +5,7 @@ import java.util.List;
 
 public class UnidadOperativa {
 	private int id;
+	private String nombre;
 	private int numeroCajones;
 	private String direccion;
 	private String departamento;
@@ -102,5 +103,11 @@ public class UnidadOperativa {
 	}
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}	
 }

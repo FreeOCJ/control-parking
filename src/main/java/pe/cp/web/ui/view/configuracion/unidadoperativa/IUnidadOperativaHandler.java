@@ -8,4 +8,7 @@ public interface IUnidadOperativaHandler {
 	void cargarProvincias();
 	void cargarDistritos();
 	Container obtenerHeadersCategoriaContainer();
+	void guardar();
+	void actualizar();
+	void cancelar();
 }

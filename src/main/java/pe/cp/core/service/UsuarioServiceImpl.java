@@ -22,6 +22,7 @@ import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
@@ -173,5 +174,19 @@ public class UsuarioServiceImpl implements UsuarioService{
 	public String generarContrasenaTemporal() {
 		// TODO Auto-generated method stub
 		return "123";
+	}
+
+	@Override
+	public ObtenerUsuariosSistemaResponse obtenerUsuariosSistema() {
+		ObtenerUsuariosSistemaResponse response = new ObtenerUsuariosSistemaResponse();
+		List<Usuario> usuarios = usuariodao.obtenerUsuariosSistema();
+		
+		response.setUsuariosView(new ArrayList<UsuarioView>());
+		for (Usuario usuario : usuarios) {
+			response.getUsuariosView().add(WrapperDomain.ViewMapper(usuario));
+		}
+		
+		response.setResultadoEjecucion(true);
+		return response;
 	}
 }

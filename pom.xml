@@ -225,6 +225,12 @@
 	    	<artifactId>confirmdialog</artifactId>
 	    	<version>2.0.4</version>
 	    </dependency>	
+	    
+	    <dependency>
+	    	<groupId>org.vaadin.addons</groupId>
+	    	<artifactId>timefield</artifactId>
+	    	<version>0.9</version>
+	    </dependency>
 	</dependencies>
 
 	<build>

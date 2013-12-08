@@ -3,6 +3,7 @@ package pe.cp.core.dao;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -17,6 +18,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.UnidadOperativa;
+import pe.cp.core.domain.Usuario;
 
 @Repository
 public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
@@ -46,6 +48,8 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 		parameters.put("HORAINICIO", unidadOp.getHoraInicio());
 		parameters.put("HORAFIN", unidadOp.getHoraFin());
 		parameters.put("IDCLIENTE", unidadOp.getCliente().getId());
+		parameters.put("NOMBRE", unidadOp.getNombre());
+		parameters.put("NROCAJONES", unidadOp.getNumeroCajones());
 		parameters.put("ELIMINADO", "F");
 		Number key = insertarUnidadOperativa.executeAndReturnKey(parameters);
 		return key.intValue();
@@ -79,6 +83,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 							throws SQLException {
 						UnidadOperativa unidadOp = new UnidadOperativa();
 						unidadOp.setId(rs.getInt("IDUNIDAD"));
+						unidadOp.setNombre(rs.getString("NOMBRE"));
 						unidadOp.setDireccion(rs.getString("DIRECCION"));
 						unidadOp.setDepartamento(rs.getString("DEPARTAMENTO"));
 						unidadOp.setProvincia(rs.getString("PROVINCIA"));
@@ -91,6 +96,34 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 						return unidadOp;
 					}
 				});
+	}
+
+	@Override
+	public List<UnidadOperativa> obtenerPorCliente(int idCliente) {
+		final String sql = "select * from unidadoperativa where IDCLIENTE = :idCliente";		
+		List<UnidadOperativa> unidades = null;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("idCliente", idCliente);		
+		unidades = namedParameterJdbcTemplate.query(sql, args, new RowMapper<UnidadOperativa>(){
+			@Override
+			public UnidadOperativa mapRow(ResultSet rs, int rowNum) throws SQLException {
+				UnidadOperativa unidadOp = new UnidadOperativa();
+				unidadOp.setId(rs.getInt("IDUNIDAD"));
+				unidadOp.setNombre(rs.getString("NOMBRE"));
+				unidadOp.setDireccion(rs.getString("DIRECCION"));
+				unidadOp.setDepartamento(rs.getString("DEPARTAMENTO"));
+				unidadOp.setProvincia(rs.getString("PROVINCIA"));
+				unidadOp.setDistrito(rs.getString("DISTRITO"));
+				unidadOp.setHoraInicio(rs.getDate("HORAINICIO"));
+				unidadOp.setHoraFin(rs.getDate("HORAFIN"));
+				unidadOp.setNumeroCajones(rs.getInt("NROCAJONES"));
+				unidadOp.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
+										
+				return unidadOp;
+			}
+			
+		} );
+		return unidades;
 	}
 
 }

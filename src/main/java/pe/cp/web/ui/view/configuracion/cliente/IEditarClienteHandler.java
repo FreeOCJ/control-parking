@@ -10,4 +10,5 @@ public interface IEditarClienteHandler {
 	Container obtenerHeadersUnidadesOpContainer();
 	void irAgregarNuevaUnidadOperativa();
 	void irAgregarNuevoUsuario();
+	void irEditarUnidadOperativa(int idUnidadOperativa);
 }

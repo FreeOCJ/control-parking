@@ -9,6 +9,7 @@ import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
 
 public interface UsuarioService {
 	ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request);
@@ -17,6 +18,7 @@ public interface UsuarioService {
 	BuscarUsuarioResponse buscarOr(BuscarUsuarioRequest request);
 	ObtenerUsuarioResponse buscar(ObtenerUsuarioRequest request);
 	Usuario buscarPorLogin(String login);
+	ObtenerUsuariosSistemaResponse obtenerUsuariosSistema();
 	boolean validarNuevoUsuario(Usuario usuario);
 	boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado);
 	String generarContrasenaTemporal();

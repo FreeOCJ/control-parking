@@ -2,6 +2,7 @@ package pe.cp.web.ui.view.configuracion.cliente;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import pe.cp.web.ui.view.main.SideBar;
 
@@ -20,6 +21,7 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 @Component
 @Scope("prototype")
@@ -159,6 +161,46 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 	    tblUnidadesOperativas.setHeight("150px");
 	    tblUnidadesOperativas.setContainerDataSource(handler.obtenerHeadersUnidadesOpContainer());
 	    tblUnidadesOperativas.setSelectable(true);
+	    
+	    tblUnidadesOperativas.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button("Editar");				 
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idUnidadOperativa = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        handler.irEditarUnidadOperativa(idUnidadOperativa);
+			      }
+			    });
+				
+				Button btnEliminar = new Button("Eliminar");				 
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                    // Confirmed to continue
+				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	System.out.println("eliminar");
+				                } else {
+				                    // User did not confirm
+				                	System.out.println("cancelar");
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} );       
+             
 							    
 		areaPrincipal.addComponent(barraTituloUnidadesOp);
 		areaPrincipal.addComponent(tblUnidadesOperativas);

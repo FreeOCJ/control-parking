@@ -1,18 +1,24 @@
-package pe.cp.core.service.messages;
+package pe.cp.core.service.domain;
 
 import java.util.Date;
 
-public class AgregarUnidadOperativaRequest {
+public class UnidadOperativaView {
+	private int id;
 	private String nombre;
 	private String direccion;
 	private String departamento;
 	private String provincia;
 	private String distrito;
-	private Date horaInicio;
+	private Date horaApertura;
 	private Date horaCierre;
-	private int idCliente;
 	private int nroCajones;
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -43,23 +49,17 @@ public class AgregarUnidadOperativaRequest {
 	public void setDistrito(String distrito) {
 		this.distrito = distrito;
 	}
-	public Date getHoraInicio() {
-		return horaInicio;
+	public Date getHoraApertura() {
+		return horaApertura;
 	}
-	public void setHoraInicio(Date horaInicio) {
-		this.horaInicio = horaInicio;
+	public void setHoraApertura(Date horaApertura) {
+		this.horaApertura = horaApertura;
 	}
 	public Date getHoraCierre() {
 		return horaCierre;
 	}
 	public void setHoraCierre(Date horaCierre) {
 		this.horaCierre = horaCierre;
-	}
-	public int getIdCliente() {
-		return idCliente;
-	}
-	public void setIdCliente(int idCliente) {
-		this.idCliente = idCliente;
 	}
 	public int getNroCajones() {
 		return nroCajones;
