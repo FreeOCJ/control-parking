@@ -12,7 +12,13 @@ import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
 import pe.cp.web.ui.view.configuracion.cliente.BuscarClienteViewImpl;
+import pe.cp.web.ui.view.configuracion.cliente.EditarClienteViewImpl;
 import pe.cp.web.ui.view.configuracion.cliente.IBuscarClientesView;
+import pe.cp.web.ui.view.configuracion.cliente.IEditarClienteView;
+import pe.cp.web.ui.view.configuracion.cliente.INuevoClienteView;
+import pe.cp.web.ui.view.configuracion.cliente.NuevoClienteViewImpl;
+import pe.cp.web.ui.view.configuracion.unidadoperativa.INuevaUnidadOperativaView;
+import pe.cp.web.ui.view.configuracion.unidadoperativa.NuevaUnidadOperativaViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioController;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.EditarUsuarioViewImpl;
@@ -56,6 +62,9 @@ public class ControlParkingUI extends UI {
 	public static final String BUSCARCLIENTES = "buscar_clientes";
 	public static final String NUEVOUSUARIO = "nuevo_usuario";
 	public static final String EDITARUSUARIO = "editar_usuario";
+	public static final String NUEVOCLIENTE = "nuevo_cliente";
+	public static final String EDITARCLIENTE = "editar_cliente";
+	public static final String UNIDADOPERATIVA = "unidad_operativa";
 	/*@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
@@ -80,6 +89,9 @@ public class ControlParkingUI extends UI {
 		INuevoUsuarioView nuevoUsuarioView = new NuevoUsuarioViewImpl();
 		IEditarUsuarioView editarUsuarioView = new EditarUsuarioViewImpl();
 		IBuscarClientesView buscarClientesView = new BuscarClienteViewImpl();
+		INuevoClienteView nuevoClienteView = new NuevoClienteViewImpl();
+		IEditarClienteView editarClienteView = new EditarClienteViewImpl();
+		INuevaUnidadOperativaView unidadOperativaView = new NuevaUnidadOperativaViewImpl(); 
 		
 		navigator.addView(OPERACIONES, mainView);
 		navigator.addView(REPORTES, reportesView);
@@ -89,6 +101,9 @@ public class ControlParkingUI extends UI {
 		navigator.addView(BUSCARCLIENTES, buscarClientesView);
 		navigator.addView(NUEVOUSUARIO, nuevoUsuarioView);
 		navigator.addView(EDITARUSUARIO, editarUsuarioView);
+		navigator.addView(NUEVOCLIENTE, nuevoClienteView);
+		navigator.addView(EDITARCLIENTE, editarClienteView);
+		navigator.addView(UNIDADOPERATIVA, unidadOperativaView);
 		setNavigator(navigator);
 		navigator.navigateTo("");
     }

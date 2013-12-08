@@ -38,6 +38,7 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		removeAllComponents();
 		handler = new BuscarClienteController(this);
 		init();		
 	}

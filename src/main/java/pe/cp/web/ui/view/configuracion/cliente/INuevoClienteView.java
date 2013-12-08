@@ -1,6 +1,7 @@
 package pe.cp.web.ui.view.configuracion.cliente;
 
 import com.vaadin.navigator.View;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 
 public interface INuevoClienteView extends View{
@@ -8,4 +9,6 @@ public interface INuevoClienteView extends View{
 	TextField getRazonSocial();
 	TextField getRuc();
 	TextField getNombreComercial();
+	Notification getNotification();
+	void setNotification(Notification notification);
 }

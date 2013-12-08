@@ -60,12 +60,12 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 
 	@Override
 	public void irAgregarNuevoCliente() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.NUEVOUSUARIO);	
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.NUEVOCLIENTE);	
 	}
 
 	@Override
 	public void irEditarCliente(int idCliente) {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARUSUARIO + "/" + String.valueOf(idCliente));
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARCLIENTE + "/" + String.valueOf(idCliente));
 	}
 
 	@Override

@@ -1,7 +1,10 @@
 package pe.cp.core.service;
 
+import org.springframework.stereotype.Service;
+
 import pe.cp.core.domain.UnidadOperativa;
 
+@Service
 public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 
 	@Override

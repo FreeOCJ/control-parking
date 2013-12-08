@@ -17,6 +17,8 @@ import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
 import pe.cp.core.service.messages.InsertarClienteRequest;
 import pe.cp.core.service.messages.InsertarClienteResponse;
+import pe.cp.core.service.messages.ObtenerClienteRequest;
+import pe.cp.core.service.messages.ObtenerClienteResponse;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
@@ -36,6 +38,7 @@ public class ClienteServiceImpl implements ClienteService {
 		if (validarNuevoCliente(cliente)){
 			Integer idCliente = cdao.agregar(cliente);
 			if (idCliente != null){
+				response.setIdCliente(idCliente);
 				response.setMensaje("Se insertó al usuario exitosamente");
 				response.setResultadoEjecucion(true);
 			}						
@@ -101,13 +104,29 @@ public class ClienteServiceImpl implements ClienteService {
 	@Override
 	public boolean validarNuevoCliente(Cliente cliente) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean validarModificarCliente(Cliente cliente, Cliente clienteMod) {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
+	}
+
+	@Override
+	public ObtenerClienteResponse obtenerPorId(ObtenerClienteRequest request) {
+		ObtenerClienteResponse response = new ObtenerClienteResponse();
+		Cliente cliente = cdao.buscar(request.getIdCliente());
+		
+		if (cliente != null){
+			response.setResultadoEjecucion(true);
+			response.setClienteView(WrapperDomain.ViewMapper(cliente));
+		}else{
+			response.setResultadoEjecucion(false);
+			response.setMensaje("No se encontro un cliente con el ID dado");
+		}
+		
+		return response;
 	}
 
 }
