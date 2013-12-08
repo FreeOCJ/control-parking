@@ -9,6 +9,8 @@ import pe.cp.web.ui.view.main.SideBar;
 
 import com.google.gwt.event.logical.shared.AttachEvent.Handler;
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
@@ -24,6 +26,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Table.ColumnGenerator;
@@ -53,6 +56,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	private VerticalLayout tabOperadores;
 	private VerticalLayout tabAprobadores;
 	private VerticalLayout tabUsuarios;
+	private int idUnidadOperativa;
 	
 	IUnidadOperativaHandler handler;
 	
@@ -60,8 +64,16 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	public void enter(ViewChangeEvent event) {		
 		removeAllComponents();
 		handler = new UnidadOperativaController(this);				
-				
-		init();					
+		
+		String fragment = UI.getCurrent().getPage().getUriFragment();
+		String id = fragment.substring(fragment.indexOf("/") + 1);
+		if (id.contains(""))
+			idUnidadOperativa = 0;
+		else
+			idUnidadOperativa = Integer.valueOf(id);
+		
+		init();	
+		handler.cargar();
 	}
 
 	@Override
@@ -123,13 +135,16 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		txtDireccion.setWidth("300px");
 		cbDepartamento = new ComboBox();
 		cbDepartamento.setCaption("Departamento");
-		cbDepartamento.setWidth("300px");	
+		cbDepartamento.setWidth("300px");
+		cbDepartamento.setItemCaptionMode(ItemCaptionMode.ID);
 		cbProvincia = new ComboBox();
 		cbProvincia.setCaption("Provincia");
-		cbProvincia.setWidth("300px");	
+		cbProvincia.setWidth("300px");
+		cbProvincia.setItemCaptionMode(ItemCaptionMode.ID);
 		cbDistrito = new ComboBox();
 		cbDistrito.setCaption("Distrito");
 		cbDistrito.setWidth("300px");	
+		cbDistrito.setItemCaptionMode(ItemCaptionMode.ID);
 		txtNumeroCajones = new TextField();
 		txtNumeroCajones.setCaption("Nro. Cajones");
 		txtNumeroCajones.setWidth("50px");
@@ -173,6 +188,20 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 			@Override
 			public void buttonClick(ClickEvent event) {
 				//handler.cancelar();				
+			}
+		});
+		
+		cbDepartamento.addValueChangeListener( new ValueChangeListener() {			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				handler.cargarProvincias();				
+			}
+		});
+		
+		cbProvincia.addValueChangeListener(new ValueChangeListener() {			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				handler.cargarDistritos();				
 			}
 		});
 		
