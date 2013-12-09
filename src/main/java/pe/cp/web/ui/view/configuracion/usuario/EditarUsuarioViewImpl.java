@@ -33,6 +33,7 @@ public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUs
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		this.removeAllComponents();
 		handler = new EditarUsuarioController(this);
 		
 		String fragment = UI.getCurrent().getPage().getUriFragment();

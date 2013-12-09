@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.util.BeanContainer;
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
@@ -38,6 +39,7 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 	@Autowired
 	private RolService rolservice;
 	
+	
 	public NuevoUsuarioController(INuevoUsuarioView view){
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
 		usuarioservice = ac.getBean(UsuarioService.class);
@@ -52,9 +54,79 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);
 	}
 
+	private boolean Validar(){
+		
+		boolean Valida = true;
+		StringBuilder sb = new StringBuilder();
+		
+		if(view.getLogin().getValue().isEmpty()){
+			
+					
+			sb.append(System.lineSeparator());
+			sb.append(view.getLogin().getCaption());
+			Valida = false;
+		}
+		
+		if(view.getNombres().getValue().isEmpty()){
+			
+			sb.append(System.lineSeparator());
+			sb.append(view.getNombres().getCaption());
+			Valida = false;
+		}
+		
+		if(view.getApellidos().getValue().isEmpty()){
+			
+			sb.append(System.lineSeparator());
+			sb.append(view.getApellidos().getCaption());
+			Valida = false;	
+			
+		}
+		
+		if(view.getCargo().getValue().isEmpty()){
+			
+			sb.append(System.lineSeparator());
+			sb.append(view.getCargo().getCaption());
+			Valida = false;	
+			
+		}
+		
+		
+		if (view.getCorreoElectronico().getValue().isEmpty()) {
+				
+			sb.append(System.lineSeparator());
+			sb.append(view.getCorreoElectronico().getCaption());
+			Valida = false;
+			
+		}
+		
+		if (Valida){
+			
+			EmailValidator VEMail = new EmailValidator("El correo electrónico no es válido");
+			
+			view.getCorreoElectronico().addValidator(VEMail);
+			
+			if (!view.getCorreoElectronico().isValid()){
+				Notification.show("Correo no válido.", Notification.Type.WARNING_MESSAGE);
+				Valida = false;
+				}
+			
+			
+			}
+		else {			
+			sb.insert(0, "Los siguientes campos son obligatorios: ");
+			Notification.show(sb.toString(), Notification.Type.WARNING_MESSAGE);
+			
+		}
+		
+		
+		return Valida;
+	}
+	
 	@Override
 	public void guardar() {
 		Notification notification = null;		
+		
+		if (!Validar()) {return;};
 		
 		InsertarUsuarioRequest request = new InsertarUsuarioRequest();
 		request.setApellidos(view.getApellidos().getValue().trim());
@@ -73,6 +145,7 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		InsertarUsuarioResponse response = usuarioservice.agregar(request);
 		if (response.isResultadoEjecucion()){
 			UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);
+			Notification.show("Usuario Guardado");
 		}else{
 			notification = new Notification(response.getMensaje(),Type.WARNING_MESSAGE);
 			notification.setPosition(Position.TOP_CENTER);

@@ -40,13 +40,18 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		this.removeAllComponents();
+		init();
+		
 		System.out.println("nuevo usuario view");
 		handler = new NuevoUsuarioController(this);
+		
+		
 	}
 
-	public NuevoUsuarioViewImpl(){		
-		init();
-	}
+	//public NuevoUsuarioViewImpl(){		
+		
+	//}
 	
 	@Override
 	public void init() {

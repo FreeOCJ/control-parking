@@ -57,7 +57,8 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	private TextField txtUsuario;
 	
 	@Override
-	public void enter(ViewChangeEvent event) {		
+	public void enter(ViewChangeEvent event) {	
+		this.removeAllComponents();
 		handler = new BuscarUsuarioController(this);
 		init();
 		//limpiarTabla();		
