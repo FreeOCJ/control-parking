@@ -1,5 +1,7 @@
 package pe.cp.web.ui.view.login;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -42,6 +44,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		
 	}
 	
 	public LoginViewImpl(){
@@ -93,7 +96,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
         txtUsername.focus();
         fields.addComponent(txtUsername);
         
-        txtPassword = new PasswordField("Contrase�a: ");
+        txtPassword = new PasswordField("Contraseña: ");
         txtPassword.setWidth("100%");
         fields.addComponent(txtPassword);
         
@@ -145,7 +148,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 
 	@Override
 	public void afterSuccessfulLogin() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.MAIN);
 	}
 
 	@Override

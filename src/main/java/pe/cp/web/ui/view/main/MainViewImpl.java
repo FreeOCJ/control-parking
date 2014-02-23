@@ -1,6 +1,11 @@
 package pe.cp.web.ui.view.main;
 
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 
 import pe.cp.web.ui.view.auditoria.AuditoriaView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
@@ -24,8 +29,10 @@ public class MainViewImpl extends HorizontalLayout implements IMain {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
+		Subject currentUser = SecurityUtils.getSubject();
+		Logger.getAnonymousLogger().log(Level.INFO, "Entering main");
+		//Logger.getAnonymousLogger().log(Level.INFO, currentUser.getPrincipal().toString() + " " + currentUser.getSession().getAttribute("nombre_completo"));
+		//Logger.getAnonymousLogger().log(Level.INFO, String.valueOf(currentUser.hasRole("ADMINISTRADOR")));
 	}
 	
 	@Override

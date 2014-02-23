@@ -5,4 +5,5 @@ public interface IEditarUsuarioViewHandler {
 	void cargarRoles();
 	void actualizar();
 	void cancelar();
+	void validarUsuario();
 }

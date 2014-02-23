@@ -7,9 +7,16 @@ import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioPorClienteRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioPorClienteResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioPorUnidadOpRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioPorUnidadOpResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuariosSistemaRequest;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
+import pe.cp.core.service.messages.ValidarDatosUsuarioRequest;
+import pe.cp.core.service.messages.ValidarDatosUsuarioResponse;
 
 public interface UsuarioService {
 	ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request);
@@ -18,7 +25,10 @@ public interface UsuarioService {
 	BuscarUsuarioResponse buscarOr(BuscarUsuarioRequest request);
 	ObtenerUsuarioResponse buscar(ObtenerUsuarioRequest request);
 	Usuario buscarPorLogin(String login);
-	ObtenerUsuariosSistemaResponse obtenerUsuariosSistema();
+	ObtenerUsuariosSistemaResponse obtenerUsuariosSistema(ObtenerUsuariosSistemaRequest request);
+	ObtenerUsuarioPorClienteResponse obtenerUsuariosPorCliente(ObtenerUsuarioPorClienteRequest request);
+	ObtenerUsuarioPorUnidadOpResponse obtenerUsuariosPorUnidadOP(ObtenerUsuarioPorUnidadOpRequest request);
+	ValidarDatosUsuarioResponse validarDatosUsuario(ValidarDatosUsuarioRequest request);
 	boolean validarNuevoUsuario(Usuario usuario);
 	boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado);
 	String generarContrasenaTemporal();

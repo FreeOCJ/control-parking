@@ -8,6 +8,7 @@ import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -141,6 +142,49 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		tblUsuarios.setContainerDataSource(handler.obtenerHeadersUsuariosContainer());
 		tblUsuarios.setSelectable(true);
 		
+		tblUsuarios.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        handler.irEditarUsuario(idUsuario);
+			      }
+			    });
+				
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                    // Confirmed to continue
+				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	System.out.println("eliminar");
+				                } else {
+				                    // User did not confirm
+				                	System.out.println("cancelar");
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} ); 
+	    
+		tblUsuarios.setVisibleColumns((Object[]) EditarClienteController.obtenerColumnasVisiblesUsuario());
+		
 		areaPrincipal.addComponent(barraTituloUsuarios);
 		areaPrincipal.addComponent(tblUsuarios);
 		
@@ -167,7 +211,8 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 			public Object generateCell(final Table source, final Object itemId, Object columnId) {
 				HorizontalLayout botonesAccion = new HorizontalLayout();
 				
-				Button btnEditar = new Button("Editar");				 
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
 				btnEditar.addClickListener(new ClickListener() {			 
 			      @Override public void buttonClick(ClickEvent event) {			    	  
 			        Integer idUnidadOperativa = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
@@ -175,7 +220,8 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 			      }
 			    });
 				
-				Button btnEliminar = new Button("Eliminar");				 
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
 				btnEliminar.addClickListener(new ClickListener() {			 
 			      @Override 
 			      public void buttonClick(ClickEvent event) {				    	  
@@ -199,17 +245,24 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 				botonesAccion.addComponent(btnEliminar);
 			    return botonesAccion;
 			}
-		} );       
-             
-							    
+		} ); 
+	    
+	    tblUnidadesOperativas.setVisibleColumns((Object[]) EditarClienteController.obtenerColumnasVisiblesUnidadOp());
+             			    
 		areaPrincipal.addComponent(barraTituloUnidadesOp);
 		areaPrincipal.addComponent(tblUnidadesOperativas);
 		
 		btnAgregarUnidadOp.addClickListener(new ClickListener() {
-			
 			@Override
 			public void buttonClick(ClickEvent event) {
 				handler.irAgregarNuevaUnidadOperativa();				
+			}
+		});
+		
+		btnAgregarUsuario.addClickListener(new ClickListener() {	
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.irAgregarNuevoUsuario();				
 			}
 		});
 		

@@ -1,18 +1,24 @@
 package pe.cp.web.ui.view.configuracion.cliente;
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
 import pe.cp.core.service.domain.ClienteView;
 import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
 import pe.cp.web.ui.ControlParkingUI;
+import pe.cp.web.ui.NavegacionUtil;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -26,6 +32,12 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 	private ApplicationContext ac;
 	private IBuscarClientesView view;
 	private Container container;
+	
+	private final static String CODIGO_CLIENTE = "Código";
+	private final static String NOMBRE_CLIENTE = "Nombre Comercial";
+	private final static String RAZONSOCIAL_CLIENTE = "Razón Social";
+	private final static String RUC_CLIENTE = "RUC";
+	private final static String BOTONES_CLIENTE = "";
 	
 	@Autowired
 	private ClienteService clienteService;
@@ -54,18 +66,18 @@ public class BuscarClienteController implements IBuscarClienteHandler {
         		 newItem.getItemProperty("RUC").setValue(clienteView.getRuc());        		 
         	}   			
 		}else{
-			
+			//TODO
 		}		
 	}
 
 	@Override
 	public void irAgregarNuevoCliente() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.NUEVOCLIENTE);	
+		NavegacionUtil.irAgregarCliente();	
 	}
 
 	@Override
 	public void irEditarCliente(int idCliente) {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARCLIENTE + "/" + String.valueOf(idCliente));
+		NavegacionUtil.irEditarCliente(idCliente);
 	}
 
 	@Override
@@ -73,15 +85,35 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 		// TODO Auto-generated method stub
 
 	}
-
+	
+	public static String[] obtenerColumnasVisiblesCliente(){
+		String[] visibles = {NOMBRE_CLIENTE, RAZONSOCIAL_CLIENTE, RUC_CLIENTE, BOTONES_CLIENTE};
+		return visibles;
+	}
+	
 	@Override
 	public Container obtenerHeadersContainer() {
 		container = new IndexedContainer(); 
-		container.addContainerProperty("Código",Integer.class, 0);
-        container.addContainerProperty("Nombre Comercial",String.class, "");
-        container.addContainerProperty("Razón Social",String.class, "");
-        container.addContainerProperty("RUC",String.class, "");        
+		container.addContainerProperty(CODIGO_CLIENTE,Integer.class, 0);
+        container.addContainerProperty(NOMBRE_CLIENTE,String.class, "");
+        container.addContainerProperty(RAZONSOCIAL_CLIENTE,String.class, "");
+        container.addContainerProperty(RUC_CLIENTE,String.class, "");        
 		return container;
+	}
+
+	@Override
+	public void validarUsuario() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (!currentUser.isAuthenticated()) {
+			Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no autenticado, redireccionando a login");
+			UI.getCurrent().getNavigator().navigateTo("");
+		}else{
+			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
+				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
+			}
+		}
 	}
 
 }

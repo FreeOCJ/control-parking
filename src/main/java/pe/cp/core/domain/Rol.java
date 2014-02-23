@@ -1,6 +1,11 @@
 package pe.cp.core.domain;
 
 public class Rol {
+	public static String ADMINISTRADOR = "ADMINISTRADOR";
+	public static String CLIENTE = "CLIENTE";
+	public static String OPERADOR = "OPERADOR";
+	public static String APROBADOR = "APROBADOR";
+	
 	private int id;
 	private String descripcion;
 	private boolean eliminado;

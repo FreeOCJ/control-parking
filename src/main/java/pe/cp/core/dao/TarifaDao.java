@@ -1,5 +1,7 @@
 package pe.cp.core.dao;
 
+import java.util.List;
+
 import pe.cp.core.domain.Tarifa;
 
 public interface TarifaDao {
@@ -7,4 +9,7 @@ public interface TarifaDao {
 	void actualizar(Tarifa tarifa);
 	void eliminar(int idTarifa);
 	Tarifa buscar(int idTarifa);
+	List<Tarifa> obtenerTarifas(int idUnidadOperativa, String categoria);
+	void eliminarPorCategoria(int idUnidadOperativa, String categoria);
+	List<String> obtenerCategorias(int unidadOperativa);
 }

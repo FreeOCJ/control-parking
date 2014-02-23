@@ -21,6 +21,7 @@ import com.vaadin.ui.Button.ClickListener;
 public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUsuarioView {
 	
 	private int idUsuario;
+	private int idCliente;
 	private CssLayout contenido;
 	private TextField txtLogin;
 	private TextField txtNombres;
@@ -37,8 +38,15 @@ public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUs
 		handler = new EditarUsuarioController(this);
 		
 		String fragment = UI.getCurrent().getPage().getUriFragment();
-		String id = fragment.substring(fragment.indexOf("/") + 1);
-		idUsuario = Integer.valueOf(id);
+		int firstSlash = fragment.indexOf('/');
+		int lastSlash = fragment.lastIndexOf('/');
+		
+		String strIdCliente = fragment.substring(firstSlash + 1, lastSlash);
+		String strIdUsuario = fragment.substring(lastSlash + 1);
+		
+		idCliente = Integer.valueOf(strIdCliente);
+		idUsuario = Integer.valueOf(strIdUsuario);
+		
 		init();		
 		handler.cargar();
 	}
@@ -177,6 +185,11 @@ public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUs
 	@Override
 	public void setNotification(Notification notification) {
 		this.notification  = notification;		
+	}
+
+	@Override
+	public int getIdCliente() {
+		return idCliente;
 	}
 
 }

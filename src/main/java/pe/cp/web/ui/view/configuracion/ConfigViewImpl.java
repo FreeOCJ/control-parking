@@ -1,5 +1,10 @@
 package pe.cp.web.ui.view.configuracion;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -12,6 +17,7 @@ import pe.cp.web.ui.view.main.SideBar;
 import pe.cp.web.ui.view.operaciones.OperacionesComponent;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.ViewChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -36,6 +42,7 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		handler = new ConfigController(this);
+		handler.validarUsuario();
 	}
 
 	public ConfigViewImpl(){		
@@ -44,7 +51,7 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	
 	@Override
 	public void init() {		
-        System.out.println("init configuracion");
+		Logger.getAnonymousLogger().log(Level.INFO, "Init ConfigViewImpl");
 		construirBase();
 	}
 	
@@ -105,4 +112,5 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	public void setHandler(IConfigViewHandler handler) {
 		this.handler = handler;		
 	}
+
 }

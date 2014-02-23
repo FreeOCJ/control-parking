@@ -3,6 +3,12 @@ package pe.cp.core.domain;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Operacion representa a la operacion diaria de una unidad operativa.
+ * La carga se realiza de manera lazy loading.
+ * @author juan
+ *
+ */
 public class Operacion {
 	private int id;
 	private Date fechaTransaccion;
@@ -24,6 +30,9 @@ public class Operacion {
 	private List<DetallePorOperacion> detalles;
 	private List<OperacionPorTarifa> operacionesTarifa;
 	private boolean eliminado;
+	private int idUnidadOperativa;
+	private String auxNombreUnidadOperativa;
+	private String auxNombreCliente;
 	private UnidadOperativa unidadoperativa;
 	
 	public int getId() {
@@ -160,6 +169,23 @@ public class Operacion {
 	}
 	public void setUnidadoperativa(UnidadOperativa unidadoperativa) {
 		this.unidadoperativa = unidadoperativa;
-	}		
-	
+	}
+	public int getIdUnidadOperativa() {
+		return idUnidadOperativa;
+	}
+	public void setIdUnidadOperativa(int idUnidadOperativa) {
+		this.idUnidadOperativa = idUnidadOperativa;
+	}
+	public String getAuxNombreUnidadOperativa() {
+		return auxNombreUnidadOperativa;
+	}
+	public void setAuxNombreUnidadOperativa(String auxNombreUnidadOperativa) {
+		this.auxNombreUnidadOperativa = auxNombreUnidadOperativa;
+	}
+	public String getAuxNombreCliente() {
+		return auxNombreCliente;
+	}
+	public void setAuxNombreCliente(String auxNombreCliente) {
+		this.auxNombreCliente = auxNombreCliente;
+	}
 }

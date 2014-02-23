@@ -1,30 +1,12 @@
 package pe.cp.web.ui.view.main;
 
-import com.vaadin.annotations.Theme;
-import com.vaadin.annotations.Title;
-import com.vaadin.event.ShortcutAction.KeyCode;
-import com.vaadin.event.ShortcutListener;
-import com.vaadin.event.Transferable;
-import com.vaadin.event.dd.DragAndDropEvent;
-import com.vaadin.event.dd.DropHandler;
-import com.vaadin.event.dd.acceptcriteria.AcceptCriterion;
-import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.View;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.server.Page;
+
 import com.vaadin.server.ThemeResource;
-import com.vaadin.server.VaadinRequest;
 import com.vaadin.shared.ui.label.ContentMode;
-import com.vaadin.ui.AbstractSelect.AcceptItem;
-import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Component;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.DragAndDropWrapper;
-import com.vaadin.ui.DragAndDropWrapper.DragStartMode;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -32,18 +14,19 @@ import com.vaadin.ui.MenuBar.Command;
 import com.vaadin.ui.MenuBar.MenuItem;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 
 @SuppressWarnings("serial")
-public class SideBar extends VerticalLayout {
+public class SideBar extends VerticalLayout implements ISideBarView {
 	
 	CssLayout menu = new CssLayout();
+	ISideBarHandler handler;
+	Label userName;
 	
 	public SideBar(){
+		handler = new SideBarController(this);
+		
 		addStyleName("sidebar");
         setWidth(null);
         setHeight("100%");
@@ -74,7 +57,7 @@ public class SideBar extends VerticalLayout {
                 Image profilePic = new Image(null, new ThemeResource("img/profile-pic.png"));
                 profilePic.setWidth("34px");
                 addComponent(profilePic);
-                Label userName = new Label("Omar Barney");
+                userName = new Label("");
                 userName.setSizeUndefined();
                 addComponent(userName);
 
@@ -102,7 +85,7 @@ public class SideBar extends VerticalLayout {
                 exit.addClickListener(new ClickListener() {
                     @Override
                     public void buttonClick(ClickEvent event) {
-                        
+                        handler.logout();
                     }
                 });
             }
@@ -131,5 +114,12 @@ public class SideBar extends VerticalLayout {
             menu.addStyleName("menu");
             menu.setHeight("100%");
         }
+        
+        handler.cargarDatos();
+	}
+
+	@Override
+	public Label getLabelUsuario() {
+		return this.userName;
 	}	
 }

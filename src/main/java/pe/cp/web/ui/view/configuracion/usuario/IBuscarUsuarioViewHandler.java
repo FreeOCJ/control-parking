@@ -8,4 +8,5 @@ public interface IBuscarUsuarioViewHandler {
 	void  buscarpornombre(String nombre);
 	void irAgregarNuevoUsuario();
 	void irEditarUsuario(int idUsuario);
+	void validarUsuario();
 }

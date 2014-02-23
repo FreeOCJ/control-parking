@@ -6,4 +6,6 @@ public interface ITarifaHandler {
 	void guardar();
 	void cancelar();
 	void cargar();
+	void validarUsuario();
+	boolean validar();
 }

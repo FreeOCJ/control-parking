@@ -31,18 +31,18 @@ public class UsuarioDaoTest {
 		clienteDao = ac.getBean(ClienteDao.class);
 	}
 	
-/*	@Test
+	@Test
 	public void probarAgregarNuevoUsuario(){
-		Cliente cliente = clienteDao.buscar(2);
+		//Cliente cliente = clienteDao.buscar(2);
 		
 		Usuario usuario = new Usuario();
 		usuario.setApellidos("Espinoza Lozada");
 		usuario.setCargo("Soporte");
-		usuario.setCliente(cliente);
+		usuario.setCliente(null);
 		usuario.setEmail("oomares@gmail.com");
 		usuario.setLogin("oespinoza");
 		usuario.setNombres("Omar Dante");
-		usuario.setPassword("123456789");		
+		usuario.setPassword("12345");		
 		
 		Integer idUsuario = usuariodao.agregar(usuario);
 		Assert.assertNotNull(idUsuario);
@@ -52,12 +52,12 @@ public class UsuarioDaoTest {
 		Assert.assertEquals("Soporte", nuevoUsuario.getCargo());
 		Assert.assertEquals("oomares@gmail.com", nuevoUsuario.getEmail());
 		Assert.assertEquals("Omar Dante", nuevoUsuario.getNombres());
-		Assert.assertEquals("123456789", nuevoUsuario.getPassword());		
+		Assert.assertEquals("12345", nuevoUsuario.getPassword());		
 		Assert.assertEquals(idUsuario.toString(), String.valueOf(nuevoUsuario.getId()));
-		Assert.assertEquals(String.valueOf(cliente.getId()), String.valueOf(nuevoUsuario.getCliente().getId()));
+		//Assert.assertEquals(String.valueOf(cliente.getId()), String.valueOf(nuevoUsuario.getCliente().getId()));
 		
 		return;
-	}*/
+	}
 	
 	/*@Test
 	public void probarAgregarRolPorUsuario(){
@@ -71,7 +71,7 @@ public class UsuarioDaoTest {
 		List<Usuario> usuarios = usuariodao.buscar("Juan");
 		System.out.println("usuarios: " + usuarios.size());
 		Assert.assertEquals(1,usuarios.size());
-	}*/
+	}
 	
 	@Test
 	public void probarBuscarUsuarioxId() {
@@ -80,7 +80,7 @@ public class UsuarioDaoTest {
 		Assert.assertEquals("Juan",usuario.getNombres());
 	}
 	
-	/*@Test
+	@Test
 	public void probarEliminarUsuarioxId() {
 		usuariodao.eliminar(3);
 		System.out.println("eliminado");

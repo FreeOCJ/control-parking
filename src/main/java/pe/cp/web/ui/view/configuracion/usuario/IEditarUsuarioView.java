@@ -9,6 +9,7 @@ public interface IEditarUsuarioView extends View {
 	void init();	
 	
 	int getIdUsuario();
+	int getIdCliente();
 	TextField getLogin();
 	TextField getNombres();
 	TextField getApellidos();

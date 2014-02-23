@@ -19,6 +19,7 @@ public interface UsuarioDao {
 	List<Rol> obtenerRoles(int idUsuario);
 	List<Usuario> obtenerRevisores(int idUnidadOperativa);
 	List<Usuario> obtenerOperadores(int idUnidadOperativa);
-	List<Usuario> obtenerUsuariosCliente(int idUnidadOperativa);
-	List<Usuario> obtenerUsuariosSistema();
+	List<Usuario> obtenerUsuariosPorUnidadOperativa(int idUnidadOperativa, String rol);
+	List<Usuario> obtenerUsuariosPorCliente(int idCliente);
+	List<Usuario> obtenerUsuariosSistema(String rol);
 }

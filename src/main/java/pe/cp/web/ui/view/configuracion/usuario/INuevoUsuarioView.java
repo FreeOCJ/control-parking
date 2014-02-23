@@ -13,4 +13,5 @@ public interface INuevoUsuarioView extends View {
 	TextField getCargo();
 	TextField getCorreoElectronico();
 	TwinColSelect getRoles();
+	int getIdCliente();
 }

@@ -21,7 +21,7 @@ public class TarifaMapper implements RowMapper<Tarifa> {
 		tarifa.setId(rs.getInt("IDTARIFA"));
 		tarifa.setMonto(rs.getDouble("MONTOTARIFA"));	
 		tarifa.setCategoria(rs.getString("CATEGORIA"));
-		tarifa.setUnidadOperativa(uoDao.buscar(rs.getInt("IDUNIDADOP")));
+		tarifa.setIdUnidadOperativa(rs.getInt("IDUNIDADOP"));
 		tarifa.setEliminado(rs.getString("ELIMINADO").equals("F") ? false : true);
 		return tarifa;
 	}

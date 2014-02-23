@@ -11,4 +11,9 @@ public interface IUnidadOperativaHandler {
 	void guardar();
 	void actualizar();
 	void cancelar();
+	void validarUsuario();
+	void guardarUsuarios();
+	void guardarAprobadores();
+	void guardarOperadores();
+	void irMantenimientoTarifa(String categoria);
 }

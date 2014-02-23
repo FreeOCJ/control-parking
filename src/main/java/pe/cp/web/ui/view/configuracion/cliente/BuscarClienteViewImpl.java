@@ -10,6 +10,7 @@ import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
@@ -84,7 +85,7 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
         
         //Crear Tabla
         tblClientes = new Table();
-        tblClientes.setSizeFull();      
+        tblClientes.setSizeFull();    
         tblClientes.setContainerDataSource(handler.obtenerHeadersContainer());
         tblClientes.setSelectable(true);
         tblClientes.addGeneratedColumn("", new ColumnGenerator() {			
@@ -92,7 +93,8 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 			public Object generateCell(final Table source, final Object itemId, Object columnId) {
 				HorizontalLayout botonesAccion = new HorizontalLayout();
 				
-				Button btnEditar = new Button("Editar");				 
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
 				btnEditar.addClickListener(new ClickListener() {			 
 			      @Override public void buttonClick(ClickEvent event) {			    	  
 			        Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
@@ -100,7 +102,8 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 			      }
 			    });
 				
-				Button btnEliminar = new Button("Eliminar");				 
+				Button btnEliminar = new Button();
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
 				btnEliminar.addClickListener(new ClickListener() {			 
 			      @Override 
 			      public void buttonClick(ClickEvent event) {				    	  
@@ -124,7 +127,8 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 				botonesAccion.addComponent(btnEliminar);
 			    return botonesAccion;
 			}
-		} );       
+		} ); 
+        tblClientes.setVisibleColumns((Object []) BuscarClienteController.obtenerColumnasVisiblesCliente());
                 
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.setWidth("100%");

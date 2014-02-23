@@ -18,6 +18,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.TwinColSelect;
+import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
@@ -35,18 +36,24 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	private TextField txtCorreoElectronico;
 	private TwinColSelect selectRoles;
 	private ComboBox cbClientes;
+	private int idCliente;
 	
 	private INuevoUsuarioViewHandler handler;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
 		this.removeAllComponents();
+		
+		String fragment = UI.getCurrent().getPage().getUriFragment();
+		String id = fragment.substring(fragment.indexOf("/") + 1);
+		try{
+			idCliente = Integer.valueOf(id);
+		}catch(Exception e){
+			idCliente = 0;
+		}
+		
 		init();
-		
-		System.out.println("nuevo usuario view");
 		handler = new NuevoUsuarioController(this);
-		
-		
 	}
 
 	//public NuevoUsuarioViewImpl(){		
@@ -173,6 +180,11 @@ public class NuevoUsuarioViewImpl extends HorizontalLayout implements INuevoUsua
 	@Override
 	public TwinColSelect getRoles() {
 		return selectRoles;
+	}
+
+	@Override
+	public int getIdCliente() {
+		return idCliente;
 	}
 
 }

@@ -5,7 +5,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -19,6 +23,7 @@ import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Notification.Type;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.service.RolService;
 import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.domain.RolView;
@@ -111,6 +116,21 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 	@Override
 	public void cancelar() {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);		
+	}
+
+	@Override
+	public void validarUsuario() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (!currentUser.isAuthenticated()) {
+			Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no autenticado, redireccionando a login");
+			UI.getCurrent().getNavigator().navigateTo("");
+		}else{
+			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
+				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
+			}
+		}
 	}
 
 }

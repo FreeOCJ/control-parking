@@ -25,6 +25,7 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -60,6 +61,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	public void enter(ViewChangeEvent event) {	
 		this.removeAllComponents();
 		handler = new BuscarUsuarioController(this);
+		handler.validarUsuario();
 		init();
 		//limpiarTabla();		
 	}
@@ -113,7 +115,8 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 			public Object generateCell(final Table source, final Object itemId, Object columnId) {
 				HorizontalLayout botonesAccion = new HorizontalLayout();
 				
-				Button btnEditar = new Button("Editar");				 
+				Button btnEditar = new Button("Editar");	
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
 				btnEditar.addClickListener(new ClickListener() {			 
 			      @Override public void buttonClick(ClickEvent event) {			    	  
 			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
@@ -121,7 +124,8 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 			      }
 			    });
 				
-				Button btnEliminar = new Button("Eliminar");				 
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
 				btnEliminar.addClickListener(new ClickListener() {			 
 			      @Override 
 			      public void buttonClick(ClickEvent event) {				    	  

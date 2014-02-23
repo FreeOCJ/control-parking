@@ -5,7 +5,7 @@ public class Tarifa {
 	private double monto;
 	private String categoria;
 	private boolean eliminado;
-	private UnidadOperativa unidadOperativa;
+	private int idUnidadOperativa;
 	
 	public int getId() {
 		return id;
@@ -31,10 +31,10 @@ public class Tarifa {
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
 	}
-	public UnidadOperativa getUnidadOperativa() {
-		return unidadOperativa;
+	public int getIdUnidadOperativa() {
+		return idUnidadOperativa;
 	}
-	public void setUnidadOperativa(UnidadOperativa unidadOperativa) {
-		this.unidadOperativa = unidadOperativa;
+	public void setIdUnidadOperativa(int idUnidadOperativa) {
+		this.idUnidadOperativa = idUnidadOperativa;
 	}	
 }

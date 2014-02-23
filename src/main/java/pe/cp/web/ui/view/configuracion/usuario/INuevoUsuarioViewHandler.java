@@ -4,4 +4,6 @@ public interface INuevoUsuarioViewHandler {
 	void cancelar();
 	void guardar();
 	void cargarRoles();
+	void validarUsuario();
+	boolean validarDatosEntrada();
 }

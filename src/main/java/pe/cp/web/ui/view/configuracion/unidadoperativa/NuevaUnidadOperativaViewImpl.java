@@ -14,6 +14,7 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.event.Transferable;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -35,9 +36,10 @@ import com.vaadin.ui.Table.ColumnGenerator;
 @Component
 @Scope("prototype")
 @Theme("controlparking")
-public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements INuevaUnidadOperativaView {
+public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IUnidadOperativaView {
 
 	private CssLayout contenido;
+	private Label lblTitulo;
 	private TextField txtNombre;
 	private TextField txtDireccion;
 	private TextField txtNombreComercialCliente;
@@ -79,10 +81,8 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		String strIdUnidadOperativa = fragment.substring(lastSlash + 1);
 		
 		idCliente = Integer.valueOf(strIdCliente);
-		if (strIdUnidadOperativa.equals(""))
-			idUnidadOperativa = 0;
-		else
-			idUnidadOperativa = Integer.valueOf(strIdUnidadOperativa);
+		if (strIdUnidadOperativa.equals("")) idUnidadOperativa = 0;
+		else idUnidadOperativa = Integer.valueOf(strIdUnidadOperativa);
 	}
 	
 	@Override
@@ -111,9 +111,9 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	    header.setWidth("100%");
 	    contenido.addComponent(header);
 	        
-	    Label title = new Label("Nueva Unidad Operativa");
-	    title.addStyleName("h1");  	    
-	    header.addComponent(title);
+	    lblTitulo = new Label();
+	    lblTitulo.addStyleName("h1");  	    
+	    header.addComponent(lblTitulo);
 			    
 	    HorizontalLayout data = new HorizontalLayout();	  
 	    data.setSizeFull();
@@ -125,6 +125,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		return contenido;
 	}
 	
+	@SuppressWarnings("serial")
 	private VerticalLayout cargarFormularioUnidadOperativa(){
 		VerticalLayout areaPrincipal = new VerticalLayout();
 		areaPrincipal.setMargin(true);
@@ -165,7 +166,6 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		txtHoraCierre.setWidth("200px");			
 				
 		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.setWidth("100%");
 		Button btnGuardarUsuario = new Button("Guardar");
 		btnGuardarUsuario.addStyleName("default");
 		Button btnCancelar = new Button("Cancelar");
@@ -197,7 +197,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		btnCancelar.addClickListener(new ClickListener() {		
 			@Override
 			public void buttonClick(ClickEvent event) {
-				//handler.cancelar();				
+				handler.cancelar();				
 			}
 		});
 		
@@ -240,6 +240,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		return contenido;
 	}
 	
+	@SuppressWarnings("serial")
 	private void configurarTabCategorias(){
 		tabCategorias = new VerticalLayout();
 		
@@ -260,15 +261,17 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 			public Object generateCell(final Table source, final Object itemId, Object columnId) {
 				HorizontalLayout botonesAccion = new HorizontalLayout();
 				
-				Button btnEditar = new Button("Editar");				 
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
 				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        
-			        
+			      @Override public void buttonClick(ClickEvent event) {	
+			    	  String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
+			    	  handler.irMantenimientoTarifa(categoria); 
 			      }
 			    });
 				
-				Button btnEliminar = new Button("Eliminar");				 
+				Button btnEliminar = new Button();
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
 				btnEliminar.addClickListener(new ClickListener() {			 
 			      @Override 
 			      public void buttonClick(ClickEvent event) {				    	  
@@ -277,7 +280,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 				            public void onClose(ConfirmDialog dialog) {
 				                if (dialog.isConfirmed()) {
 				                    // Confirmed to continue
-				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
 				                	System.out.println("eliminar");
 				                } else {
 				                    // User did not confirm
@@ -296,8 +299,16 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		
         tabCategorias.addComponent(toolbar);
         tabCategorias.addComponent(tblCategorias);
+        
+        btnNuevaCategoria.addClickListener(new ClickListener() {			 
+		    @Override 
+		    public void buttonClick(ClickEvent event) {			    	  
+			   handler.irMantenimientoTarifa(null);   
+			}
+		});
 	}
 	
+	@SuppressWarnings("serial")
 	private void configurarTabOperadores(){
 		tabOperadores = new VerticalLayout();	
 		
@@ -306,9 +317,24 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsOperadores.setRightColumnCaption("Seleccionados");
 		tcsOperadores.setItemCaptionPropertyId("nombreCompleto");
 		
+		HorizontalLayout buttons = new HorizontalLayout();
+		buttons.setWidth("100%");
+		Button btnGuardarOperadores= new Button("Guardar Operadores");
+		btnGuardarOperadores.addStyleName("default");
+		buttons.addComponent(btnGuardarOperadores);
+		
 		tabOperadores.addComponent(tcsOperadores);
+		tabOperadores.addComponent(buttons);
+		
+		btnGuardarOperadores.addClickListener(new ClickListener() {		
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.guardarOperadores();				
+			}
+		});
 	}
 	
+	@SuppressWarnings("serial")
 	private void configurarTabAprobadores(){
 		tabAprobadores = new VerticalLayout();
 		
@@ -317,9 +343,24 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsAprobadores.setRightColumnCaption("Seleccionados");
 		tcsAprobadores.setItemCaptionPropertyId("nombreCompleto");
 		
+		HorizontalLayout buttons = new HorizontalLayout();
+		buttons.setWidth("100%");
+		Button btnGuardarAprobadores= new Button("Guardar Aprobadores");
+		btnGuardarAprobadores.addStyleName("default");
+		buttons.addComponent(btnGuardarAprobadores);
+		
 		tabAprobadores.addComponent(tcsAprobadores);
+		tabAprobadores.addComponent(buttons);
+		
+		btnGuardarAprobadores.addClickListener(new ClickListener() {		
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.guardarAprobadores();				
+			}
+		});
 	}
 	
+	@SuppressWarnings("serial")
 	private void configurarTabUsuarios(){
 		tabUsuarios = new VerticalLayout();	
 		
@@ -328,7 +369,21 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 		tcsUsuarios.setRightColumnCaption("Seleccionados");
 		tcsUsuarios.setItemCaptionPropertyId("nombreCompleto");
 		
+		HorizontalLayout buttons = new HorizontalLayout();
+		buttons.setWidth("100%");
+		Button btnGuardarUsuarios = new Button("Guardar Usuarios");
+		btnGuardarUsuarios.addStyleName("default");
+		buttons.addComponent(btnGuardarUsuarios);
+		
 		tabUsuarios.addComponent(tcsUsuarios);
+		tabUsuarios.addComponent(buttons);
+		
+		btnGuardarUsuarios.addClickListener(new ClickListener() {		
+			@Override
+			public void buttonClick(ClickEvent event) {
+				handler.guardarUsuarios();				
+			}
+		});
 	}
 	
 	@Override
@@ -404,5 +459,15 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IN
 	@Override
 	public int getIdUnidadOperativa() {
 		return idUnidadOperativa;
+	}
+
+	@Override
+	public TabSheet getTablas() {
+		return tsTablas;
+	}
+
+	@Override
+	public Label getTitulo() {
+		return lblTitulo;
 	}
 }

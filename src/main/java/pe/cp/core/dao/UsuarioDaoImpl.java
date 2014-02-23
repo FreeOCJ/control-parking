@@ -245,14 +245,19 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	}
 
 	@Override
-	public List<Usuario> obtenerUsuariosCliente(int idUnidadOperativa) {
-		final String sql = "select u.IDUSUARIO, u.EMAIL, u.NOMBRES, u.APELLIDOS, u.CARGO, u.LOGIN, u.PASSWORD, " +
-				  				  "u.IDCLIENTE, u.ELIMINADO from usuario u, uoxuser uo " + 
-				  		   "where uo.IDUSUARIO = u.IDUSUARIO and REPORTES = 'T' and ELIMINADO = 'F' and uo.IDUNIDAD = :idUnidad";		
+	public List<Usuario> obtenerUsuariosPorUnidadOperativa(int idUnidadOperativa, String rol) {
+		StringBuilder sbSql = new StringBuilder();
+		sbSql.append("select u.IDUSUARIO, u.EMAIL, u.NOMBRES, u.APELLIDOS, u.CARGO, u.LOGIN, u.PASSWORD, u.IDCLIENTE, u.ELIMINADO ");
+		sbSql.append("FROM usuario u, uoxuser uo where uo.IDUSUARIO = u.IDUSUARIO and ELIMINADO = 'F' and uo.IDUNIDAD = :idUnidad ");
+		if (rol != null && !rol.isEmpty())
+			if (rol.equals(Rol.CLIENTE)) sbSql.append("and REPORTES = 'T'");
+			else if (rol.equals(Rol.OPERADOR)) sbSql.append("and UNIDAD = 'T'");
+			else if (rol.equals(Rol.APROBADOR)) sbSql.append("and APROBAR = 'T'");
+		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("idUnidad", idUnidadOperativa);		
-		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){			
+		usuarios = namedParameterJdbcTemplate.query(sbSql.toString(), args, new RowMapper<Usuario>(){			
 			@Override
 			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
 				return userMapRow(rs, rowNum);
@@ -262,10 +267,21 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	}
 
 	@Override
-	public List<Usuario> obtenerUsuariosSistema() {
-		final String sql = "select * from usuario where idcliente is null";		
+	public List<Usuario> obtenerUsuariosSistema(String rol) {
+		String sql;
+		
+		Map<String, Object> args = new HashMap<String, Object>();
+		if (rol == null || rol.trim().isEmpty())
+			sql = "select * from usuario where idcliente is null";	
+		else{
+			StringBuilder sb = new StringBuilder();
+			sb.append("select * from cp_core_db.usuario u, cp_core_db.rol r, cp_core_db.rolxusuario ru ");
+			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol");
+			sql = sb.toString();
+			args.put("rol", rol);
+		}
+		
 		List<Usuario> usuarios = null;
-		SqlParameterSource args = new MapSqlParameterSource();		
 		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){
 			@Override
 			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -273,6 +289,21 @@ public class UsuarioDaoImpl implements UsuarioDao{
 			}
 			
 		} );
+		return usuarios;
+	}
+
+	@Override
+	public List<Usuario> obtenerUsuariosPorCliente(int idCliente) {
+		final String sql = "select * from usuario where idCliente = :idCliente";		
+		List<Usuario> usuarios = null;
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("idCliente", idCliente);		
+		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){			
+			@Override
+			public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return userMapRow(rs, rowNum);
+				}		
+			});
 		return usuarios;
 	}
 }

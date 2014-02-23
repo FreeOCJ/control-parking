@@ -8,4 +8,5 @@ public interface IBuscarClienteHandler {
 	void irEditarCliente(int idCliente);
 	void eliminarCliente(int idCliente);
 	Container obtenerHeadersContainer();
+	void validarUsuario();
 }

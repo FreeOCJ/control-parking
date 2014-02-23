@@ -1,7 +1,22 @@
 package pe.cp.core.service;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.IncorrectCredentialsException;
+import org.apache.shiro.authc.UnknownAccountException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+//import org.vaadin.example.shiro.SecureView;
+
+
+
+
+
+import com.vaadin.server.VaadinService;
 
 import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Usuario;
@@ -18,7 +33,9 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public LoginResponse login(LoginRequest request) {
 		LoginResponse response = new LoginResponse();
-		UsuarioFilter filtro = new UsuarioFilter();
+		response.setAutorizado(false);
+		response.setResultadoEjecucion(false);
+		/*UsuarioFilter filtro = new UsuarioFilter();
 		filtro.setLogin(request.getLoginName());
 		
 		Usuario usuario = usuarioDao.buscarPorLogin(request.getLoginName());
@@ -36,7 +53,29 @@ public class LoginServiceImpl implements LoginService {
 			response.setResultadoEjecucion(false);
 			response.setAutorizado(false);	
 			response.setMensaje("El usuario ingresado no existe");
-		}		
+		}		*/
+		
+		Subject currentUser = SecurityUtils.getSubject();
+		UsernamePasswordToken token = new UsernamePasswordToken(
+				request.getLoginName(), request.getPassword());
+		try {
+			currentUser.login(token);
+			Usuario usuario = usuarioDao.buscarPorLogin(request.getLoginName());
+			currentUser.getSession().setAttribute("nombre_completo", String.format("%s\n%s", usuario.getNombres(), usuario.getApellidos()));
+			currentUser.getSession().setAttribute("login", usuario.getLogin());
+			response.setAutorizado(true);
+			response.setResultadoEjecucion(true);
+			
+		}catch(UnknownAccountException ex) {
+			Logger.getAnonymousLogger().log(Level.INFO, ex.getMessage());
+			response.setMensaje("No existe la cuenta ingresada");
+		}catch (IncorrectCredentialsException ex) {
+			Logger.getAnonymousLogger().log(Level.INFO, ex.getMessage());
+			response.setMensaje("Los credenciales ingresados son incorrectos");
+		}catch (Exception e) {
+			Logger.getAnonymousLogger().log(Level.INFO, e.getMessage());
+			response.setMensaje("Ocurrio un error al realizar la transaccion");
+		}
 		
 		return response;
 	}

@@ -20,9 +20,16 @@ import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioPorClienteRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioPorClienteResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioPorUnidadOpRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioPorUnidadOpResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
+import pe.cp.core.service.messages.ObtenerUsuariosSistemaRequest;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
+import pe.cp.core.service.messages.ValidarDatosUsuarioRequest;
+import pe.cp.core.service.messages.ValidarDatosUsuarioResponse;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService{
@@ -177,9 +184,75 @@ public class UsuarioServiceImpl implements UsuarioService{
 	}
 
 	@Override
-	public ObtenerUsuariosSistemaResponse obtenerUsuariosSistema() {
+	public ObtenerUsuariosSistemaResponse obtenerUsuariosSistema(ObtenerUsuariosSistemaRequest request) {
 		ObtenerUsuariosSistemaResponse response = new ObtenerUsuariosSistemaResponse();
-		List<Usuario> usuarios = usuariodao.obtenerUsuariosSistema();
+		List<Usuario> usuarios = usuariodao.obtenerUsuariosSistema(request.getRol());
+		
+		response.setUsuariosView(new ArrayList<UsuarioView>());
+		for (Usuario usuario : usuarios) {
+			response.getUsuariosView().add(WrapperDomain.ViewMapper(usuario));
+		}
+		
+		response.setResultadoEjecucion(true);
+		return response;
+	}
+
+	@Override
+	public ObtenerUsuarioPorClienteResponse obtenerUsuariosPorCliente(ObtenerUsuarioPorClienteRequest request) {
+		ObtenerUsuarioPorClienteResponse response = new ObtenerUsuarioPorClienteResponse();
+		List<Usuario> usuarios = usuariodao.obtenerUsuariosPorCliente(request.getIdCliente());
+		
+		response.setUsuariosView(new ArrayList<UsuarioView>());
+		for (Usuario usuario : usuarios) {
+			response.getUsuariosView().add(WrapperDomain.ViewMapper(usuario));
+		}
+		
+		response.setResultadoEjecucion(true);
+		return response;
+	}
+
+	
+	/**
+	 * Realiza las validaciones de los datos que se deben comparar contra la base de datos
+	 */
+	@Override
+	public ValidarDatosUsuarioResponse validarDatosUsuario(ValidarDatosUsuarioRequest request) {
+		ValidarDatosUsuarioResponse response = new ValidarDatosUsuarioResponse();
+		response.setResultadoEjecucion(true);
+		
+		Usuario usuario = buscarPorLogin(request.getLogin());
+		if (usuario != null){
+			//Si el id > 0, el usuario existe por lo que si el login ha cambiado, este no debe existir en otro usuario
+			if (request.getIdUsuario() > 0){
+				Usuario antiguoUsuario = usuariodao.buscar(request.getIdUsuario());
+				if (antiguoUsuario == null){
+					response.setResultadoEjecucion(false);
+					response.setMensaje("No se encontro al usuario a editar, posiblemente fue eliminado");
+				}else{
+					if (antiguoUsuario.getId() != usuario.getId() && usuario.getLogin().equals(request.getLogin())){
+						response.setResultadoEjecucion(false);
+						response.setMensaje("Ya existe un usuario con el login ingresado");
+					}
+				}
+			}else{
+				//Si el id <= 0, es un nuevo usuario, no debe existir el login
+				if (usuario.getLogin().equals(request.getLogin())){
+					response.setResultadoEjecucion(false);
+					response.setMensaje("Ya existe un usuario con el login ingresado");
+				}
+			}	
+		}
+		
+		return response;
+	}
+
+	@Override
+	public ObtenerUsuarioPorUnidadOpResponse obtenerUsuariosPorUnidadOP(
+				ObtenerUsuarioPorUnidadOpRequest request) {
+		ObtenerUsuarioPorUnidadOpResponse response = new ObtenerUsuarioPorUnidadOpResponse();
+		
+		List<Usuario> usuarios = 
+				usuariodao.obtenerUsuariosPorUnidadOperativa(request.getIdUnidadOperativa(), request.getRol());
 		
 		response.setUsuariosView(new ArrayList<UsuarioView>());
 		for (Usuario usuario : usuarios) {

@@ -50,4 +50,7 @@ public class RolView {
 		return nombre;		
 	}
 	
+	public static String CLIENTE = "CLIENTE";
+	public static String OPERADOR = "OPERADOR";
+	public static String APROBADOR = "APROBADOR";
 }
