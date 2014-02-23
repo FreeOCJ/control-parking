@@ -1,6 +1,8 @@
 package pe.cp.core.dao;
 
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,6 +13,7 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
@@ -18,11 +21,13 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Operacion;
+import pe.cp.core.domain.OperacionDetalle;
 import pe.cp.core.mapper.OperacionMapper;
 
 @Repository
 public class OperacionDaoImpl implements OperacionDao {
 	private SimpleJdbcInsert insertarOperacion;
+	private SimpleJdbcInsert insertarOperacionDetalle;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -35,6 +40,9 @@ public class OperacionDaoImpl implements OperacionDao {
 		this.insertarOperacion = new SimpleJdbcInsert(dataSource)
 				.withTableName("operacion")
 				.usingGeneratedKeyColumns("IDOPERACION");
+		this.insertarOperacionDetalle = new SimpleJdbcInsert(dataSource)
+		        .withTableName("opdetalle")
+		        .usingGeneratedKeyColumns("IDDETALLE");
 	}
 	@Override
 	public int agregar(Operacion op) {
@@ -131,6 +139,50 @@ public class OperacionDaoImpl implements OperacionDao {
 		operaciones = namedParameterJdbcTemplate.query(sbSql.toString(), namedParameters, new OperacionMapper());
 		
 		return operaciones;
+	}
+	@Override
+	public int agregarOperacionDetalle(OperacionDetalle opDetalle) {
+		Map<String, Object> parameters = new HashMap<String, Object>(17);
+		parameters.put("HORAINICIO", opDetalle.getHoraInicio());
+		parameters.put("HORAFIN", opDetalle.getHoraFin());
+		parameters.put("PERSONAS", opDetalle.getCantidadPersonas());
+		parameters.put("INGRESOS", opDetalle.getCantidadIngresos());
+		parameters.put("SALIDAS", opDetalle.getCantidadSalidas());
+		parameters.put("IDOPERACION", opDetalle.getIdOperacion());
+					
+		Number key = insertarOperacionDetalle.executeAndReturnKey(parameters);
+		return key.intValue();
+	}
+	@Override
+	public void actualizarOperacionDetalle(OperacionDetalle opDetalle) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public List<OperacionDetalle> obtenerDetalles(int idOperacion) {
+		final String sql = "SELECT * from opdetalle where idoperacion = :idOperacion";
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("idOperacion", idOperacion);
+		
+		SqlParameterSource namedParameters = new MapSqlParameterSource(args);
+		
+		List<OperacionDetalle> detalles = new ArrayList<OperacionDetalle>();
+		detalles = namedParameterJdbcTemplate.query(sql, namedParameters, new RowMapper<OperacionDetalle>() {
+			@Override
+			public OperacionDetalle mapRow(ResultSet rs, int rowNumber) throws SQLException {
+				OperacionDetalle detalle = new OperacionDetalle();
+				detalle.setCantidadIngresos(rs.getInt("INGRESOS"));
+				detalle.setCantidadPersonas(rs.getInt("PERSONAS"));
+				detalle.setCantidadSalidas(rs.getInt("SALIDAS"));
+				detalle.setHoraFin(rs.getTimestamp("HORAFIN"));
+				detalle.setHoraInicio(rs.getTimestamp("HORAINICIO"));
+				detalle.setIdOpDetalle(rs.getInt("IDDETALLE"));
+				detalle.setIdOperacion(rs.getInt("IDOPERACION"));
+				return detalle;
+			}
+		});
+		
+		return detalles;
 	}
 
 }

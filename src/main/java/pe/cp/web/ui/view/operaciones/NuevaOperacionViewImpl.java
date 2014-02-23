@@ -10,6 +10,7 @@ import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.AbstractSelect.ItemCaptionMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
@@ -77,6 +78,7 @@ public class NuevaOperacionViewImpl extends HorizontalLayout implements INuevaOp
 		areaPrincipal.addComponent(formulario);
 		cbUnidadOperativa = new ComboBox();
 		cbUnidadOperativa.setCaption("Unidad Operativa");
+		cbUnidadOperativa.setItemCaptionMode(ItemCaptionMode.PROPERTY);
 		cbUnidadOperativa.setItemCaptionPropertyId("NOMBRE");
 		dfFechaOperacion = new DateField();
 		dfFechaOperacion.setValue(new Date());

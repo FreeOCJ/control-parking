@@ -6,6 +6,8 @@ import org.springframework.stereotype.Component;
 import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -207,20 +209,22 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	    
 	    //Control Ingreso y Salida
 	  	VerticalLayout controlIngresoLayout = new VerticalLayout();
+	  	FormLayout formularioOferta = new FormLayout();
+	  	HorizontalLayout ingresoDiaLayout = new HorizontalLayout();
 	  	areaPrincipal.addComponent(controlIngresoLayout);
-	    
-		FormLayout formularioControl = new FormLayout();
-		controlIngresoLayout.addComponent(formularioControl);
-		
+	  	controlIngresoLayout.addComponent(formularioOferta);
+	  	controlIngresoLayout.addComponent(ingresoDiaLayout);
+	 
 		txtOferta = new TextField("Oferta del día");
 		txtOferta.setWidth("100%");
-		formularioControl.addComponent(txtOferta);
+		formularioOferta.addComponent(txtOferta);
 		
-		HorizontalLayout ingresoDiaLayout = new HorizontalLayout();
-		controlIngresoLayout.addComponent(ingresoDiaLayout);
-		tblControlTarifas = new Table();
-		//Otro layout vertical para los datos de la parte derecha
+		tblOperacionesPorHorario = new Table();
 		FormLayout adicionalesControlLayout = new FormLayout();
+		
+	    ingresoDiaLayout.addComponent(tblOperacionesPorHorario);
+	    ingresoDiaLayout.addComponent(adicionalesControlLayout);
+		
 		txtTicketInicial = new TextField("Ticket Inicial");
 		txtTicketFinal = new TextField("Ticket Final");
 		txtTotalDia = new TextField("Total Día");
@@ -249,9 +253,6 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		adicionalesControlLayout.addComponent(txtTotalSalidas);
 		adicionalesControlLayout.addComponent(txtTotalPersonas);
 		
-		ingresoDiaLayout.addComponent(tblControlTarifas);
-		ingresoDiaLayout.addComponent(adicionalesControlLayout);
-		
 		//Control de Tarifas
 		HorizontalLayout headerTarifas = new HorizontalLayout();
 		areaPrincipal.addComponent(headerTarifas);
@@ -276,6 +277,22 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	    tblIncidencias = new Table();
 	    areaPrincipal.addComponent(tblIncidencias);
 		
+	    //Eventos
+	    txtTicketInicial.addValueChangeListener(new ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				handler.calcularTotalTickets();
+			}
+		});
+        txtTicketFinal.addValueChangeListener(new ValueChangeListener() {
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				handler.calcularTotalTickets();
+			}
+		});
+        txtTicketInicial.setImmediate(true);
+        txtTicketFinal.setImmediate(true);
+	    
 	    return areaPrincipal;
 	}
 

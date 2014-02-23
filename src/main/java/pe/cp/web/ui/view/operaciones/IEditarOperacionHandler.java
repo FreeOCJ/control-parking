@@ -10,4 +10,6 @@ public interface IEditarOperacionHandler {
    void aprobar();
    void validarUsuario();
    boolean validarEdicion();
+   void calcularTotalTickets();
+   void calcularTotalIngresoSalidas();
 }

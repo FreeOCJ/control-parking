@@ -8,6 +8,8 @@ import pe.cp.core.service.messages.AgregarOperacionRequest;
 import pe.cp.core.service.messages.AgregarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
+import pe.cp.core.service.messages.ObtenerDetalleOperacionRequest;
+import pe.cp.core.service.messages.ObtenerDetalleOperacionResponse;
 import pe.cp.core.service.messages.ObtenerOperacionRequest;
 import pe.cp.core.service.messages.ObtenerOperacionResponse;
 
@@ -23,4 +25,5 @@ public interface OperacionService {
 	BuscarOperacionResponse buscar(BuscarOperacionesRequest request);
 	AgregarOperacionResponse agregar(AgregarOperacionRequest request);
 	ObtenerOperacionResponse obtener(ObtenerOperacionRequest request);
+	ObtenerDetalleOperacionResponse obtenerDetalles(ObtenerDetalleOperacionRequest request);
 }

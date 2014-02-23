@@ -47,7 +47,9 @@ public class NuevaOperacionController implements INuevaOperacionHandler {
 		String login = currentUser.getSession().getAttribute("login").toString();
 		
 		if (view.getUnidadOperativa().getValue() != null && view.getFechaOperacion().getValue() != null) {
-			int idUnidadSeleccionada = Integer.valueOf(view.getUnidadOperativa().getValue().toString());
+			Object unidadSelectId = view.getUnidadOperativa().getValue();
+			int idUnidadSeleccionada = 
+					Integer.valueOf(view.getUnidadOperativa().getItem(unidadSelectId).getItemProperty(ID_UNIDAD).toString());
 			AgregarOperacionRequest request = 
 					new AgregarOperacionRequest(idUnidadSeleccionada, view.getFechaOperacion().getValue(), login);
 			AgregarOperacionResponse response = opService.agregar(request);

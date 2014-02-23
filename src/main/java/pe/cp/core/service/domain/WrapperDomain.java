@@ -1,7 +1,11 @@
 package pe.cp.core.service.domain;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
 import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Operacion;
+import pe.cp.core.domain.OperacionDetalle;
 import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Tarifa;
 import pe.cp.core.domain.UnidadOperativa;
@@ -93,5 +97,24 @@ public class WrapperDomain {
 		operacionView.setNombreUnidadOperativa(operacion.getAuxNombreUnidadOperativa());
 		
 		return operacionView;
+	}
+	
+	public static OperacionDetalleView ViewMapper(OperacionDetalle detalle) {
+		OperacionDetalleView detalleView = new OperacionDetalleView();
+		detalleView.setCantidadIngreso(detalle.getCantidadIngresos());
+		detalleView.setCantidadPersonas(detalle.getCantidadPersonas());
+		detalleView.setCantidadSalida(detalle.getCantidadSalidas());
+		detalleView.setIdOperacionDetalle(detalle.getIdOperacion());
+		detalleView.setIdOperacionDetalle(detalle.getIdOpDetalle());
+		
+		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm");
+		String horaInicio = formatter.format(detalle.getHoraInicio()); 
+		String horaFin = formatter.format(detalle.getHoraFin());
+
+		String horario = String.format("%s - %s", horaInicio, horaFin);
+		
+		detalleView.setHorario(horario);
+		
+		return detalleView;
 	}
 }
