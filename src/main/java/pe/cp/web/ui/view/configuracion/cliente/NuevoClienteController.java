@@ -47,7 +47,9 @@ public class NuevoClienteController implements INuevoClienteHandler {
 		request.setRuc(view.getRuc().getValue().trim());
 		
 		InsertarClienteResponse response = clienteService.agregar(request);
+		Subject currentUser = SecurityUtils.getSubject();
 		if (response.isResultadoEjecucion()){
+			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 			UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARCLIENTE + "/" + String.valueOf(response.getIdCliente()));
 		}else{
 			view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
@@ -72,6 +74,7 @@ public class NuevoClienteController implements INuevoClienteHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}

@@ -77,6 +77,7 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 			
 			response.setIdUnidadOperativa(idUnidadOperativa);
 			response.setResultadoEjecucion(true);
+			response.setMensaje("Se agregó la unidad operativa exitosamente");
 		}else{
 			response.setResultadoEjecucion(false);
 			response.setMensaje("No se pudo agregar la unidad operativa");

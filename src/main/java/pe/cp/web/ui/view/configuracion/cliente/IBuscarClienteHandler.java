@@ -9,4 +9,5 @@ public interface IBuscarClienteHandler {
 	void eliminarCliente(int idCliente);
 	Container obtenerHeadersContainer();
 	void validarUsuario();
+	void mostrarMensajeInicio();
 }

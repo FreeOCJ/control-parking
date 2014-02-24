@@ -15,7 +15,11 @@ import org.springframework.stereotype.Component;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
@@ -24,6 +28,8 @@ import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.domain.ClienteView;
 import pe.cp.core.service.domain.UnidadOperativaView;
 import pe.cp.core.service.domain.UsuarioView;
+import pe.cp.core.service.messages.ActualizarClienteRequest;
+import pe.cp.core.service.messages.ActualizarClienteResponse;
 import pe.cp.core.service.messages.ObtenerClienteRequest;
 import pe.cp.core.service.messages.ObtenerClienteResponse;
 import pe.cp.core.service.messages.ObtenerUnidadOpPorClienteRequest;
@@ -84,8 +90,25 @@ public class EditarClienteController implements IEditarClienteHandler {
 	
 	@Override
 	public void guardar() {
-		// TODO Auto-generated method stub
-
+		ActualizarClienteRequest request = new ActualizarClienteRequest();
+		request.setIdCliente(view.getIdCliente());
+		request.setNombreComercial(view.getNombreComercial().getValue().trim());
+		request.setRazonSocial(view.getRazonSocial().getValue().trim());
+		request.setRuc(view.getRuc().getValue().trim());
+		
+		ActualizarClienteResponse response = new ActualizarClienteResponse();
+		Subject currentUser = SecurityUtils.getSubject();
+		
+		if (response.isResultadoEjecucion()){		
+			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+			UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARCLIENTES);			
+		}else{
+			view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
+			view.getNotification().setPosition(Position.TOP_CENTER);
+			view.getNotification().show(Page.getCurrent());	
+			
+		}
+		
 	}
 
 	@Override
@@ -183,14 +206,28 @@ public class EditarClienteController implements IEditarClienteHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				NavegacionUtil.irMain();
 			}
 		}
 	}
 
 	@Override
-	public void irEditarUsuario(int idUsuario) {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARUSUARIO + "/" + idUsuario);
+	public void irEditarUsuario(int idUsuario,int idCliente) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITARUSUARIO + "/" + idCliente + "/" + idUsuario);
+	}
+
+	@Override
+	public void mostrarMensajeInicio() {
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser != null && currentUser.isAuthenticated()){
+			if (currentUser.getSession().getAttribute("mensaje") != null){
+				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());				
+			}
+		}		
+		
 	}
 
 }

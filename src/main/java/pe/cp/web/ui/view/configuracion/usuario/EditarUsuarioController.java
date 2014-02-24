@@ -32,6 +32,7 @@ import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
 import pe.cp.web.ui.ControlParkingUI;
+import pe.cp.web.ui.NavegacionUtil;
 
 @Component
 @Scope("prototype")
@@ -104,12 +105,19 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		}
 		
 		ActualizarUsuarioResponse response = usuarioservice.actualizar(request);
-		if (response.isResultadoEjecucion()){
-			UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);
+		Subject currentUser = SecurityUtils.getSubject();
+		
+		if (response.isResultadoEjecucion()){		
+			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+			if (view.getIdCliente()==0){
+				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);}
+			else{
+				NavegacionUtil.irEditarCliente(view.getIdCliente());
+			}					
 		}else{
 			view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
 			view.getNotification().setPosition(Position.TOP_CENTER);
-			view.getNotification().show(Page.getCurrent());	
+			view.getNotification().show(Page.getCurrent());
 		}
 	}
 
@@ -128,6 +136,7 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}

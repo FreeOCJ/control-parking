@@ -70,6 +70,7 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IU
 		getParams();			
 		init();	
 		handler.cargar();
+		handler.mostrarMensajeInicio();
 	}
 
 	private void getParams(){

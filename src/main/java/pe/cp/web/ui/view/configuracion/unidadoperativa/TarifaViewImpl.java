@@ -2,10 +2,13 @@ package pe.cp.web.ui.view.configuracion.unidadoperativa;
 
 import javax.swing.text.html.ListView;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.w3c.dom.ls.LSException;
 
 import pe.cp.web.ui.view.main.SideBar;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickListener;
@@ -20,6 +23,10 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 
+@Component
+@Scope("prototype")
+@Theme("controlparking")
+@SuppressWarnings("serial")
 public class TarifaViewImpl extends HorizontalLayout  implements ITarifaView {
 
 	private CssLayout contenido;

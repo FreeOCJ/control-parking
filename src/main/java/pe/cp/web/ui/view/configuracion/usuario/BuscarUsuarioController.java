@@ -18,7 +18,11 @@ import com.vaadin.data.util.IndexedContainer;
 
 
 
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.UsuarioService;
@@ -102,9 +106,24 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				NavegacionUtil.irMain();
 			}
 		}
+	}
+
+	@Override
+	public void mostrarMensajeInicio() {
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser != null && currentUser.isAuthenticated()){
+			if (currentUser.getSession().getAttribute("mensaje") != null){
+				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());				
+			}
+		}
+		
+		
 	}
 	
 	

@@ -9,7 +9,9 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.stereotype.Component;
 
 import pe.cp.core.dao.UnidadOperativaDao;
 import pe.cp.core.domain.Rol;
@@ -30,9 +32,13 @@ import pe.cp.web.ui.NavegacionUtil;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.themes.Reindeer;
 
+
+@Scope("prototype")
 public class BuscarOperacionesController implements IBuscarOperacionesHandler {
    
 	private ApplicationContext ac;
@@ -132,6 +138,7 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 			if (!currentUser.hasRole(Rol.OPERADOR) || !currentUser.hasRole(Rol.APROBADOR) || 
 					!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				NavegacionUtil.irMain();
 			}
 		}

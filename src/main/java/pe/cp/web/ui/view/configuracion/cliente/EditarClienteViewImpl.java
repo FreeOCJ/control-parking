@@ -50,6 +50,7 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		idCliente = Integer.valueOf(id);
 		init();		
 		handler.cargar();
+		handler.mostrarMensajeInicio();
 	}
 
 	@Override
@@ -152,7 +153,7 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 				btnEditar.addClickListener(new ClickListener() {			 
 			      @Override public void buttonClick(ClickEvent event) {			    	  
 			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-			        handler.irEditarUsuario(idUsuario);
+			        handler.irEditarUsuario(idUsuario,idCliente);
 			      }
 			    });
 				

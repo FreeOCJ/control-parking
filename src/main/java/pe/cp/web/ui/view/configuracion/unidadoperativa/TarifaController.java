@@ -20,7 +20,11 @@ import pe.cp.core.service.messages.ObtenerUnidadOperativaResponse;
 import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.ControlParkingUI;
 
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 
 public class TarifaController implements ITarifaHandler {
 	ApplicationContext ac;
@@ -70,11 +74,15 @@ public class TarifaController implements ITarifaHandler {
 		   AgregarTarifaRequest request = 
 				   new AgregarTarifaRequest(view.getIdUnidadOperativa(), montos, view.getTxtNombre().getValue());
 		   Response response = unidadOpService.agregarTarifa(request);
+		   Subject currentUser = SecurityUtils.getSubject();
 		   
 		   if (response.isResultadoEjecucion()) {
+			   currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 			   irManteniemientoUnidadOp();
 		   } else {
-			   //TODO
+			   Notification notification = new Notification(response.getMensaje(),Type.WARNING_MESSAGE);
+			   notification.setPosition(Position.TOP_CENTER);
+			   notification.show(Page.getCurrent());
 		   }
 		}
 	}
@@ -124,6 +132,7 @@ public class TarifaController implements ITarifaHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}

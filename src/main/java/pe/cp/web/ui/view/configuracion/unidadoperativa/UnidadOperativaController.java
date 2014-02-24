@@ -49,7 +49,11 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 
 @Component
 @Scope("prototype")
@@ -263,7 +267,9 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 			request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
 			
 			AgregarUnidadOperativaResponse response = unidadOpService.agregar(request);
+			Subject currentUser = SecurityUtils.getSubject();
 			if (response.isResultadoEjecucion()){
+				currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + response.getIdUnidadOperativa());
 			}else{
 				Logger.getAnonymousLogger().log(Level.SEVERE, response.getMensaje());
@@ -289,7 +295,9 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 	   request.setHoraCierre(view.getHoraCierre().getValue());
 	   
 	   ActualizarUnidadOpResponse response = unidadOpService.actualizar(request);
+	   Subject currentUser = SecurityUtils.getSubject();
 	   if (response.isResultadoEjecucion()) {
+		   currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 		   UI.getCurrent().getNavigator().navigateTo(
 				   ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
 	   } else {
@@ -312,6 +320,7 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}
@@ -348,8 +357,10 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 		AgregarUsuarioUnidadOperativaRequest request = 
 				new AgregarUsuarioUnidadOperativaRequest(view.getIdUnidadOperativa(), rol, idsUsuarios);
 		Response response = unidadOpService.agregarUsuario(request);
+		Subject currentUser = SecurityUtils.getSubject();
 		
 		if (response.isResultadoEjecucion()) {
+			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 			UI.getCurrent().getNavigator().navigateTo(
 					   ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
 		} else {
@@ -372,5 +383,17 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 		if (categoria != null && !categoria.isEmpty()) sb.append(categoria);
 		
 		UI.getCurrent().getNavigator().navigateTo(sb.toString());
+	}
+
+	@Override
+	public void mostrarMensajeInicio() {
+		Subject currentUser = SecurityUtils.getSubject();
+		if (currentUser != null && currentUser.isAuthenticated()){
+			if (currentUser.getSession().getAttribute("mensaje") != null){
+				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());				
+			}
+		}		
 	} 
 }

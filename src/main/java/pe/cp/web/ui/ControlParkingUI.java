@@ -57,7 +57,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 @SuppressWarnings("serial")
 @Theme("controlparking")
 
@@ -113,6 +113,7 @@ public class ControlParkingUI extends UI {
 		INuevaOperacionView nuevaOperacionView = new NuevaOperacionViewImpl();
 		IEditarOperacionView editarOperacionView = new EditarOperacionViewImpl();
 		
+		
 		navigator.addView(MAIN, mainView);
 		navigator.addView(OPERACIONES, operacionesView);
 		navigator.addView(REPORTES, reportesView);
@@ -128,6 +129,7 @@ public class ControlParkingUI extends UI {
 		navigator.addView(TARIFA, tarifaView);
 		navigator.addView(NUEVA_OPERACION, nuevaOperacionView);
 		navigator.addView(EDITAR_OPERACION, editarOperacionView);
+		
 		setNavigator(navigator);
 		navigator.navigateTo("");
     }

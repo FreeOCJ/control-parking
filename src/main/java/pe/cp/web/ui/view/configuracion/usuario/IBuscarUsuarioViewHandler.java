@@ -9,4 +9,5 @@ public interface IBuscarUsuarioViewHandler {
 	void irAgregarNuevoUsuario();
 	void irEditarUsuario(int idUsuario);
 	void validarUsuario();
+	void mostrarMensajeInicio();
 }

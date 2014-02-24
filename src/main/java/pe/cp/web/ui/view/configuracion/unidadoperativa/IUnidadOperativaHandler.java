@@ -16,4 +16,5 @@ public interface IUnidadOperativaHandler {
 	void guardarAprobadores();
 	void guardarOperadores();
 	void irMantenimientoTarifa(String categoria);
+	void mostrarMensajeInicio();
 }

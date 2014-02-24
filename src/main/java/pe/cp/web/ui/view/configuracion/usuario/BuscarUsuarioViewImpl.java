@@ -63,6 +63,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 		handler = new BuscarUsuarioController(this);
 		handler.validarUsuario();
 		init();
+		handler.mostrarMensajeInicio();
 		//limpiarTabla();		
 	}
 		

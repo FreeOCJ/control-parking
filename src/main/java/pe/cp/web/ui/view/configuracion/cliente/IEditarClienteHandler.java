@@ -11,6 +11,7 @@ public interface IEditarClienteHandler {
 	void irAgregarNuevaUnidadOperativa();
 	void irAgregarNuevoUsuario();
 	void irEditarUnidadOperativa(int idUnidadOperativa);
-	void irEditarUsuario(int idUsuario);
+	void irEditarUsuario(int idUsuario,int idCliente);
 	void validarUsuario();
+	void mostrarMensajeInicio();
 }

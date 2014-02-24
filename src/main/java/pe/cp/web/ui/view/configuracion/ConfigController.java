@@ -12,7 +12,9 @@ import pe.cp.core.domain.Rol;
 import pe.cp.web.ui.ControlParkingUI;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Notification.Type;
 
 @Component
 @Scope("prototype")
@@ -45,6 +47,7 @@ public class ConfigController implements IConfigViewHandler {
 		}else{
 			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
 				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}
