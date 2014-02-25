@@ -22,12 +22,14 @@ import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.OperacionDetalle;
+import pe.cp.core.domain.OperacionPorTarifa;
 import pe.cp.core.mapper.OperacionMapper;
 
 @Repository
 public class OperacionDaoImpl implements OperacionDao {
 	private SimpleJdbcInsert insertarOperacion;
 	private SimpleJdbcInsert insertarOperacionDetalle;
+	private SimpleJdbcInsert insertarOperacionPorTarifa;
 	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
@@ -43,6 +45,9 @@ public class OperacionDaoImpl implements OperacionDao {
 		this.insertarOperacionDetalle = new SimpleJdbcInsert(dataSource)
 		        .withTableName("opdetalle")
 		        .usingGeneratedKeyColumns("IDDETALLE");
+		this.insertarOperacionPorTarifa = new SimpleJdbcInsert(dataSource)
+                .withTableName("optarifa")
+                .usingGeneratedKeyColumns("IDOPTARIFA");
 	}
 	@Override
 	public int agregar(Operacion op) {
@@ -184,5 +189,49 @@ public class OperacionDaoImpl implements OperacionDao {
 		
 		return detalles;
 	}
+	
+	@Override
+	public int agregarOperacionPorTarifa(OperacionPorTarifa operacionPorTarifa) {
+		Map<String, Object> parameters = new HashMap<String, Object>(4);
+		parameters.put("CANTIDADTICKETS", operacionPorTarifa.getCantidadTickets());
+		parameters.put("MONTOTOTAL", operacionPorTarifa.getMonto());
+		parameters.put("IDTARIFA", operacionPorTarifa.getIdTarifa());
+		parameters.put("IDOPERACION", operacionPorTarifa.getIdOperacion());
+				
+		Number key = insertarOperacionPorTarifa.executeAndReturnKey(parameters);
+		return key.intValue();
+	}
+	
+	@Override
+	public void actualizarOperacionPorTarifa(
+			OperacionPorTarifa operacionPorTarifa) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public List<OperacionPorTarifa> obtenerOpsPorTarifa(int idOperacion) {
+		final String sql = "SELECT op.IDOPTARIFA, op.CANTIDADTICKETS, op.IDTARIFA, op.MONTOTOTAL, op.IDOPERACION, t.CATEGORIA, t.MONTOTARIFA from optarifa op, tarifa t where op.IDTARIFA = t.IDTARIFA and op.idoperacion = :idOperacion";
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("idOperacion", idOperacion);
+		SqlParameterSource namedParameters = new MapSqlParameterSource(args);
+		
+		List<OperacionPorTarifa> opsPorTarifa = new ArrayList<OperacionPorTarifa>();
+		opsPorTarifa = namedParameterJdbcTemplate.query(sql, namedParameters, new RowMapper<OperacionPorTarifa>() {
+			@Override
+			public OperacionPorTarifa mapRow(ResultSet rs, int rowNumber) throws SQLException {
+				OperacionPorTarifa opTarifa = new OperacionPorTarifa();
+				opTarifa.setCantidadTickets(rs.getInt("CANTIDADTICKETS"));
+				opTarifa.setIdTarifa(rs.getInt("IDTARIFA"));
+				opTarifa.setIdOperacionPorTarifa(rs.getInt("IDOPTARIFA"));
+				opTarifa.setMonto(rs.getFloat("MONTOTOTAL"));
+				opTarifa.setIdOperacion(rs.getInt("IDOPERACION"));
+				opTarifa.setCategoria(rs.getString("CATEGORIA"));
+				opTarifa.setPrecioTarifa(rs.getFloat("MONTOTARIFA"));
 
+				return opTarifa;
+			}
+		});
+		
+		return opsPorTarifa;
+	}
 }

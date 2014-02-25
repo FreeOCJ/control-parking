@@ -5,6 +5,7 @@ import java.util.List;
 
 import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.OperacionDetalle;
+import pe.cp.core.domain.OperacionPorTarifa;
 
 public interface OperacionDao {
 	int agregar(Operacion op);
@@ -15,4 +16,7 @@ public interface OperacionDao {
 	int agregarOperacionDetalle(OperacionDetalle opDetalle);
 	void actualizarOperacionDetalle(OperacionDetalle opDetalle);
 	List<OperacionDetalle> obtenerDetalles(int idOperacion);
+	int agregarOperacionPorTarifa(OperacionPorTarifa operacionPorTarifa);
+	void actualizarOperacionPorTarifa(OperacionPorTarifa operacionPorTarifa);
+	List<OperacionPorTarifa> obtenerOpsPorTarifa(int idOperacion);
 }

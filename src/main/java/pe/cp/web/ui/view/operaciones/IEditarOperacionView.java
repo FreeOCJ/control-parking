@@ -22,6 +22,8 @@ public interface IEditarOperacionView extends View {
    TextField gdtTxtTotalIngresos();
    TextField getTxtTotalSalidas();
    TextField getTxtTotalPersonas();
+   TextField getTxtTotalRecaudacion();
+   TextField getTxtTotalCarrosTarifa();
    Table getTblControlTarifas();
    Table getTblIncidencias();
    int getIdOperacion();

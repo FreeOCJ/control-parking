@@ -10,6 +10,10 @@ import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionResponse;
+import pe.cp.core.service.messages.ObtenerIncidenciasRequest;
+import pe.cp.core.service.messages.ObtenerIncidenciasResponse;
+import pe.cp.core.service.messages.ObtenerOperacionPorTarifaRequest;
+import pe.cp.core.service.messages.ObtenerOperacionPorTarifaResponse;
 import pe.cp.core.service.messages.ObtenerOperacionRequest;
 import pe.cp.core.service.messages.ObtenerOperacionResponse;
 
@@ -26,4 +30,6 @@ public interface OperacionService {
 	AgregarOperacionResponse agregar(AgregarOperacionRequest request);
 	ObtenerOperacionResponse obtener(ObtenerOperacionRequest request);
 	ObtenerDetalleOperacionResponse obtenerDetalles(ObtenerDetalleOperacionRequest request);
+	ObtenerOperacionPorTarifaResponse obtenerOperacionesPorTarifa(ObtenerOperacionPorTarifaRequest request);
+	ObtenerIncidenciasResponse obtenerIncidencias(ObtenerIncidenciasRequest request);
 }

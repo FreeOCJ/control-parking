@@ -2,6 +2,7 @@ package pe.cp.web.ui.view.operaciones;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import pe.cp.web.ui.view.main.SideBar;
 
@@ -9,16 +10,21 @@ import com.vaadin.annotations.Theme;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 @Component
 @Scope("prototype")
@@ -42,9 +48,12 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	private TextField txtTotalIngresos;
 	private TextField txtTotalSalidas;
 	private TextField txtTotalPersonas;
+	private TextField txtTotalCarrosTarifa;
+	private TextField txtTotalRecaudacion;
 	private Table tblControlTarifas;
 	private Table tblIncidencias;
 	private Button btnNuevaIncidencia;
+	private TabSheet tsAcciones;
 	
 	IEditarOperacionHandler handler;
 	int idOperacion;
@@ -179,31 +188,49 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	    areaPrincipal.addComponent(header);
 	    
 	    //Configurar datos de labels
+	    HorizontalLayout cabeceraInformacion = new HorizontalLayout();
+	    cabeceraInformacion.setWidth("100%");
 		FormLayout labels1 = new FormLayout();
 		FormLayout labels2 = new FormLayout();
-		HorizontalLayout cabeceraInformacion = new HorizontalLayout();
+		FormLayout labels3 = new FormLayout();
+		FormLayout labels4 = new FormLayout();
 		cabeceraInformacion.addComponent(labels1);
 		cabeceraInformacion.addComponent(labels2);
+		cabeceraInformacion.addComponent(labels3);
+		cabeceraInformacion.addComponent(labels4);
 		areaPrincipal.addComponent(cabeceraInformacion);
 		
 		lblNombreUnidad = new Label();
 		lblNombreUnidad.setCaption("Unidad Operativa");
 		lblCreador = new Label();
 		lblCreador.setCaption("Registrado Por");
-		labels1.addComponent(lblNombreUnidad);
-		labels1.addComponent(lblCreador);
-		
 		lblEstado = new Label("Estado");
 		lblEstado.setCaption("Estado");
 		lblFechaRegistro = new Label("Fecha Registro");
 		lblFechaRegistro.setCaption("Fecha Registro");
-		labels2.addComponent(lblEstado);
-		labels2.addComponent(lblFechaRegistro);
 		
-		//Header Control de Ingreso y Salida
+		labels1.addComponent(lblNombreUnidad);
+		labels2.addComponent(lblCreador);
+		labels3.addComponent(lblEstado);
+		labels4.addComponent(lblFechaRegistro);
+		
+		//Configurar de Tabs
+		tsAcciones = new TabSheet();		
+		tsAcciones.setSizeFull();
+		tsAcciones.addStyleName("borderless");
+		areaPrincipal.addComponent(tsAcciones);
+		VerticalLayout tabIngresosSalidas = new VerticalLayout();
+		VerticalLayout tabTarifas = new VerticalLayout();
+		VerticalLayout tabIncidencias = new VerticalLayout();
+		
+		tsAcciones.addTab(tabIngresosSalidas, "Control de Ingresos y Salidas");
+		tsAcciones.addTab(tabTarifas, "Control de Tarifas");
+		tsAcciones.addTab(tabIncidencias, "Incidencias del Día");
+		
+		//TAB INGRESOS Y SALIDAS
 		HorizontalLayout headerIngresoSalidas = new HorizontalLayout();
-		areaPrincipal.addComponent(headerIngresoSalidas);
-		Label tituloControl = new Label("Control de Ingreso y Salida");
+		tabIngresosSalidas.addComponent(headerIngresoSalidas);
+		Label tituloControl = new Label("");
 	    title.addStyleName("h2");  
 	    headerIngresoSalidas.addComponent(tituloControl);
 	    
@@ -211,7 +238,7 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	  	VerticalLayout controlIngresoLayout = new VerticalLayout();
 	  	FormLayout formularioOferta = new FormLayout();
 	  	HorizontalLayout ingresoDiaLayout = new HorizontalLayout();
-	  	areaPrincipal.addComponent(controlIngresoLayout);
+	  	tabIngresosSalidas.addComponent(controlIngresoLayout);
 	  	controlIngresoLayout.addComponent(formularioOferta);
 	  	controlIngresoLayout.addComponent(ingresoDiaLayout);
 	 
@@ -253,20 +280,30 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		adicionalesControlLayout.addComponent(txtTotalSalidas);
 		adicionalesControlLayout.addComponent(txtTotalPersonas);
 		
-		//Control de Tarifas
+		//TAB TARIFAS
 		HorizontalLayout headerTarifas = new HorizontalLayout();
-		areaPrincipal.addComponent(headerTarifas);
-		Label tituloTarifas = new Label("Control de Tarifas");
+		tabTarifas.addComponent(headerTarifas);
+		Label tituloTarifas = new Label("");
 	    title.addStyleName("h2");  
 	    headerTarifas.addComponent(tituloTarifas);
 		
+	    HorizontalLayout elementosTarifasLayout = new HorizontalLayout();
+	    tabTarifas.addComponent(elementosTarifasLayout);
+	    
 	    tblControlTarifas = new Table();
-		areaPrincipal.addComponent(tblControlTarifas);
+	    elementosTarifasLayout.addComponent(tblControlTarifas);
+	    
+	    FormLayout adicionalesTarifaLayout = new FormLayout();
+	    elementosTarifasLayout.addComponent(adicionalesTarifaLayout);
+	    txtTotalCarrosTarifa = new TextField("Total Carros");
+	    txtTotalRecaudacion = new TextField("Total Recaudación");
+	    adicionalesTarifaLayout.addComponent(txtTotalCarrosTarifa);
+	    adicionalesTarifaLayout.addComponent(txtTotalRecaudacion);
 		
-		//Incidencias del dia
+		//TAB INCIDENCIAS
 		HorizontalLayout headerIncidencias = new HorizontalLayout();
-		areaPrincipal.addComponent(headerIncidencias);
-		Label tituloIncidencias = new Label("Incidencias del Día");
+		tabIncidencias.addComponent(headerIncidencias);
+		Label tituloIncidencias = new Label("");
 	    title.addStyleName("h2");  
 	    btnNuevaIncidencia = new Button("+");
 	    btnNuevaIncidencia.addStyleName("default");
@@ -275,7 +312,48 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	    headerIncidencias.setComponentAlignment(btnNuevaIncidencia, Alignment.MIDDLE_RIGHT);
 		
 	    tblIncidencias = new Table();
-	    areaPrincipal.addComponent(tblIncidencias);
+	    tabIncidencias.addComponent(tblIncidencias);
+
+	    tblIncidencias.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button("Editar");	
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idIncidencia = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Id").getValue();
+			        handler.editarIncidencia(idIncidencia);
+			      }
+			    });
+				
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                    // Confirmed to continue
+				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	System.out.println("eliminar");
+				                } else {
+				                    // User did not confirm
+				                	System.out.println("cancelar");
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} );
 		
 	    //Eventos
 	    txtTicketInicial.addValueChangeListener(new ValueChangeListener() {
@@ -299,5 +377,15 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	@Override
 	public int getIdOperacion() {
 		return idOperacion;
+	}
+
+	@Override
+	public TextField getTxtTotalRecaudacion() {
+		return txtTotalRecaudacion;
+	}
+
+	@Override
+	public TextField getTxtTotalCarrosTarifa() {
+		return txtTotalCarrosTarifa;
 	}
 }

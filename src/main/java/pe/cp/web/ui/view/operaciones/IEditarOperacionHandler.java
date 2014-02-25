@@ -12,4 +12,5 @@ public interface IEditarOperacionHandler {
    boolean validarEdicion();
    void calcularTotalTickets();
    void calcularTotalIngresoSalidas();
+   void calcularTotalTarifas();
 }

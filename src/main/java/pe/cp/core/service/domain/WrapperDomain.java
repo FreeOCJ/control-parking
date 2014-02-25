@@ -4,8 +4,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.OperacionDetalle;
+import pe.cp.core.domain.OperacionPorTarifa;
 import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Tarifa;
 import pe.cp.core.domain.UnidadOperativa;
@@ -95,6 +97,7 @@ public class WrapperDomain {
 		operacionView.setUltimoModificador(operacion.getUltimoModificador());
 		operacionView.setNombreCliente(operacion.getAuxNombreCliente());
 		operacionView.setNombreUnidadOperativa(operacion.getAuxNombreUnidadOperativa());
+		operacionView.setOferta(operacion.getOferta());
 		
 		return operacionView;
 	}
@@ -116,5 +119,28 @@ public class WrapperDomain {
 		detalleView.setHorario(horario);
 		
 		return detalleView;
+	}
+	
+	public static OperacionPorTarifaView ViewMapper(OperacionPorTarifa operacionPorTarifa) {
+		OperacionPorTarifaView view = new OperacionPorTarifaView();
+		view.setIdOpTarifa(operacionPorTarifa.getIdOperacionPorTarifa());
+		view.setCantidad(operacionPorTarifa.getCantidadTickets());
+		view.setDescripcion(String.format("%s - %s", operacionPorTarifa.getCategoria(), String.valueOf(operacionPorTarifa.getPrecioTarifa())));
+		view.setMonto(operacionPorTarifa.getMonto());
+        view.setPrecioTarifa(operacionPorTarifa.getPrecioTarifa());
+		
+		return view;
+	}
+	
+	public static IncidenciaView ViewMapper(Incidencia incidencia) {
+		IncidenciaView view = new IncidenciaView();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+		view.setDetalle(incidencia.getDescripcion());
+		view.setHora(sdf.format(incidencia.getFechaIncidencia()));
+		view.setId(incidencia.getId());
+		view.setTipo(incidencia.getTipoIncidencia().getDescripcion());
+		
+		return view;
 	}
 }

@@ -9,11 +9,16 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pe.cp.core.dao.IncidenciaDao;
 import pe.cp.core.dao.OperacionDao;
 import pe.cp.core.dao.RolDao;
+import pe.cp.core.dao.TarifaDao;
 import pe.cp.core.dao.UnidadOperativaDao;
+import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.OperacionDetalle;
+import pe.cp.core.domain.OperacionPorTarifa;
+import pe.cp.core.domain.Tarifa;
 import pe.cp.core.domain.UnidadOperativa;
 import pe.cp.core.service.messages.AgregarOperacionRequest;
 import pe.cp.core.service.messages.AgregarOperacionResponse;
@@ -21,9 +26,15 @@ import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionResponse;
+import pe.cp.core.service.messages.ObtenerIncidenciasRequest;
+import pe.cp.core.service.messages.ObtenerIncidenciasResponse;
+import pe.cp.core.service.messages.ObtenerOperacionPorTarifaRequest;
+import pe.cp.core.service.messages.ObtenerOperacionPorTarifaResponse;
 import pe.cp.core.service.messages.ObtenerOperacionRequest;
 import pe.cp.core.service.messages.ObtenerOperacionResponse;
+import pe.cp.core.service.domain.IncidenciaView;
 import pe.cp.core.service.domain.OperacionDetalleView;
+import pe.cp.core.service.domain.OperacionPorTarifaView;
 import pe.cp.core.service.domain.OperacionView;
 import pe.cp.core.service.domain.WrapperDomain;
 
@@ -32,15 +43,19 @@ public class OperacionServiceImpl implements OperacionService {
 	
 	@Autowired
 	private OperacionDao opdao;
-	
 	@Autowired
 	private UnidadOperativaDao unidadOpdao;
+	@Autowired
+	private TarifaDao tarifadao;
+	@Autowired
+	private IncidenciaDao incidenciaDao;
 	
 	private final String ERROR_VALIDAR_NUEVA_OPERACION = "Ya existe una operacion para la unidad operativa en la fecha indicada";
 	private final String ERROR_PARAMS_INCOMPLETOS = "Los parametros enviados no estan completos";
 	private final String ERROR_AGREGAR_OPERACION = "Error al agregar la operacion";
 	private final String ERROR_INSERT_OPERACION = "Error al insertar la operacion";
 	private final String EXITO_AGREGAR_OPERACION = "Se agrego la operacion";
+	private final String ERROR_UNIDAD_OPERATIVA_SIN_TARIFAS = "La unidad operativa no tiene tarifas asociadas";
 	
 	@Override
 	public int agregar(Operacion op) {
@@ -110,6 +125,13 @@ public class OperacionServiceImpl implements OperacionService {
 			Date horaInicio = unidadOp.getHoraInicio();
 			Date horaFin = unidadOp.getHoraFin();
 			
+			List<Tarifa> tarifas = tarifadao.obtenerTarifas(request.getIdUnidadOperativa(), null);
+			if (tarifas == null || tarifas.size() == 0) {
+				response.setResultadoEjecucion(false);
+				response.setMensaje(ERROR_UNIDAD_OPERATIVA_SIN_TARIFAS);
+				return response;
+			}
+			
 			if (request.getIdUnidadOperativa() > 0 && request.getFechaOperacion() != null 
 					&& request.getLogin() != null && !request.getLogin().isEmpty()
 					&& unidadOp != null) {
@@ -138,6 +160,15 @@ public class OperacionServiceImpl implements OperacionService {
 							opdao.agregarOperacionDetalle(opDetalle);
 							
 							horaInicio = horaFinTemp;
+						}
+						
+						//Cargar las tarifas por operacion
+						for (Tarifa tarifa : tarifas) {
+							OperacionPorTarifa opPorTarifa = new OperacionPorTarifa();
+							opPorTarifa.setIdOperacion(idNuevaOperacion);
+							opPorTarifa.setIdTarifa(tarifa.getId());
+							opPorTarifa.setMonto(0.0f);
+							opdao.agregarOperacionPorTarifa(opPorTarifa);
 						}
 						
 						response.setIdNuevaOperacion(idNuevaOperacion);
@@ -206,6 +237,56 @@ public class OperacionServiceImpl implements OperacionService {
 		} catch (Exception e) {
 			response.setResultadoEjecucion(false);
 			response.setMensaje("Error al obtener los detalles de la operacion");
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+
+	@Override
+	public ObtenerOperacionPorTarifaResponse obtenerOperacionesPorTarifa(
+			ObtenerOperacionPorTarifaRequest request) {
+		ObtenerOperacionPorTarifaResponse response = new ObtenerOperacionPorTarifaResponse();
+		
+		try {
+			float totalRecaudacion = 0f;
+			int cantidadCarros = 0;
+			List<OperacionPorTarifa> operacionesPorTarifa = opdao.obtenerOpsPorTarifa(request.getIdOperacion());
+			response.setOpsPorTarifaView(new ArrayList<OperacionPorTarifaView>());
+			for (OperacionPorTarifa operacionPorTarifa : operacionesPorTarifa) {
+				response.getOpsPorTarifaView().add(WrapperDomain.ViewMapper(operacionPorTarifa));
+				totalRecaudacion += operacionPorTarifa.getMonto();
+				cantidadCarros += operacionPorTarifa.getCantidadTickets();
+			}
+			response.setTotalCarros(cantidadCarros);
+			response.setTotalRecaudacion(totalRecaudacion);
+			response.setResultadoEjecucion(true);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje("Error al obtener las tarifas por operacion");
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+
+	@Override
+	public ObtenerIncidenciasResponse obtenerIncidencias(
+			ObtenerIncidenciasRequest request) {
+		ObtenerIncidenciasResponse response = new ObtenerIncidenciasResponse();
+		
+		try {
+			List<Incidencia> incidencias = incidenciaDao.obtenerIncidencias(request.getIdOperacion());
+			response.setIncidenciasView(new ArrayList<IncidenciaView>());
+			for (Incidencia incidencia : incidencias) {
+				response.getIncidenciasView().add(WrapperDomain.ViewMapper(incidencia));
+			}
+			response.setResultadoEjecucion(true);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje("Error al obtener las incidencias");
 			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}

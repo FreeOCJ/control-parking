@@ -6,7 +6,8 @@ public class Incidencia {
 	private int id;
 	private String descripcion;
 	private TipoIncidencia tipoIncidencia;
-	private Date fechaIncidencia;	
+	private Date fechaIncidencia;
+	private int idOperacion;
 	
 	public int getId() {
 		return id;
@@ -31,5 +32,11 @@ public class Incidencia {
 	}
 	public void setTipoIncidencia(TipoIncidencia tipoIncidencia) {
 		this.tipoIncidencia = tipoIncidencia;
+	}
+	public int getIdOperacion() {
+		return idOperacion;
+	}
+	public void setIdOperacion(int idOperacion) {
+		this.idOperacion = idOperacion;
 	}	
 }
