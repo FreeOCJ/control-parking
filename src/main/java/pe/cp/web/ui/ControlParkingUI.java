@@ -85,10 +85,10 @@ public class ControlParkingUI extends UI {
 	public static final String EDITAR_OPERACION = "editar_operacion";
 	public static final String INCIDENCIA = "incidencia";
 	
-	/*@WebServlet(value = "/*", asyncSupported = true)
+	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
-	}*/
+	}
 	
 	@Override
     protected void init(VaadinRequest request) {		
