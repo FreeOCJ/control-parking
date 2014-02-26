@@ -57,7 +57,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
 
@@ -81,10 +81,10 @@ public class ControlParkingUI extends UI {
 	public static final String TARIFA = "tarifa";
 	public static final String NUEVA_OPERACION = "nueva_operacion";
 	public static final String EDITAR_OPERACION = "editar_operacion";
-	/*@WebServlet(value = "/*", asyncSupported = true)
+	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
-	}*/
+	}
 	
 	@Override
     protected void init(VaadinRequest request) {		
