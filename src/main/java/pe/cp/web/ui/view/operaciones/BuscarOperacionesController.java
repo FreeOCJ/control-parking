@@ -157,8 +157,12 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 		Date fechaSeleccionada = null;
 		String estadoSeleccionado = null;
 		
-		UnidadOperativaView unidadSeleccionada = (UnidadOperativaView) view.getCbUnidadOp().getValue();
-		if (unidadSeleccionada != null) idUnidadSeleccionada = unidadSeleccionada.getId();
+		view.getResultados().removeAllItems();
+		
+		Object idElemUnidadSeleccionado = view.getCbUnidadOp().getValue();
+		int idUnidad = Integer.valueOf(view.getCbUnidadOp().getItem(idElemUnidadSeleccionado).getItemProperty("ID").toString());
+		
+		if (idUnidad > 0) idUnidadSeleccionada = idUnidad;
 		if (view.getDfFechaOp().getValue() != null) fechaSeleccionada = view.getDfFechaOp().getValue();
 		if (view.getCbEstado().getValue() != null && !view.getCbEstado().getValue().toString().isEmpty())
 			estadoSeleccionado = view.getCbEstado().getValue().toString();

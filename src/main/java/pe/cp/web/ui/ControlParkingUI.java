@@ -42,7 +42,9 @@ import pe.cp.web.ui.view.operaciones.EditarOperacionViewImpl;
 import pe.cp.web.ui.view.operaciones.IBuscarOperacionesView;
 import pe.cp.web.ui.view.operaciones.BuscarOperacionesViewImpl;
 import pe.cp.web.ui.view.operaciones.IEditarOperacionView;
+import pe.cp.web.ui.view.operaciones.IIncidenciaView;
 import pe.cp.web.ui.view.operaciones.INuevaOperacionView;
+import pe.cp.web.ui.view.operaciones.IncidenciaViewImpl;
 import pe.cp.web.ui.view.operaciones.NuevaOperacionViewImpl;
 import pe.cp.web.ui.view.reportes.IReportesView;
 import pe.cp.web.ui.view.reportes.ReportesView;
@@ -81,6 +83,8 @@ public class ControlParkingUI extends UI {
 	public static final String TARIFA = "tarifa";
 	public static final String NUEVA_OPERACION = "nueva_operacion";
 	public static final String EDITAR_OPERACION = "editar_operacion";
+	public static final String INCIDENCIA = "incidencia";
+	
 	/*@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
 	public static class Servlet extends VaadinServlet {
@@ -112,7 +116,7 @@ public class ControlParkingUI extends UI {
 		ITarifaView tarifaView = new TarifaViewImpl();
 		INuevaOperacionView nuevaOperacionView = new NuevaOperacionViewImpl();
 		IEditarOperacionView editarOperacionView = new EditarOperacionViewImpl();
-		
+		IIncidenciaView incidenciaView = new IncidenciaViewImpl();
 		
 		navigator.addView(MAIN, mainView);
 		navigator.addView(OPERACIONES, operacionesView);
@@ -129,6 +133,7 @@ public class ControlParkingUI extends UI {
 		navigator.addView(TARIFA, tarifaView);
 		navigator.addView(NUEVA_OPERACION, nuevaOperacionView);
 		navigator.addView(EDITAR_OPERACION, editarOperacionView);
+		navigator.addView(INCIDENCIA, incidenciaView);
 		
 		setNavigator(navigator);
 		navigator.navigateTo("");

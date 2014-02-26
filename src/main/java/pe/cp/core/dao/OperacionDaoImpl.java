@@ -78,19 +78,18 @@ public class OperacionDaoImpl implements OperacionDao {
 	@Override
 	public void modificar(Operacion op) {
 		jdbcTemplate.update("UPDATE OPERACION SET FECOPERACION = ?,DESOFERTA = ?," +
-				"VEHICULOSENTRADA = ?,VEHICULOSALIDA = ?,TICKETINICIO = ?, " +
+				"VEHICULOSENTRADA = ?,VEHICULOSSALIDA = ?,TICKETINICIO = ?, " +
 				"TICKETFIN = ?,CONDUCTORESRAUDOS = ?,CANTIDADPERSONAS = ?," +
-				"PERNOCTADOSINICIO = ?, PERNOCTADOSFIN = ?,IDUNIDAD = ?," +
-				"CREADOPOR = ?, ACTUALIZADOPOR = ?,FECHACREACION = ?," +
-				"FECHAACTUALIZA = ?, ESTADO = ?, AJUSTE = ? WHERE IDOPERACION = ?",
+				"PERNOCTADOSFIN = ?, ACTUALIZADOPOR = ?," +
+				"FECHAACTUALIZA = ?, ESTADO = ?, AJUSTE = ?, PERNOCTADOSINICIO = ? WHERE IDOPERACION = ?",
 				op.getFechaTransaccion(),op.getOferta(),op.getCantidadVehiculosEntrada(),
 				op.getCantidadVehiculosSalida(),op.getNumeroTicketInicio(),
 				op.getNumeroTicketFin(),op.getCantidadRaudos(),op.getCantidadPersonas(),
-				op.getCantidadPernoctadosInicio(),op.getCantidadPernoctadosFin(),
-				op.getUnidadoperativa().getId(),op.getCreador(),op.getUltimoModificador(),
-				op.getFechaCreacion(),op.getFechaActualizacion(),op.getEstado(),
+				op.getCantidadPernoctadosFin(),
+				op.getUltimoModificador(),
+				op.getFechaActualizacion(),op.getEstado(),
+				op.getCantidadPernoctadosInicio(),
 				op.getAjuste(),op.getId());
-
 	}
 
 	@Override
@@ -160,9 +159,11 @@ public class OperacionDaoImpl implements OperacionDao {
 	}
 	@Override
 	public void actualizarOperacionDetalle(OperacionDetalle opDetalle) {
-		// TODO Auto-generated method stub
-		
+		jdbcTemplate.update("UPDATE OPDETALLE SET PERSONAS = ?, INGRESOS = ?, SALIDAS = ? WHERE IDDETALLE = ?", 
+				opDetalle.getCantidadPersonas(), opDetalle.getCantidadIngresos(), opDetalle.getCantidadSalidas(),
+				opDetalle.getIdOpDetalle());
 	}
+	
 	@Override
 	public List<OperacionDetalle> obtenerDetalles(int idOperacion) {
 		final String sql = "SELECT * from opdetalle where idoperacion = :idOperacion";
@@ -203,10 +204,9 @@ public class OperacionDaoImpl implements OperacionDao {
 	}
 	
 	@Override
-	public void actualizarOperacionPorTarifa(
-			OperacionPorTarifa operacionPorTarifa) {
-		// TODO Auto-generated method stub
-		
+	public void actualizarOperacionPorTarifa(OperacionPorTarifa operacionPorTarifa) {
+		jdbcTemplate.update("UPDATE OPTARIFA SET CANTIDADTICKETS = ?, MONTOTOTAL = ? WHERE IDOPTARIFA = ?", 
+				operacionPorTarifa.getCantidadTickets(), operacionPorTarifa.getMonto(), operacionPorTarifa.getIdOperacionPorTarifa());
 	}
 	@Override
 	public List<OperacionPorTarifa> obtenerOpsPorTarifa(int idOperacion) {

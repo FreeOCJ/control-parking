@@ -93,7 +93,7 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
 	        
 	    Label title = new Label("Operaciones");
 	    title.addStyleName("h1");  
-	    btnNuevaOperacion = new Button("Procesar");
+	    btnNuevaOperacion = new Button("+");
 	    btnNuevaOperacion.addStyleName("default");
 	    header.addComponent(title); 
 	    header.addComponent(btnNuevaOperacion);
@@ -105,10 +105,10 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
 	    cbUnidadOperativa.setWidth("200px");
 	    cbUnidadOperativa.setItemCaptionPropertyId("NOMBRE");
         dfFechaOp = new DateField();
-        dfFechaOp.setWidth("200px");
+        dfFechaOp.setWidth("120px");
         cbEstado = new ComboBox();
         cbEstado.setInputPrompt("Estado");
-        cbEstado.setWidth("200px");
+        cbEstado.setWidth("120px");
         btnBuscar = new Button("Buscar");
         btnBuscar.addStyleName("default");
 
@@ -123,6 +123,7 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
         toolbar.setComponentAlignment(cbUnidadOperativa, Alignment.MIDDLE_LEFT);
         toolbar.addComponent(dfFechaOp);
         toolbar.setComponentAlignment(dfFechaOp, Alignment.MIDDLE_LEFT);
+        toolbar.addComponent(new Label("  "));
         toolbar.addComponent(cbEstado);
         toolbar.setComponentAlignment(cbEstado, Alignment.MIDDLE_LEFT);
         toolbar.addComponent(btnBuscar);

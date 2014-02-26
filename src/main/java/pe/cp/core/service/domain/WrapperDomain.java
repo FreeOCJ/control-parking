@@ -10,6 +10,7 @@ import pe.cp.core.domain.OperacionDetalle;
 import pe.cp.core.domain.OperacionPorTarifa;
 import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Tarifa;
+import pe.cp.core.domain.TipoIncidencia;
 import pe.cp.core.domain.UnidadOperativa;
 import pe.cp.core.domain.Usuario;
 
@@ -140,6 +141,14 @@ public class WrapperDomain {
 		view.setHora(sdf.format(incidencia.getFechaIncidencia()));
 		view.setId(incidencia.getId());
 		view.setTipo(incidencia.getTipoIncidencia().getDescripcion());
+		view.setFechaIncidencia(incidencia.getFechaIncidencia());
+		return view;
+	}
+	
+	public static TipoIncidenciaView ViewMapper(TipoIncidencia tipo) {
+		TipoIncidenciaView view = new TipoIncidenciaView();
+		view.setId(tipo.getId());
+		view.setTipo(tipo.getDescripcion());
 		
 		return view;
 	}

@@ -65,4 +65,12 @@ public class NavegacionUtil {
 	public static void irEditarOperacion(int idOperacion) {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.EDITAR_OPERACION + "/" + idOperacion);
 	}
+	
+	//Incidencias
+	public static void irMantIncidencia(int idOperacion, int idIncidencia) {
+		String id = (idIncidencia > 0) ? String.valueOf(idIncidencia) : "";
+		
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.INCIDENCIA + "/" + idOperacion + "/" + id);
+	}
+	
 }

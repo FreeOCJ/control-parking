@@ -21,6 +21,7 @@ import org.springframework.stereotype.Repository;
 import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.OperacionDetalle;
 import pe.cp.core.domain.TipoIncidencia;
+import pe.cp.core.domain.Usuario;
 
 @Repository
 public class IncidenciaDaoImpl implements IncidenciaDao {
@@ -41,29 +42,31 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	
 	@Override
 	public int agregar(Incidencia incidencia) {
-		Map<String, Object> parameters = new HashMap<String, Object>(1);
-		//parameters.put("IDOPERACION", 0); TODO
+		Map<String, Object> parameters = new HashMap<String, Object>(5);
 		parameters.put("DESINCIDENCIA", incidencia.getDescripcion());
-		//parameters.put("IDTIPOINC", tarifa.getCategoria());
+		parameters.put("FECHAINCIDENCIA", incidencia.getFechaIncidencia());
+		parameters.put("IDOPERACION", incidencia.getIdOperacion());
+		parameters.put("ELIMINADO", "F");
+		parameters.put("IDTIPOINC", incidencia.getTipoIncidencia().getId());
 		Number key = insertarIncidencia.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
 
 	@Override
 	public void actualizar(Incidencia incidencia) {
-		// TODO Auto-generated method stub
-
+		jdbcTemplate.update("UPDATE INCIDENCIA SET DESINCIDENCIA = ?, IDTIPOINC = ?, FECHAINCIDENCIA = ? WHERE IDINCIDENCIA = ?", 
+				incidencia.getDescripcion(), incidencia.getTipoIncidencia().getId(), incidencia.getFechaIncidencia(), 
+				incidencia.getId());
 	}
 
 	@Override
 	public void eliminar(int idIncidencia) {
-		// TODO Auto-generated method stub
-
+		jdbcTemplate.update("UPDATE INCIDENCIA SET ELIMINADO = 'T' WHERE IDINCIDENCIA = ?", idIncidencia);
 	}
 
 	@Override
 	public List<Incidencia> obtenerIncidencias(int idOperacion) {
-		final String sql = "SELECT i.IDINCIDENCIA, i.DESCINCIDENCIA, i.FECHAINCIDENCIA, i.IDOPERACION, i.ELIMINADO, i.IDTIPOINC, t.DESCTIPOINC  from incidencia i, tipoincidencia t where t.IDTIPOINC = i.IDTIPOINC and idoperacion = :idOperacion";
+		final String sql = "SELECT i.IDINCIDENCIA, i.DESINCIDENCIA, i.FECHAINCIDENCIA, i.IDOPERACION, i.ELIMINADO, i.IDTIPOINC, t.DESCTIPOINC  from incidencia i, tipoincidencia t where t.IDTIPOINC = i.IDTIPOINC and idoperacion = :idOperacion and i.ELIMINADO = 'F'";
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("idOperacion", idOperacion);
 		
@@ -91,4 +94,55 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 		return incidencias;
 	}
 
+	@Override
+	public List<TipoIncidencia> obtenerTipos() {
+		final String sql = "SELECT * from tipoincidencia where ELIMINADO='F'";
+		SqlParameterSource namedParameters = new MapSqlParameterSource(new HashMap<String, Object>());
+		
+		List<TipoIncidencia> tipos = new ArrayList<TipoIncidencia>();
+		tipos = namedParameterJdbcTemplate.query(sql, namedParameters, new RowMapper<TipoIncidencia>() {
+			@Override
+			public TipoIncidencia mapRow(ResultSet rs, int rowNumber) throws SQLException {
+				TipoIncidencia tipo = new TipoIncidencia();
+				tipo.setId(rs.getInt("IDTIPOINC"));
+				tipo.setDescripcion(rs.getString("DESCTIPOINC"));
+				tipo.setEliminado(false);
+				
+				return tipo;
+			}
+		});
+		
+		return tipos;
+	}
+
+	@Override
+	public Incidencia buscar(int idIncidencia) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT i.IDINCIDENCIA, i.DESINCIDENCIA, i.FECHAINCIDENCIA, i.IDOPERACION, i.ELIMINADO, i.IDTIPOINC, t.DESCTIPOINC ");
+		sb.append(" from incidencia i, tipoincidencia t ");
+		sb.append("where t.IDTIPOINC = i.IDTIPOINC and idincidencia = ? and i.ELIMINADO = 'F'");
+				
+		Incidencia incidencia = null;
+		Object[] args = {idIncidencia};
+		
+		incidencia = jdbcTemplate.queryForObject(sb.toString(), args, new RowMapper<Incidencia>(){
+			@Override
+			public Incidencia mapRow(ResultSet rs, int rowNumber) throws SQLException {
+				Incidencia incidencia = new Incidencia();
+				incidencia.setDescripcion(rs.getString("DESINCIDENCIA"));
+				incidencia.setFechaIncidencia(rs.getTimestamp("FECHAINCIDENCIA"));
+				incidencia.setId(rs.getInt("IDINCIDENCIA"));
+				incidencia.setIdOperacion(rs.getInt("IDOPERACION"));
+				
+				TipoIncidencia tipoIncidencia = new TipoIncidencia();
+				tipoIncidencia.setId(rs.getInt("IDTIPOINC"));
+				tipoIncidencia.setDescripcion(rs.getString("DESCTIPOINC"));
+				
+				incidencia.setTipoIncidencia(tipoIncidencia);
+				return incidencia;
+			}
+			
+		} );
+		return incidencia;
+	}
 }

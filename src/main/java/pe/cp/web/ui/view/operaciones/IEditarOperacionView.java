@@ -1,6 +1,7 @@
 package pe.cp.web.ui.view.operaciones;
 
 import com.vaadin.navigator.View;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -26,5 +27,9 @@ public interface IEditarOperacionView extends View {
    TextField getTxtTotalCarrosTarifa();
    Table getTblControlTarifas();
    Table getTblIncidencias();
+   Button getBtnAprobar();
+   Button getBtnGuardar();
+   Button getBtnEnviarAprobar();
+   Button getBtnAgregarIncidencia();
    int getIdOperacion();
 }

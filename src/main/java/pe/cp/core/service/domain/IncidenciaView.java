@@ -1,10 +1,13 @@
 package pe.cp.core.service.domain;
 
+import java.util.Date;
+
 public class IncidenciaView {
     private int id;
     private String tipo;
     private String hora;
     private String detalle;
+    private Date fechaIncidencia;
     
 	public int getId() {
 		return id;
@@ -29,5 +32,11 @@ public class IncidenciaView {
 	}
 	public void setDetalle(String detalle) {
 		this.detalle = detalle;
+	}
+	public Date getFechaIncidencia() {
+		return fechaIncidencia;
+	}
+	public void setFechaIncidencia(Date fechaIncidencia) {
+		this.fechaIncidencia = fechaIncidencia;
 	}
 }
