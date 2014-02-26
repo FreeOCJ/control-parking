@@ -59,7 +59,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 @Component
-@Scope("request")
+@Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
 
