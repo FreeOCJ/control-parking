@@ -15,6 +15,7 @@ public class NavegacionUtil {
 	
 	public static void irAgregarUsuarioCliente(int idCliente) { 
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.NUEVOUSUARIO + "/" + idCliente);	
+		
 	}
 	
 	public static void irEditarUsuario(int idCliente, int idUsuario) {
