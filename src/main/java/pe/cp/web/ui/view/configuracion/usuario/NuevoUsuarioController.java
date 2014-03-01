@@ -68,15 +68,12 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		if(view.getLogin().getValue().trim().isEmpty() || view.getNombres().getValue().trim().isEmpty() ||
 		   view.getApellidos().getValue().trim().isEmpty() || view.getCargo().getValue().trim().isEmpty() ||
 		   view.getCorreoElectronico().getValue().isEmpty()){
-			System.out.println("1");
 			sb.append("Debe ingresar llenar todos los campos del formulario;\n\t");
 			datosValidos = false;
 		}else{
 			//Luego se valida el formato del correo electronico
 			EmailValidator emailValidator = new EmailValidator("El correo electrónico no tiene un formato valido;\n\t");
 			view.getCorreoElectronico().addValidator(emailValidator);
-			
-			System.out.println("2");
 			
 			if (!view.getCorreoElectronico().isValid()) datosValidos = false;
 			else{

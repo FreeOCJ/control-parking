@@ -21,7 +21,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.jdbc.JdbcRealm;
 import org.apache.shiro.util.JdbcUtils;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
 import com.vaadin.external.org.slf4j.Logger;
@@ -49,8 +48,7 @@ public class SecurityRealm extends JdbcRealm {
     protected boolean permissionsLookupEnabled = false;	
 
     private static final Logger log = LoggerFactory.getLogger(SecurityRealm.class);
-    
- 
+
 	/**
 	 * jndiDataSourceName
 	 */
