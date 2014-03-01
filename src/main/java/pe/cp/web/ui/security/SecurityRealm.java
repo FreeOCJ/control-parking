@@ -50,10 +50,7 @@ public class SecurityRealm extends JdbcRealm {
 
     private static final Logger log = LoggerFactory.getLogger(SecurityRealm.class);
     
-    public void setDataSource(DriverManagerDataSource datasource) {
-    	
-    }
-    
+ 
 	/**
 	 * jndiDataSourceName
 	 */
