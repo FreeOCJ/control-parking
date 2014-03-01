@@ -61,7 +61,7 @@ import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
 
 @Component
-@Scope("prototype")
+@Scope("request")
 @SuppressWarnings("serial")
 @Theme("controlparking")
 

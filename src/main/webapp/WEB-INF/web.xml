@@ -19,10 +19,10 @@
 	    <servlet-name>ControlParking</servlet-name>
 	    <url-pattern>/VAADIN/*</url-pattern>
 	</servlet-mapping>
-<!-- 	<servlet-mapping>
+	<servlet-mapping>
 		<servlet-name>ControlParking</servlet-name>
 		<url-pattern>/*</url-pattern>
-	</servlet-mapping> -->
+	</servlet-mapping>
 	
    	<context-param>
 	    <param-name>contextConfigLocation</param-name>

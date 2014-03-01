@@ -7,7 +7,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CssLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.MenuBar;
@@ -33,24 +32,18 @@ public class SideBar extends VerticalLayout implements ISideBarView {
         setHeight("100%");
         
         // Branding element
-        HorizontalLayout logoLayout = new HorizontalLayout();
-        logoLayout.setStyleName("branding");
-        Image imgLogo = new Image(null, new ThemeResource("img/logo-controlparking.png"));
-        //imgLogo.setWidth("100px");
-        //imgLogo.setHeight("75px");
-        logoLayout.addComponent(imgLogo);
-        
-        //Image imgLogo = new Image(null, new ThemeResource("img/logo-controlparking.png"));
-        //imgLogo.setSizeFull();
-        //addComponent(imgLogo);
-        /*addComponent(new CssLayout() {
+        addComponent(new CssLayout() {
             {
                 addStyleName("branding");
-                //Image imgLogo = new Image(null, new ThemeResource("img/logo-controlparking.png"));
-                //imgLogo.setSizeFull();
-                //addComponent(imgLogo);
+                Image imgLogo = new Image(null, new ThemeResource("img/logo-controlparking.png"));
+                Label logo = new Label(
+                        "<span>ControlParking</span>",
+                        ContentMode.HTML);
+                logo.setSizeUndefined();
+                addComponent(logo);
+                addComponent(imgLogo);
             }
-        });*/
+        });
         
         // Main menu
         addComponent(menu);
@@ -82,7 +75,7 @@ public class SideBar extends VerticalLayout implements ISideBarView {
                 settingsMenu.addItem("Settings", cmd);
                 settingsMenu.addItem("Preferences", cmd);
                 settingsMenu.addSeparator();
-                settingsMenu.addItem("Mi Cuenta", cmd);
+                settingsMenu.addItem("My Account", cmd);
                 addComponent(settings);
 
                 Button exit = new NativeButton("Exit");
