@@ -3,6 +3,7 @@ package pe.cp.web.ui.view.configuracion.unidadoperativa;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
@@ -15,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
@@ -41,19 +43,29 @@ import pe.cp.core.service.messages.ObtenerUsuarioPorClienteResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioPorUnidadOpResponse;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaRequest;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
+import pe.cp.core.service.messages.RemoverTarifaRequest;
 import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 @Component
 @Scope("prototype")
@@ -72,6 +84,12 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	private final String ERR_HORARIO_NO_INGRESADO = "Debe ingresar las horas de funcionamiento de la unidad";
+	private final String ERR_HORARIO_NO_MAYOR = "La hora de apertura debe ser menor a la hora de cierre";
+	private final String ERR_TXTFIELD_OBLIGATORIOS = "Debe ingresar el nombre, dirección y cantidad de cajones";
+	private final String ERR_UBIGEO_OBLIGATORIOS = "Debe ingresar la información del ubigeo";
+	private final String ERR_FORMATO_NUMERO = "El campo numero de cajones solo acepta valores numéricos mayores a cero";
+	
 	public UnidadOperativaController(IUnidadOperativaView view){
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
 		unidadOpService = ac.getBean(UnidadOperativaService.class);
@@ -82,7 +100,8 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 	}
 	
 	@Override
-	public void cargar() {		
+	public void cargar() {	
+		anadirValidadorNumerico();
 		cargarDepartamentos();
 		cargarTwinColSelects();
 		
@@ -116,6 +135,7 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 				precargarUsuariosSeleccionados(view.getIdUnidadOperativa(), Rol.OPERADOR);
 				
 				//Se cargar las categorias
+				prepararTablaCategorias();
 				cargarCategorias();
 			}else{
 				Logger.getAnonymousLogger().log(Level.SEVERE, response.getMensaje());
@@ -242,6 +262,58 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 		}
 	}
 
+	@SuppressWarnings("serial")
+	private void prepararTablaCategorias() {
+	   view.getCategorias().setContainerDataSource(obtenerHeadersCategoriaContainer());
+	   view.getCategorias().addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {	
+			    	  String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
+			    	  irMantenimientoTarifa(categoria); 
+			      }
+			    });
+				
+				Button btnEliminar = new Button();
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar la tarifa?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                	String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
+				                	Response responseEliminar = unidadOpService.removerTarifa(new RemoverTarifaRequest(view.getIdUnidadOperativa(), categoria));
+				                	
+				                	if (responseEliminar.isResultadoEjecucion()) {
+				                		Subject currentUser = SecurityUtils.getSubject();
+				                		currentUser.getSession().setAttribute("mensaje", responseEliminar.getMensaje());
+				                		NavegacionUtil.irEditarUnidadOperativa(view.getIdCliente(), view.getIdUnidadOperativa());
+				                	} else {
+				                		Notification notification = new Notification(responseEliminar.getMensaje());
+				                		notification.setPosition(Position.TOP_CENTER);
+					        			notification.show(Page.getCurrent());
+				                	}
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} );
+		
+	}
+	
 	@Override
 	public Container obtenerHeadersCategoriaContainer() {
 		categoriasContainer = new IndexedContainer(); 
@@ -252,57 +324,65 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 
 	@Override
 	public void guardar() {
-		if (view.getIdUnidadOperativa() == 0){ 		
-			//Caso Nueva Unidad Operativa: Solo se ingresan datos principales. 
-			//Tablas asociadas solo se ingresan por el modo de Edicion
-			AgregarUnidadOperativaRequest request = new AgregarUnidadOperativaRequest();
-			request.setDepartamento((String) view.getDepartamento().getValue());
-			request.setDireccion(view.getDireccion().getValue());
-			request.setDistrito((String) view.getDistrito().getValue());
-			request.setNombre(view.getNombre().getValue());
-			request.setProvincia((String) view.getProvincia().getValue());
-			request.setIdCliente(view.getIdCliente());
-			request.setHoraInicio(view.getHoraApertura().getValue());
-			request.setHoraCierre(view.getHoraCierre().getValue());
-			request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
-			
-			AgregarUnidadOperativaResponse response = unidadOpService.agregar(request);
-			Subject currentUser = SecurityUtils.getSubject();
-			if (response.isResultadoEjecucion()){
-				currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
-				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + response.getIdUnidadOperativa());
-			}else{
-				Logger.getAnonymousLogger().log(Level.SEVERE, response.getMensaje());
-				//TODO Mostrar mensaje de error al usuario
-			}
-		}else{		
-			//Caso Actualizar Unidad Operativa
-			actualizar();
+		String mensaje = validarActualizacion();
+		
+		if (mensaje == null) {
+			if (view.getIdUnidadOperativa() == 0){ 				
+				//Caso Nueva Unidad Operativa: Solo se ingresan datos principales. 
+				//Tablas asociadas solo se ingresan por el modo de Edicion
+				AgregarUnidadOperativaRequest request = new AgregarUnidadOperativaRequest();
+				request.setDepartamento((String) view.getDepartamento().getValue());
+				request.setDireccion(view.getDireccion().getValue());
+				request.setDistrito((String) view.getDistrito().getValue());
+				request.setNombre(view.getNombre().getValue());
+				request.setProvincia((String) view.getProvincia().getValue());
+				request.setIdCliente(view.getIdCliente());
+				request.setHoraInicio(view.getHoraApertura().getValue());
+				request.setHoraCierre(view.getHoraCierre().getValue());
+				request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
+				
+				AgregarUnidadOperativaResponse response = unidadOpService.agregar(request);
+				Subject currentUser = SecurityUtils.getSubject();
+				if (response.isResultadoEjecucion()){
+					currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+					UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + response.getIdUnidadOperativa());
+				}else{
+					Logger.getAnonymousLogger().log(Level.SEVERE, response.getMensaje());
+					//TODO Mostrar mensaje de error al usuario
+				}
+			}else{		
+				//Caso Actualizar Unidad Operativa
+				actualizar();
+			}	
+		} else {
+			Notification notification = new Notification(mensaje);
+			notification.setPosition(Position.TOP_CENTER);
+			notification.show(Page.getCurrent());
 		}
 	}
 
 	@Override
 	public void actualizar() {
-	   ActualizarUnidadOpRequest request = new ActualizarUnidadOpRequest();
-	   request.setIdUnidadOperativa(view.getIdUnidadOperativa());
-	   request.setDepartamento(view.getDepartamento().getValue().toString());
-	   request.setDireccion(view.getDireccion().getValue());
-	   request.setDistrito(view.getDistrito().getValue().toString());
-	   request.setNombre(view.getNombre().getValue().toString());
-	   request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
-	   request.setProvincia(view.getProvincia().getValue().toString());
-	   request.setHoraInicio(view.getHoraApertura().getValue());
-	   request.setHoraCierre(view.getHoraCierre().getValue());
-	   
-	   ActualizarUnidadOpResponse response = unidadOpService.actualizar(request);
-	   Subject currentUser = SecurityUtils.getSubject();
-	   if (response.isResultadoEjecucion()) {
-		   currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+		ActualizarUnidadOpRequest request = new ActualizarUnidadOpRequest();
+		request.setIdUnidadOperativa(view.getIdUnidadOperativa());
+		request.setDepartamento(view.getDepartamento().getValue().toString());
+		request.setDireccion(view.getDireccion().getValue());
+		request.setDistrito(view.getDistrito().getValue().toString());
+		request.setNombre(view.getNombre().getValue().toString());
+		request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
+		request.setProvincia(view.getProvincia().getValue().toString());
+		request.setHoraInicio(view.getHoraApertura().getValue());
+		request.setHoraCierre(view.getHoraCierre().getValue());
+		   
+		ActualizarUnidadOpResponse response = unidadOpService.actualizar(request);
+		Subject currentUser = SecurityUtils.getSubject();
+		if (response.isResultadoEjecucion()) {
+	       currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 		   UI.getCurrent().getNavigator().navigateTo(
-				   ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
-	   } else {
-		   //TODO
-	   }
+		      ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
+		} else {
+			   //TODO
+		}
 	}
 
 	@Override
@@ -392,8 +472,54 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 			if (currentUser.getSession().getAttribute("mensaje") != null){
 				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
 				notification.setPosition(Position.TOP_CENTER);
-				notification.show(Page.getCurrent());				
+				notification.show(Page.getCurrent());	
+				currentUser.getSession().setAttribute("mensaje", null);
 			}
 		}		
-	} 
+	}
+	
+	private String validarActualizacion() {
+		Date horaApertura = view.getHoraApertura().getValue();
+		Date horaCierre = view.getHoraCierre().getValue();
+		String nombre = view.getNombre().getValue();
+		String direccion = view.getDireccion().getValue();
+		String cajones = view.getNumeroCajones().getValue();
+		String departamento = (String) view.getDepartamento().getValue();
+		String provincia = (String) view.getProvincia().getValue();
+		String distrito = (String) view.getDistrito().getValue();
+		String mensaje = null;
+		
+		if (nombre == null || nombre.isEmpty()) return ERR_TXTFIELD_OBLIGATORIOS;
+		if (direccion == null || direccion.isEmpty()) return ERR_TXTFIELD_OBLIGATORIOS;
+		if (cajones == null || cajones.isEmpty()) return ERR_TXTFIELD_OBLIGATORIOS;
+		if (departamento == null || departamento.isEmpty()) return ERR_UBIGEO_OBLIGATORIOS;
+		if (provincia == null || provincia.isEmpty()) return ERR_UBIGEO_OBLIGATORIOS;
+		if (distrito == null || distrito.isEmpty()) return ERR_UBIGEO_OBLIGATORIOS;
+		if (horaApertura == null || horaCierre == null) return ERR_HORARIO_NO_INGRESADO;
+		if (horaApertura.compareTo(horaCierre) >= 0) return ERR_HORARIO_NO_MAYOR;
+		try {
+			int cantidad = Integer.parseInt(cajones);
+			if (cantidad <= 0) return ERR_FORMATO_NUMERO;
+		} catch (NumberFormatException e) {
+			return ERR_FORMATO_NUMERO;
+		}
+		
+		return mensaje;
+	}
+	
+	private void anadirValidadorNumerico() {
+		view.getNumeroCajones().setImmediate(true);
+		view.getNumeroCajones().addValueChangeListener(new ValueChangeListener() {
+			
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				String valor = event.getProperty().getValue().toString();
+				try {
+					int cantidad = Integer.parseInt(valor);
+				} catch (NumberFormatException e) {
+					view.getNumeroCajones().setValue("");
+				}
+			}
+		});
+	}
 }

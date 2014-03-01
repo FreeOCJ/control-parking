@@ -120,7 +120,6 @@ public class TarifaViewImpl extends HorizontalLayout  implements ITarifaView {
 		lTarifas.setWidth("220px");
 		
 		HorizontalLayout buttons = new HorizontalLayout();
-		buttons.setWidth("100%");
 		btnGuardar = new Button("Guardar");
 		btnGuardar.addStyleName("default");
 		btnCancelar = new Button("Cancelar");

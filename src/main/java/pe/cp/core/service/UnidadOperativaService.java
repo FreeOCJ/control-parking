@@ -16,6 +16,7 @@ import pe.cp.core.service.messages.ObtenerUnidadOperativaResponse;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarRequest;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarResponse;
 import pe.cp.core.service.messages.ObtenerUnidadpOpPorClienteResponse;
+import pe.cp.core.service.messages.RemoverTarifaRequest;
 import pe.cp.core.service.messages.Response;
 
 public interface UnidadOperativaService {
@@ -31,10 +32,14 @@ public interface UnidadOperativaService {
 	int agregarTarifa(int idUnidadOp, int idTarifa);
 	int removerTarifa(int idUnidadOperativa, int idTarifa);
 	Response agregarUsuario(AgregarUsuarioUnidadOperativaRequest request);
+	Response removerTarifa(RemoverTarifaRequest request);
 	int agregarOperador(int idUnidadOp, int idUsuario);
 	int removerOperador(int idUnidadOp, int idUsuario);
 	int agregarAprobador(int idUnidadOp, int idUsuario);
 	int removerAprobador(int idUnidadOp, int idUsuario);
 	int agregarUsuarioCliente(int idUnidadOp, int idUsuario);
 	int removerUsuarioCliente(int idUnidadOp, int idUsuario);
+	String getConstanteRaudos();
+	String getConstantePernoctados();
+	String getConstanteRegular();
 }

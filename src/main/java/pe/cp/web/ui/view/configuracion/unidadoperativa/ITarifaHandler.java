@@ -7,5 +7,5 @@ public interface ITarifaHandler {
 	void cancelar();
 	void cargar();
 	void validarUsuario();
-	boolean validar();
+	String validar();
 }

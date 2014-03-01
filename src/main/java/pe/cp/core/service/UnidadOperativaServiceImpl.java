@@ -34,6 +34,7 @@ import pe.cp.core.service.messages.ObtenerUnidadOperativaResponse;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarRequest;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarResponse;
 import pe.cp.core.service.messages.ObtenerUnidadpOpPorClienteResponse;
+import pe.cp.core.service.messages.RemoverTarifaRequest;
 import pe.cp.core.service.messages.Response;
 
 @Service
@@ -42,6 +43,9 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 	private final String REGULAR = "REGULAR";
 	private final String RAUDOS = "RAUDOS";
 	private final String PERNOCTADOS = "PERNOCTADOS";
+	private final String EXITO_TARIFA_ELIMINADA = "La tarifa fue retirada exitosamente";
+	private final String ERR_ELIMINAR_TARIFA = "Error al eliminar la tarifa";
+	private final String ERR_TARIFA_DEFAULT = "No se pueden eliminar las tarifas RAUDOS, REGULAR o PERNOCTADOS";
 	
 	@Autowired
 	private UnidadOperativaDao unidadOpDao;
@@ -348,6 +352,45 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 		}
 		
 		return response;
+	}
+	
+	@Override
+	public Response removerTarifa(RemoverTarifaRequest request) {
+		Response response = new Response();
+		    
+		try {
+			if (request.getCategoria().equals(RAUDOS) || request.getCategoria().equals(PERNOCTADOS) ||
+					request.getCategoria().equals(REGULAR)) {
+				response.setResultadoEjecucion(false);
+				response.setMensaje(ERR_TARIFA_DEFAULT);
+			} else {
+				tarifaDao.eliminarPorCategoria(request.getIdUnidadOp(), request.getCategoria());
+				response.setResultadoEjecucion(true);
+				response.setMensaje(EXITO_TARIFA_ELIMINADA);	
+			}
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ELIMINAR_TARIFA);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+
+	@Override
+	public String getConstanteRaudos() {
+		return RAUDOS;
+	}
+
+	@Override
+	public String getConstantePernoctados() {
+		return PERNOCTADOS;
+	}
+
+	@Override
+	public String getConstanteRegular() {
+		return REGULAR;
 	}
 
 }

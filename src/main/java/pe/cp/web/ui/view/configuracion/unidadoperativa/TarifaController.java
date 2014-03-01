@@ -19,6 +19,7 @@ import pe.cp.core.service.messages.ObtenerUnidadOperativaRequest;
 import pe.cp.core.service.messages.ObtenerUnidadOperativaResponse;
 import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.ControlParkingUI;
+import pe.cp.web.ui.NavegacionUtil;
 
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
@@ -31,6 +32,11 @@ public class TarifaController implements ITarifaHandler {
 	@Autowired
 	private UnidadOperativaService unidadOpService;
 	
+	private final String ERR_NOMBRE_RESERVADO = "No se pueden usar los nombres RAUDOS, PERNOCTADOS o REGULAR";
+	private final String ERR_NOMBRE_VACIO = "Debe ingresar un nombre para la tarifa";
+	private final String ERR_NO_TARIFAS = "Debe agregar al menos un monto";
+	private final String ERR_FORMATO_NUMERO = "Sólo puede añadir números decimales mayores o iguales a 0.00";
+	
 	private ITarifaView view;
 	
 	public TarifaController(ITarifaView view){
@@ -41,13 +47,21 @@ public class TarifaController implements ITarifaHandler {
 	
 	@Override
 	public void anadir() {
+		Notification notification = new Notification(ERR_FORMATO_NUMERO,Type.WARNING_MESSAGE);
+		
 		try {
-		   double monto = Double.valueOf(view.getTxtMonto().getValue());
-		   view.getListaTarifas().addItem(monto);
-		   view.getTxtMonto().setValue("");
-		} catch (Exception e) {
-			//TODO
-			e.printStackTrace();
+		   double monto = Double.parseDouble(view.getTxtMonto().getValue());
+		   if (monto < 0.0) {
+			   notification.setPosition(Position.TOP_CENTER);
+			   notification.show(Page.getCurrent()); 
+			   view.getTxtMonto().setValue("");
+		   } else {
+			   view.getListaTarifas().addItem(monto);
+			   view.getTxtMonto().setValue("");   
+		   }
+		} catch (NumberFormatException e) {
+		    notification.setPosition(Position.TOP_CENTER);
+			notification.show(Page.getCurrent());
 		}
 	}
 
@@ -62,7 +76,9 @@ public class TarifaController implements ITarifaHandler {
 
 	@Override
 	public void guardar() {
-		if (validar()) {
+		String mensaje = validar();
+		
+		if (mensaje == null) {
 		   double[] montos = new double[view.getListaTarifas().getItemIds().size()];
 		   
 		   int i = 0;
@@ -84,13 +100,16 @@ public class TarifaController implements ITarifaHandler {
 			   notification.setPosition(Position.TOP_CENTER);
 			   notification.show(Page.getCurrent());
 		   }
+		} else {
+			Notification notification = new Notification(mensaje,Type.WARNING_MESSAGE);
+		    notification.setPosition(Position.TOP_CENTER);
+			notification.show(Page.getCurrent());
 		}
 	}
 
 	@Override
 	public void cancelar() {
-		// TODO Auto-generated method stub
-
+		NavegacionUtil.irEditarUnidadOperativa(view.getIdCliente(), view.getIdUnidadOperativa());
 	}
 
 	@Override
@@ -137,21 +156,20 @@ public class TarifaController implements ITarifaHandler {
 			}
 		}
 	}
-
+	
 	@Override
-	public boolean validar() {
-		// TODO Que pasa si entra y cambia el nombre al de otra ya existente. Bloquear los nombres reservados RAUDOS, etc
-		if (view.getTxtNombre().getValue().isEmpty()) {
-			//TODO Notificacion
-			return false;
-		}
+	public String validar() {
+		String nombre = view.getTxtNombre().getValue();
+		int cantidad = view.getListaTarifas().getItemIds().size();
 		
-		if (view.getListaTarifas().getItemIds().size() <= 0) {
-			//TODO Notificacion
-			return false;
-		}
+		if (nombre == null || nombre.isEmpty()) return ERR_NOMBRE_VACIO;
+		if (nombre.toUpperCase().equals(unidadOpService.getConstanteRaudos()) ||
+			nombre.toUpperCase().equals(unidadOpService.getConstantePernoctados()) ||
+			nombre.toUpperCase().equals(unidadOpService.getConstanteRegular()))
+			   return ERR_NOMBRE_RESERVADO;
+		if (cantidad == 0) return ERR_NO_TARIFAS;
 		
-		return true;
+		return null;
 	}
 	
 	private void irManteniemientoUnidadOp() {

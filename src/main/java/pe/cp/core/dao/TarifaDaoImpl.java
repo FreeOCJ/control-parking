@@ -58,14 +58,8 @@ public class TarifaDaoImpl implements TarifaDao {
 	}
 
 	@Override
-	public void eliminar(int idTarifa) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public Tarifa buscar(int idTarifa) {
-		final String sql = "select * from tarifa where IDTARIFA = :idTarifa";
+		final String sql = "select * from tarifa where IDTARIFA = :idTarifa AND ELIMINADO = 'F'";
 		SqlParameterSource namedParameters = new MapSqlParameterSource("idTarifa", idTarifa);
 		return namedParameterJdbcTemplate.queryForObject(sql, namedParameters, new TarifaMapper());
 	}
@@ -74,7 +68,7 @@ public class TarifaDaoImpl implements TarifaDao {
 	public List<Tarifa> obtenerTarifas(int idUnidadOperativa, String categoria) {
 		StringBuilder sbSql = new StringBuilder();
 		sbSql.append("select * from tarifa where IDUNIDADOP = :idUnidadOp");
-		if (categoria != null && !categoria.isEmpty()) sbSql.append(" and CATEGORIA = :categoria");
+		if (categoria != null && !categoria.isEmpty()) sbSql.append(" and CATEGORIA = :categoria AND ELIMINADO = 'F'");
 		
 		Map<String, Object> parameters = new HashMap<String, Object>(2);
 		parameters.put("idUnidadOp", idUnidadOperativa);
@@ -89,7 +83,7 @@ public class TarifaDaoImpl implements TarifaDao {
 	@Override
 	public void eliminarPorCategoria(int idUnidadOperativa, String categoria) {
 		StringBuilder sbSql = new StringBuilder();
-		sbSql.append("DELETE FROM tarifa where IDUNIDADOP=");
+		sbSql.append("UPDATE tarifa SET ELIMINADO = 'T' where IDUNIDADOP=");
 		sbSql.append(idUnidadOperativa);
 		sbSql.append(" AND CATEGORIA='");
 		sbSql.append(categoria);
@@ -100,7 +94,7 @@ public class TarifaDaoImpl implements TarifaDao {
 
 	@Override
 	public List<String> obtenerCategorias(int unidadOperativa) {
-		final String sql = "select distinct categoria from tarifa where IDUNIDADOP = :idUnidadOp";
+		final String sql = "select distinct categoria from tarifa where IDUNIDADOP = :idUnidadOp AND ELIMINADO = 'F'";
 		
 		List<String> categorias = new ArrayList<String>();
 		SqlParameterSource namedParameters = new MapSqlParameterSource("idUnidadOp", unidadOperativa);

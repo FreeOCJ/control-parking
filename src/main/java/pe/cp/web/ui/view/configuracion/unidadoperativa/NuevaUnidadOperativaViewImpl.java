@@ -255,48 +255,6 @@ public class NuevaUnidadOperativaViewImpl extends HorizontalLayout implements IU
 		
         tblCategorias = new Table();
         tblCategorias.setSizeFull();      
-        tblCategorias.setContainerDataSource(handler.obtenerHeadersCategoriaContainer());
-        tblCategorias.setSelectable(true);
-        tblCategorias.addGeneratedColumn("", new ColumnGenerator() {			
-			@Override
-			public Object generateCell(final Table source, final Object itemId, Object columnId) {
-				HorizontalLayout botonesAccion = new HorizontalLayout();
-				
-				Button btnEditar = new Button();
-				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
-				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {	
-			    	  String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
-			    	  handler.irMantenimientoTarifa(categoria); 
-			      }
-			    });
-				
-				Button btnEliminar = new Button();
-				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
-				btnEliminar.addClickListener(new ClickListener() {			 
-			      @Override 
-			      public void buttonClick(ClickEvent event) {				    	  
-			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
-				        new ConfirmDialog.Listener() {
-				            public void onClose(ConfirmDialog dialog) {
-				                if (dialog.isConfirmed()) {
-				                    // Confirmed to continue
-				                	String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
-				                	System.out.println("eliminar");
-				                } else {
-				                    // User did not confirm
-				                	System.out.println("cancelar");
-				                }
-				            }
-				        });			        			      
-			      }
-			    });
-			 
-				botonesAccion.addComponent(btnEditar);
-				botonesAccion.addComponent(btnEliminar);
-			    return botonesAccion;
-			}
-		} ); 
 		
         tabCategorias.addComponent(toolbar);
         tabCategorias.addComponent(tblCategorias);
