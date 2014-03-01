@@ -54,6 +54,8 @@ import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.BeanItemContainer;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.event.FieldEvents.TextChangeEvent;
+import com.vaadin.event.FieldEvents.TextChangeListener;
 import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
@@ -507,15 +509,17 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 		return mensaje;
 	}
 	
+	@SuppressWarnings("serial")
 	private void anadirValidadorNumerico() {
+		
 		view.getNumeroCajones().setImmediate(true);
-		view.getNumeroCajones().addValueChangeListener(new ValueChangeListener() {
-			
+		view.getNumeroCajones().addTextChangeListener(new TextChangeListener() {
+
 			@Override
-			public void valueChange(ValueChangeEvent event) {
-				String valor = event.getProperty().getValue().toString();
+			public void textChange(TextChangeEvent event) {
+				String valor = event.getText();
 				try {
-					int cantidad = Integer.parseInt(valor);
+					Integer.parseInt(valor);
 				} catch (NumberFormatException e) {
 					view.getNumeroCajones().setValue("");
 				}

@@ -24,6 +24,7 @@ import pe.cp.core.service.messages.AgregarTarifaRequest;
 import pe.cp.core.service.messages.AgregarUnidadOperativaRequest;
 import pe.cp.core.service.messages.AgregarUnidadOperativaResponse;
 import pe.cp.core.service.messages.AgregarUsuarioUnidadOperativaRequest;
+import pe.cp.core.service.messages.EliminarUnidadOpRequest;
 import pe.cp.core.service.messages.ObtenerConsTarifasRequest;
 import pe.cp.core.service.messages.ObtenerConsTarifasResponse;
 import pe.cp.core.service.messages.ObtenerTarifasRequest;
@@ -46,6 +47,8 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 	private final String EXITO_TARIFA_ELIMINADA = "La tarifa fue retirada exitosamente";
 	private final String ERR_ELIMINAR_TARIFA = "Error al eliminar la tarifa";
 	private final String ERR_TARIFA_DEFAULT = "No se pueden eliminar las tarifas RAUDOS, REGULAR o PERNOCTADOS";
+	private final String ERR_ELIMINAR_UNIDAD = "Error al eliminar la unidad operativa";
+	private final String EXITO_ELIMINAR_UNIDAD = "Se eliminó la unidad operativa";
 	
 	@Autowired
 	private UnidadOperativaDao unidadOpDao;
@@ -391,6 +394,24 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 	@Override
 	public String getConstanteRegular() {
 		return REGULAR;
+	}
+	
+	@Override
+	public Response eliminarUnidadOperativa(EliminarUnidadOpRequest request) {
+		Response response = new Response();
+		
+		try {
+			unidadOpDao.eliminar(request.getIdUnidadOperativa());
+			response.setResultadoEjecucion(true);
+			response.setMensaje(EXITO_ELIMINAR_UNIDAD);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ELIMINAR_UNIDAD);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
 	}
 
 }

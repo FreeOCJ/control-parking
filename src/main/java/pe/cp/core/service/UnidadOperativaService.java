@@ -6,6 +6,7 @@ import pe.cp.core.service.messages.AgregarTarifaRequest;
 import pe.cp.core.service.messages.AgregarUnidadOperativaRequest;
 import pe.cp.core.service.messages.AgregarUnidadOperativaResponse;
 import pe.cp.core.service.messages.AgregarUsuarioUnidadOperativaRequest;
+import pe.cp.core.service.messages.EliminarUnidadOpRequest;
 import pe.cp.core.service.messages.ObtenerConsTarifasRequest;
 import pe.cp.core.service.messages.ObtenerConsTarifasResponse;
 import pe.cp.core.service.messages.ObtenerTarifasRequest;
@@ -28,6 +29,7 @@ public interface UnidadOperativaService {
 	Response agregarTarifa(AgregarTarifaRequest request);
 	ObtenerConsTarifasResponse obtenerTarifas(ObtenerConsTarifasRequest request);
 	ObtenerUnidadesOpProcesarResponse obtenerParaProcesar(ObtenerUnidadesOpProcesarRequest request);
+	Response eliminarUnidadOperativa(EliminarUnidadOpRequest request);
 	void eliminar(int idUnidadOperativa);
 	int agregarTarifa(int idUnidadOp, int idTarifa);
 	int removerTarifa(int idUnidadOperativa, int idTarifa);
