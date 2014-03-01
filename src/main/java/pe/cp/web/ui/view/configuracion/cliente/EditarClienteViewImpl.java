@@ -169,6 +169,7 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 				                    // Confirmed to continue
 				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
 				                	System.out.println("eliminar");
+				                	handler.elimiarUsuario();
 				                } else {
 				                    // User did not confirm
 				                	System.out.println("cancelar");

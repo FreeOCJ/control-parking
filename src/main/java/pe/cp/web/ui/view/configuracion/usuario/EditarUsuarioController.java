@@ -17,6 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.data.util.BeanItemContainer;
+import com.vaadin.data.validator.EmailValidator;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
@@ -31,6 +32,8 @@ import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
+import pe.cp.core.service.messages.ValidarDatosUsuarioRequest;
+import pe.cp.core.service.messages.ValidarDatosUsuarioResponse;
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 
@@ -54,6 +57,9 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 	
 	@Override
 	public void cargar() {
+		
+		System.out.println("0.1 ");
+		
 		cargarRoles();
 		
 		ObtenerUsuarioRequest request = new ObtenerUsuarioRequest(view.getIdUsuario());
@@ -70,6 +76,8 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 			for (RolView rolView : response.getRolesView()) {				
 				Collections.addAll(preselected, rolView);
 			}
+			
+			
 										
 			view.getRoles().setValue(preselected);
 			view.getRoles().setImmediate(true);
@@ -87,9 +95,56 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		
 		view.getRoles().setContainerDataSource(rolBeans);		
 	}
+	
+	public boolean validarDatosEntrada(){
+		
+			
+		//Primero se validan los campos obligatorios.
+		
+		if(view.getLogin().getValue().trim().isEmpty() || view.getNombres().getValue().trim().isEmpty() ||
+		   view.getApellidos().getValue().trim().isEmpty() || view.getCargo().getValue().trim().isEmpty() ||
+		   view.getCorreoElectronico().getValue().isEmpty()){
+			Notification.show("Debe ingresar llenar todos los campos del formulario;", Notification.Type.WARNING_MESSAGE);
+			System.out.println("a. ");
+			return false;
+			
+		}else{
+			//Luego se valida el formato del correo electronico
+			EmailValidator emailValidator = new EmailValidator("");
+			view.getCorreoElectronico().addValidator(emailValidator);
+			
+			if (!view.getCorreoElectronico().isValid()) 
+				{
+				System.out.println("b. ");
+					Notification.show("El correo electrónico no tiene un formato valido;\n\t", Notification.Type.WARNING_MESSAGE);					
+					return false;
+				
+				}
+			else{
+				//Se valida que el login del usuario sea unico
+				ValidarDatosUsuarioRequest request = new ValidarDatosUsuarioRequest(0, view.getLogin().getValue().trim());
+				ValidarDatosUsuarioResponse response = usuarioservice.validarDatosUsuario(request);
+				
+				if (!response.isResultadoEjecucion())
+					{
+					System.out.println("c. ");
+						Notification.show(response.getMensaje(), Notification.Type.WARNING_MESSAGE);
+						return false;
+					}
+				}
+			}
+	
+		return true;
+	}
 
 	@Override
 	public void actualizar() {
+		
+		System.out.println("1.1 ");
+		System.out.println(validarDatosEntrada());
+		
+		if (!validarDatosEntrada()) return;
+		
 		ActualizarUsuarioRequest request = new ActualizarUsuarioRequest();
 		request.setIdUsuario(view.getIdUsuario());
 		request.setApellidos(view.getApellidos().getValue().trim());

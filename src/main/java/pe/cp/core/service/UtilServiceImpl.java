@@ -27,5 +27,13 @@ public class UtilServiceImpl implements UtilService {
 	public List<String> obtenerDistritos(String departamento, String provincia) {
 		return utildao.obtenerDistritos(departamento, provincia);
 	}
+	
+	
+	/*
+	 * @Override
+	public boolean enviarEmail()
+	{
+		return false;
+	}*/
 
 }

@@ -61,35 +61,39 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 	}
 
 	public boolean validarDatosEntrada(){
-		boolean datosValidos = true;
-		StringBuilder sb = new StringBuilder();
 		
+				
 		//Primero se validan los campos obligatorios
 		if(view.getLogin().getValue().trim().isEmpty() || view.getNombres().getValue().trim().isEmpty() ||
 		   view.getApellidos().getValue().trim().isEmpty() || view.getCargo().getValue().trim().isEmpty() ||
 		   view.getCorreoElectronico().getValue().isEmpty()){
-			sb.append("Debe ingresar llenar todos los campos del formulario;\n\t");
-			datosValidos = false;
+			Notification.show("Se debe llenar todos los datos del formulario.", Notification.Type.WARNING_MESSAGE);
+			return false;
 		}else{
 			//Luego se valida el formato del correo electronico
-			EmailValidator emailValidator = new EmailValidator("El correo electrónico no tiene un formato valido;\n\t");
+			EmailValidator emailValidator = new EmailValidator("");
 			view.getCorreoElectronico().addValidator(emailValidator);
 			
-			if (!view.getCorreoElectronico().isValid()) datosValidos = false;
-			else{
+			if (!view.getCorreoElectronico().isValid())
+			{
+				Notification.show("El correo electrónico no tiene un formato valido;\n\t", Notification.Type.WARNING_MESSAGE);
+				return false;
+			}
+			else
+			{
 				//Se valida que el login del usuario sea unico
 				ValidarDatosUsuarioRequest request = new ValidarDatosUsuarioRequest(0, view.getLogin().getValue().trim());
 				ValidarDatosUsuarioResponse response = usuarioservice.validarDatosUsuario(request);
 				if (!response.isResultadoEjecucion()){
-					sb.append(response.getMensaje());
-					datosValidos = false;
+					Notification.show(response.getMensaje(), Notification.Type.WARNING_MESSAGE);
+					return false;
 				}
-			}
-		}
-		
-		if (!datosValidos) Notification.show(sb.toString(), Notification.Type.WARNING_MESSAGE);
+			}		
 			
-		return datosValidos;
+	}
+		
+		return true;
+		
 	}
 	
 	@Override

@@ -14,4 +14,5 @@ public interface IEditarClienteHandler {
 	void irEditarUsuario(int idUsuario,int idCliente);
 	void validarUsuario();
 	void mostrarMensajeInicio();
+	void elimiarUsuario();
 }

@@ -230,4 +230,11 @@ public class EditarClienteController implements IEditarClienteHandler {
 		
 	}
 
+	@Override
+	public void elimiarUsuario() {
+		
+		
+		
+	}
+
 }
