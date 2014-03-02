@@ -1,11 +1,8 @@
-package pe.cp.web.ui.view.reportes;
+package pe.cp.web.ui.view.reportes.incidencias;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import pe.cp.web.ui.view.main.SideBar;
-import pe.cp.web.ui.view.reportes.IReportesView;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -17,35 +14,32 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+import pe.cp.web.ui.view.main.SideBar;
+
 @Component
 @Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
-public class ReportesView extends HorizontalLayout implements IReportesView {
+public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IReportesIncidenciasView{
 
 	private CssLayout contenido;
 	
 	@Autowired
-	private IReportesViewHandler handler;
+	private IReportesIncidenciasViewHandler handler;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		handler = new ReportesController(this);
-
-	}
-	
-	public ReportesView(){
-		init();
+		// TODO Auto-generated method stub
+		
 	}
 
-	
 	@Override
-	public void init() {		
-        System.out.println("init reportes");
+	public void init() {
+		System.out.println("init reportes incidencias");
 		construirBase();
 	}
 	
-	private void construirBase(){
+	private void construirBase(){		
 		setSizeFull();		
 		addStyleName("main-view");
 		
@@ -71,7 +65,7 @@ public class ReportesView extends HorizontalLayout implements IReportesView {
 	    header.setWidth("100%");
 	    areaPrincipal.addComponent(header);
 	        
-	    Label title = new Label("Reportes");
+	    Label title = new Label("Reporte de Incidencias");
 	    title.addStyleName("h1");         
 	    header.addComponent(title); 
 		
@@ -82,13 +76,13 @@ public class ReportesView extends HorizontalLayout implements IReportesView {
 	    btnReportesIncidencias.addClickListener(new ClickListener() {			
 			@Override
 			public void buttonClick(ClickEvent event) {
-				handler.irReportesIncidencias();		
+				//handler.irReportesIncidencias();		
 			}
 		});
 	    		
 	    areaPrincipal.addComponent(configLayout);
 	    areaPrincipal.setExpandRatio(configLayout, 1);
-		return areaPrincipal;
+	    return areaPrincipal;
 	}
 
 }

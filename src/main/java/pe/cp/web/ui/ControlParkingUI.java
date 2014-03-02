@@ -1,12 +1,10 @@
 package pe.cp.web.ui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 import javax.servlet.annotation.WebServlet;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -26,7 +24,6 @@ import pe.cp.web.ui.view.configuracion.unidadoperativa.IUnidadOperativaView;
 import pe.cp.web.ui.view.configuracion.unidadoperativa.ITarifaView;
 import pe.cp.web.ui.view.configuracion.unidadoperativa.NuevaUnidadOperativaViewImpl;
 import pe.cp.web.ui.view.configuracion.unidadoperativa.TarifaViewImpl;
-import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioController;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.EditarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.IBuscarUsuarioView;
@@ -50,12 +47,12 @@ import pe.cp.web.ui.view.operaciones.IncidenciaViewImpl;
 import pe.cp.web.ui.view.operaciones.NuevaOperacionViewImpl;
 import pe.cp.web.ui.view.reportes.IReportesView;
 import pe.cp.web.ui.view.reportes.ReportesView;
+import pe.cp.web.ui.view.reportes.incidencias.IReportesIncidenciasView;
+import pe.cp.web.ui.view.reportes.incidencias.ReportesIncidenciasViewImpl;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.annotations.VaadinServletConfiguration;
 import com.vaadin.navigator.Navigator;
-import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.server.VaadinServlet;
 import com.vaadin.ui.UI;
@@ -72,6 +69,7 @@ public class ControlParkingUI extends UI {
 	
 	public static final String OPERACIONES = "operaciones";
 	public static final String REPORTES = "reportes";
+	public static final String REPORTES_INCIDENCIAS = "reportes_incidencias";
 	public static final String CONFIGURACION = "configuracion";
 	public static final String AUDITORIA = "auditoria";
 	public static final String MAIN = "main";
@@ -106,6 +104,7 @@ public class ControlParkingUI extends UI {
 		//Create navigation
 		IMain mainView = new MainViewImpl();
 		IReportesView reportesView = new ReportesView();
+		IReportesIncidenciasView reportesIncidenciasView = new ReportesIncidenciasViewImpl();
 		IBuscarOperacionesView operacionesView = new BuscarOperacionesViewImpl();
 		IConfigView configuracionView = new ConfigViewImpl();
 		IAuditoriaView auditoriaView = new AuditoriaViewImpl();
@@ -125,6 +124,7 @@ public class ControlParkingUI extends UI {
 		navigator.addView(MAIN, mainView);
 		navigator.addView(OPERACIONES, operacionesView);
 		navigator.addView(REPORTES, reportesView);
+		navigator.addView(REPORTES_INCIDENCIAS, reportesIncidenciasView);
 		navigator.addView(CONFIGURACION, configuracionView);
 		navigator.addView(AUDITORIA, auditoriaView);
 		navigator.addView(BUSCARUSUARIOS, buscarUsuarioView);

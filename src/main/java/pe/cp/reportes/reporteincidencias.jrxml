@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteincidencias" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="32c00f67-ebc6-4fba-8dda-4dddb9bf1418">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_ID_CLIENTE" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT DATE_FORMAT(OP.FECOPERACION,'%d/%m/%Y') AS FECHA_INCIDENCIA,
+       DATE_FORMAT(OP.FECOPERACION,'%H:%i:%s %p') AS HORA_INCIDENCIA,
+       TINC.DESCTIPOINC AS NOVEDAD,
+       INC.DESINCIDENCIA AS ACCION_TOMADA,
+       C.RAZONSOCIAL,
+       UO.NOMBRE
+FROM
+INCIDENCIA INC,
+TIPOINCIDENCIA TINC,
+OPERACION OP,
+UNIDADOPERATIVA UO,
+CLIENTE C
+WHERE INC.IDTIPOINC = TINC.IDTIPOINC AND
+INC.IDOPERACION = OP.IDOPERACION AND
+OP.IDUNIDAD = UO.IDUNIDAD AND
+UO.IDCLIENTE = C.IDCLIENTE AND
+UO.IDCLIENTE = $P{P_ID_CLIENTE} AND
+OP.IDUNIDAD = $P{P_ID_UNIDAD}]]>
+	</queryString>
+	<field name="FECHA_INCIDENCIA" class="java.lang.String"/>
+	<field name="HORA_INCIDENCIA" class="java.lang.String"/>
+	<field name="NOVEDAD" class="java.lang.String"/>
+	<field name="ACCION_TOMADA" class="java.lang.String"/>
+	<field name="RAZONSOCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="11" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="77" splitType="Stretch">
+			<textField>
+				<reportElement uuid="7997d090-8b5d-4af4-8c98-8712ca14085f" x="103" y="11" width="305" height="20"/>
+				<textElement>
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["CLIENTE :    " + $F{RAZONSOCIAL}]]></textFieldExpression>
+			</textField>
+			<textField pattern="" isBlankWhenNull="false">
+				<reportElement uuid="b199b78a-7554-44e4-9efd-b4273c5614d6" mode="Transparent" x="26" y="45" width="307" height="20" forecolor="#000000" backcolor="#FFFFFF"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="SansSerif" size="14" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfEncoding="Cp1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single"/>
+				</textElement>
+				<textFieldExpression><![CDATA["UNIDAD OPERATIVA :    " + $F{NOMBRE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="46" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="e6512480-2316-442d-9f12-bf9c70183b6f" x="3" y="22" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="84992b0a-55f8-4cb0-889a-fd416e6ac235" x="103" y="22" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5bcd7487-2c4c-4ed9-a19b-b03677d8d077" x="245" y="22" width="100" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Novedad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f2ffd975-c6f1-4427-a95e-717256a3dd45" x="398" y="22" width="118" height="20"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acción Tomada]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<textField>
+				<reportElement uuid="28d301b9-9b98-486e-88d3-1faa789b7c04" x="3" y="12" width="119" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{FECHA_INCIDENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="88abaf36-61b3-411c-a789-302caba51a6e" x="103" y="12" width="130" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{HORA_INCIDENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="e77a94c8-9b6e-4440-a186-d8cec5a4a4c3" x="245" y="12" width="100" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{NOVEDAD}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="51ab460b-4aaf-4efc-b612-92264dbc5487" x="398" y="12" width="120" height="20"/>
+				<textElement/>
+				<textFieldExpression><![CDATA[$F{ACCION_TOMADA}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
