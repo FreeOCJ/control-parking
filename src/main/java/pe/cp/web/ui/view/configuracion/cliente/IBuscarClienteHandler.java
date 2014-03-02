@@ -3,6 +3,7 @@ package pe.cp.web.ui.view.configuracion.cliente;
 import com.vaadin.data.Container;
 
 public interface IBuscarClienteHandler {
+	void cargar();
 	void buscar();
 	void irAgregarNuevoCliente();
 	void irEditarCliente(int idCliente);

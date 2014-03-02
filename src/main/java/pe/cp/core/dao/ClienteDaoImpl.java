@@ -54,12 +54,12 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public void eliminar(int idCliente) {
-		jdbcTemplate.update("UPDATE cliente SET ELIMINADO = 'Y' WHERE IDCLIENTE = ?",idCliente);
+		jdbcTemplate.update("UPDATE cliente SET ELIMINADO = 'T' WHERE IDCLIENTE = ?",idCliente);
 	}
 
 	@Override
 	public List<Cliente> buscar(String nombreComercial) {
-		final String sql = "SELECT * FROM CLIENTE WHERE NOMBRECOMERCIAL LIKE ? ";
+		final String sql = "SELECT * FROM CLIENTE WHERE NOMBRECOMERCIAL LIKE ? and ELIMINADO='F'";
 		List<Cliente> clientes = null;
 		Object[] args = { "%" + nombreComercial + "%"};
 		clientes = jdbcTemplate.query(sql, args, new ClienteMapper());
@@ -68,7 +68,7 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public Cliente buscar(int idCliente) {
-		final String sql = "SELECT * FROM CLIENTE WHERE IDCLIENTE = ? ";
+		final String sql = "SELECT * FROM CLIENTE WHERE IDCLIENTE = ? AND ELIMINADO='F'";
 		Cliente cliente= null;
 		Object[] args = {idCliente};
 		cliente = jdbcTemplate.queryForObject(sql, args, new ClienteMapper());

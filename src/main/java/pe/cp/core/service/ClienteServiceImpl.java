@@ -2,6 +2,8 @@ package pe.cp.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,16 +17,21 @@ import pe.cp.core.service.messages.ActualizarClienteRequest;
 import pe.cp.core.service.messages.ActualizarClienteResponse;
 import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
+import pe.cp.core.service.messages.EliminarClienteRequest;
 import pe.cp.core.service.messages.InsertarClienteRequest;
 import pe.cp.core.service.messages.InsertarClienteResponse;
 import pe.cp.core.service.messages.ObtenerClienteRequest;
 import pe.cp.core.service.messages.ObtenerClienteResponse;
+import pe.cp.core.service.messages.Response;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
 	private ClienteDao cdao;
+	
+	private final String ERR_ELIMINAR_CLIENTE = "Error al eliminar al cliente";
+	private final String EXITO_ELIMINAR_CLIENTE = "Se eliminó al cliente de manera satisfactoria";
 	
 	@Override
 	public InsertarClienteResponse agregar(InsertarClienteRequest request) {
@@ -39,7 +46,7 @@ public class ClienteServiceImpl implements ClienteService {
 			Integer idCliente = cdao.agregar(cliente);
 			if (idCliente != null){
 				response.setIdCliente(idCliente);
-				response.setMensaje("Se insertó al usuario exitosamente");
+				response.setMensaje("Se insertó al cliente exitosamente");
 				response.setResultadoEjecucion(true);
 			}						
 		}else{
@@ -67,7 +74,7 @@ public class ClienteServiceImpl implements ClienteService {
 			cdao.actualizar(cliente);	
 			
 			response.setResultadoEjecucion(true);
-			response.setMensaje("Se actulizaron los datos del cliente exitosamente");
+			response.setMensaje("Se actualizaron los datos del cliente exitosamente");
 		}else{
 			response.setResultadoEjecucion(false);
 			response.setMensaje("Error al validar los datos del cliente");
@@ -124,6 +131,24 @@ public class ClienteServiceImpl implements ClienteService {
 		}else{
 			response.setResultadoEjecucion(false);
 			response.setMensaje("No se encontro un cliente con el ID dado");
+		}
+		
+		return response;
+	}
+	
+	@Override
+	public Response eliminarCliente(EliminarClienteRequest request) {
+		Response response = new Response();
+		
+		try {
+			cdao.eliminar(request.getIdCliente());
+			response.setResultadoEjecucion(true);
+			response.setMensaje(EXITO_ELIMINAR_CLIENTE);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ELIMINAR_CLIENTE);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return response;

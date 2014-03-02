@@ -2,6 +2,8 @@ package pe.cp.core.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
+import pe.cp.core.service.messages.EliminarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioPorClienteRequest;
@@ -28,6 +31,7 @@ import pe.cp.core.service.messages.ObtenerUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioResponse;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaRequest;
 import pe.cp.core.service.messages.ObtenerUsuariosSistemaResponse;
+import pe.cp.core.service.messages.Response;
 import pe.cp.core.service.messages.ValidarDatosUsuarioRequest;
 import pe.cp.core.service.messages.ValidarDatosUsuarioResponse;
 
@@ -39,6 +43,9 @@ public class UsuarioServiceImpl implements UsuarioService{
 	
 	@Autowired
 	private ClienteDao clientedao;
+	
+	private final String ERR_ELIMINAR_USUARIO = "Error al eliminar el usuario";
+	private final String EXITO_ELIMINAR_USUARIO = "Se eliminó al usuario satisfactoriamente";
 	
 	@Override
 	public ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request) {
@@ -260,6 +267,24 @@ public class UsuarioServiceImpl implements UsuarioService{
 		}
 		
 		response.setResultadoEjecucion(true);
+		return response;
+	}
+	
+	@Override
+	public Response eliminarUsuario(EliminarUsuarioRequest request) {
+		Response response = new Response();
+		
+		try {
+			usuariodao.eliminar(request.getIdUsuario());
+			response.setResultadoEjecucion(true);
+			response.setMensaje(EXITO_ELIMINAR_USUARIO);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ELIMINAR_USUARIO);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
 		return response;
 	}
 }

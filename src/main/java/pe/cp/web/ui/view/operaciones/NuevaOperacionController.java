@@ -1,11 +1,15 @@
 package pe.cp.web.ui.view.operaciones;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.service.OperacionService;
 import pe.cp.core.service.UnidadOperativaService;
 import pe.cp.core.service.domain.UnidadOperativaView;
@@ -18,6 +22,8 @@ import pe.cp.web.ui.NavegacionUtil;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.ui.Notification;
+import com.vaadin.ui.Notification.Type;
 
 public class NuevaOperacionController implements INuevaOperacionHandler {
     
@@ -66,8 +72,18 @@ public class NuevaOperacionController implements INuevaOperacionHandler {
 
 	@Override
 	public void validarUsuario() {
-		// TODO Auto-generated method stub
+		Subject currentUser = SecurityUtils.getSubject();
 
+		if (!currentUser.isAuthenticated()) {
+			Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no autenticado, redireccionando a login");
+			NavegacionUtil.irLogin();
+		}else{
+			if (!currentUser.hasRole(Rol.OPERADOR)){
+				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
+				NavegacionUtil.irMain();
+			}
+		}
 	}
 
 	@SuppressWarnings("unchecked")

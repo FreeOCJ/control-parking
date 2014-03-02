@@ -57,9 +57,6 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 	
 	@Override
 	public void cargar() {
-		
-		System.out.println("0.1 ");
-		
 		cargarRoles();
 		
 		ObtenerUsuarioRequest request = new ObtenerUsuarioRequest(view.getIdUsuario());
@@ -76,11 +73,13 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 			for (RolView rolView : response.getRolesView()) {				
 				Collections.addAll(preselected, rolView);
 			}
-			
-			
-										
+				
 			view.getRoles().setValue(preselected);
 			view.getRoles().setImmediate(true);
+			
+			//Los roles solo son editables cuando son usuarios de Control Parking
+			if (view.getIdCliente() == 0)
+				view.getRoles().setVisible(false);
 		}
 	}
 	
@@ -105,7 +104,6 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		   view.getApellidos().getValue().trim().isEmpty() || view.getCargo().getValue().trim().isEmpty() ||
 		   view.getCorreoElectronico().getValue().isEmpty()){
 			Notification.show("Debe ingresar llenar todos los campos del formulario;", Notification.Type.WARNING_MESSAGE);
-			System.out.println("a. ");
 			return false;
 			
 		}else{
@@ -113,21 +111,16 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 			EmailValidator emailValidator = new EmailValidator("");
 			view.getCorreoElectronico().addValidator(emailValidator);
 			
-			if (!view.getCorreoElectronico().isValid()) 
-				{
-				System.out.println("b. ");
+			if (!view.getCorreoElectronico().isValid()) {
 					Notification.show("El correo electrónico no tiene un formato valido;\n\t", Notification.Type.WARNING_MESSAGE);					
 					return false;
-				
-				}
-			else{
+			} else{
 				//Se valida que el login del usuario sea unico
 				ValidarDatosUsuarioRequest request = new ValidarDatosUsuarioRequest(0, view.getLogin().getValue().trim());
 				ValidarDatosUsuarioResponse response = usuarioservice.validarDatosUsuario(request);
 				
 				if (!response.isResultadoEjecucion())
 					{
-					System.out.println("c. ");
 						Notification.show(response.getMensaje(), Notification.Type.WARNING_MESSAGE);
 						return false;
 					}
@@ -139,8 +132,6 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 
 	@Override
 	public void actualizar() {
-		
-		System.out.println("1.1 ");
 		System.out.println(validarDatosEntrada());
 		
 		if (!validarDatosEntrada()) return;
@@ -178,7 +169,8 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 
 	@Override
 	public void cancelar() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);		
+		if (view.getIdCliente() == 0) NavegacionUtil.irBuscarUsuarios();
+		else NavegacionUtil.irEditarCliente(view.getIdCliente());
 	}
 
 	@Override

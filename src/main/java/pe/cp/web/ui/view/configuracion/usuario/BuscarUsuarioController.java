@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -19,17 +20,25 @@ import com.vaadin.data.util.IndexedContainer;
 
 
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.domain.UsuarioView;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
 import pe.cp.core.service.messages.BuscarUsuarioResponse;
-import pe.cp.web.ui.ControlParkingUI;
+import pe.cp.core.service.messages.EliminarUsuarioRequest;
+import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.NavegacionUtil;
 
 
@@ -40,6 +49,7 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	ApplicationContext ac;
 	private IBuscarUsuarioView view;
 	private Container container;
+	private Notification notification;
 	
 	@Autowired
 	private UsuarioService usuarioservice;
@@ -117,14 +127,65 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 		Subject currentUser = SecurityUtils.getSubject();
 		if (currentUser != null && currentUser.isAuthenticated()){
 			if (currentUser.getSession().getAttribute("mensaje") != null){
-				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
+				notification = (Notification) currentUser.getSession().getAttribute("mensaje");
 				notification.setPosition(Position.TOP_CENTER);
-				notification.show(Page.getCurrent());				
+				notification.show(Page.getCurrent());			
+				currentUser.getSession().setAttribute("mensaje", null);
 			}
 		}
-		
-		
 	}
 	
+	@SuppressWarnings("serial")
+	private void prepararTabla() {
+	    Table tblUsuarios = view.getTblResultados();
+		
+	    tblUsuarios.setContainerDataSource(setHeaderTable());
+	    tblUsuarios.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button();	
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        irEditarUsuario(idUsuario);
+			      }
+			    });
+				
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+				                	Response response = usuarioservice.eliminarUsuario(new EliminarUsuarioRequest(idUsuario));
+				                	
+				                	notification = new Notification(response.getMensaje());
+				                	if (response.isResultadoEjecucion()) view.getTblResultados().removeAllItems();
+				                	notification.setPosition(Position.TOP_CENTER);
+				    				notification.show(Page.getCurrent());
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} );
+	}
+
+	@Override
+	public void cargar() {
+		prepararTabla();
+	}
 	
 }

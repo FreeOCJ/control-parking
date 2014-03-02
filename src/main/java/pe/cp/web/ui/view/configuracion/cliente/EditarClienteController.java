@@ -96,18 +96,15 @@ public class EditarClienteController implements IEditarClienteHandler {
 		request.setRazonSocial(view.getRazonSocial().getValue().trim());
 		request.setRuc(view.getRuc().getValue().trim());
 		
-		ActualizarClienteResponse response = new ActualizarClienteResponse();
-		Subject currentUser = SecurityUtils.getSubject();
+		ActualizarClienteResponse response = clienteService.actualizar(request);
 		
+		Notification notification = new Notification(response.getMensaje());
 		if (response.isResultadoEjecucion()){		
-			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
-			UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARCLIENTES);			
-		}else{
-			view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
-			view.getNotification().setPosition(Position.TOP_CENTER);
-			view.getNotification().show(Page.getCurrent());	
-			
+			cargar();		
 		}
+		
+		notification.setPosition(Position.TOP_CENTER);
+		notification.show(Page.getCurrent());	
 		
 	}
 

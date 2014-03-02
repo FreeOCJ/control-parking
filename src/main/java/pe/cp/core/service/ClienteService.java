@@ -5,10 +5,12 @@ import pe.cp.core.service.messages.ActualizarClienteRequest;
 import pe.cp.core.service.messages.ActualizarClienteResponse;
 import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
+import pe.cp.core.service.messages.EliminarClienteRequest;
 import pe.cp.core.service.messages.InsertarClienteRequest;
 import pe.cp.core.service.messages.InsertarClienteResponse;
 import pe.cp.core.service.messages.ObtenerClienteRequest;
 import pe.cp.core.service.messages.ObtenerClienteResponse;
+import pe.cp.core.service.messages.Response;
 
 public interface ClienteService {
 	InsertarClienteResponse agregar(InsertarClienteRequest request);
@@ -16,6 +18,7 @@ public interface ClienteService {
 	void eliminar(int idCliente);
 	BuscarClienteResponse buscar(BuscarClienteRequest request);
 	ObtenerClienteResponse obtenerPorId(ObtenerClienteRequest request);
+	Response eliminarCliente(EliminarClienteRequest request);
 	boolean validarNuevoCliente(Cliente cliente);
 	boolean validarModificarCliente(Cliente cliente, Cliente clienteMod);	
 }

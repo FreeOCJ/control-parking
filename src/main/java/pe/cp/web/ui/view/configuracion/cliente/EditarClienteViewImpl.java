@@ -88,12 +88,15 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		txtRazonSocial = new TextField();
 		txtRazonSocial.setCaption("Razón Social");
 		txtRazonSocial.setWidth("300px");
+		txtRazonSocial.setMaxLength(50);
 		txtNombreComercial = new TextField();
 		txtNombreComercial.setCaption("Nombre Comercial");
 		txtNombreComercial.setWidth("300px");
+		txtNombreComercial.setMaxLength(100);
 		txtRuc = new TextField();
 		txtRuc.setCaption("RUC");
 		txtRuc.setWidth("300px");		
+		txtRuc.setMaxLength(11);
 		
 		HorizontalLayout buttons = new HorizontalLayout();
 		Button btnGuardarUsuario = new Button("Guardar");

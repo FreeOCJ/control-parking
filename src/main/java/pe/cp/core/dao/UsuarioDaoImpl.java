@@ -87,7 +87,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscar(String nombre) {
-		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre";		
+		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		SqlParameterSource args = new MapSqlParameterSource("nombre","%" + nombre + "%");		
 		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){
@@ -154,7 +154,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscarOr(UsuarioFilter filtro) {
-		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos";		
+		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("nombres", "%" +  filtro.getNombres() + "%");

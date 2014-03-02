@@ -10,4 +10,5 @@ public interface IBuscarUsuarioViewHandler {
 	void irEditarUsuario(int idUsuario);
 	void validarUsuario();
 	void mostrarMensajeInicio();
+	void cargar();
 }

@@ -1,42 +1,21 @@
 package pe.cp.web.ui.view.configuracion.usuario;
 
-import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 
-
-
-
-
-
-
-
-
-
-
-import org.vaadin.dialogs.ConfirmDialog;
-
 import pe.cp.web.ui.view.main.SideBar;
 
 import com.vaadin.annotations.Theme;
-import com.vaadin.data.Property;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.Page;
-import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.Position;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.UI;
-import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.Table.ColumnGenerator;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
@@ -64,7 +43,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 		handler.validarUsuario();
 		init();
 		handler.mostrarMensajeInicio();
-		//limpiarTabla();		
+		handler.cargar();		
 	}
 		
 	@Override
@@ -93,7 +72,7 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	        
 	    Label title = new Label("Configuración de Usuarios");
 	    title.addStyleName("h1");  
-	    Button btnNuevoUsuario = new Button("Nuevo Usuario");
+	    Button btnNuevoUsuario = new Button("+");
 	    btnNuevoUsuario.addStyleName("default");
 	    header.addComponent(title); 
 	    header.addComponent(btnNuevoUsuario);
@@ -109,61 +88,6 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
         //Crear Tabla
         tblusuarios = new Table();
         tblusuarios.setSizeFull();      
-        tblusuarios.setContainerDataSource(handler.setHeaderTable());
-        tblusuarios.setSelectable(true);
-        tblusuarios.addGeneratedColumn("", new ColumnGenerator() {			
-			@Override
-			public Object generateCell(final Table source, final Object itemId, Object columnId) {
-				HorizontalLayout botonesAccion = new HorizontalLayout();
-				
-				Button btnEditar = new Button("Editar");	
-				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
-				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-			        handler.irEditarUsuario(idUsuario);
-			      }
-			    });
-				
-				Button btnEliminar = new Button();	
-				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
-				btnEliminar.addClickListener(new ClickListener() {			 
-			      @Override 
-			      public void buttonClick(ClickEvent event) {				    	  
-			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
-				        new ConfirmDialog.Listener() {
-				            public void onClose(ConfirmDialog dialog) {
-				                if (dialog.isConfirmed()) {
-				                    // Confirmed to continue
-				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-				                	System.out.println("eliminar");
-				                } else {
-				                    // User did not confirm
-				                	System.out.println("cancelar");
-				                }
-				            }
-				        });			        			      
-			      }
-			    });
-			 
-				botonesAccion.addComponent(btnEditar);
-				botonesAccion.addComponent(btnEliminar);
-			    return botonesAccion;
-			}
-		} );
-        
-     // Define the properties (columns)
-    /** container.addContainerProperty("name", String.class, "noname");
-     container.addContainerProperty("volume", Double.class, -1.0d);
-
-     // Add some items
-     Object content[][] = {{"jar", 2.0}, {"bottle", 0.75},
-                           {"can", 1.5}};
-     for (Object[] row: content) {
-         Item newItem = container.getItem(container.addItem());
-         newItem.getItemProperty("name").setValue(row[0]);
-         newItem.getItemProperty("volume").setValue(row[1]);
-     }**/
                 
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.setWidth("100%");
@@ -204,8 +128,11 @@ public class BuscarUsuarioViewImpl extends HorizontalLayout implements IBuscarUs
 	@Override
 	public void limpiarTabla() {
 		tblusuarios.removeAllItems();
-		//tblusuarios.setVisibleColumns(new Object[]{});
-		//tblusuarios.setColumnHeaders(new String[]{});		
+	}
+
+	@Override
+	public Table getTblResultados() {
+		return tblusuarios;
 	}
 	
 	

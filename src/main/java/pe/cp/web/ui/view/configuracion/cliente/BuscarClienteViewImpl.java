@@ -42,6 +42,7 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 		removeAllComponents();
 		handler = new BuscarClienteController(this);
 		init();		
+		handler.cargar();
 	}
 
 	@Override
@@ -70,7 +71,7 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
 	        
 	    Label title = new Label("Configuración de Clientes");
 	    title.addStyleName("h1");  
-	    Button btnNuevoUsuario = new Button("Nuevo Cliente");
+	    Button btnNuevoUsuario = new Button("+");
 	    btnNuevoUsuario.addStyleName("default");
 	    header.addComponent(title); 
 	    header.addComponent(btnNuevoUsuario);
@@ -79,56 +80,15 @@ public class BuscarClienteViewImpl extends HorizontalLayout implements IBuscarCl
         //Crear Tools Busqueda
 	    txtFiltroCliente = new TextField();
 	    txtFiltroCliente.setInputPrompt("Nombre Comercial");
-	    txtFiltroCliente.setWidth("300px");               
+	    txtFiltroCliente.setWidth("300px");
+	    txtFiltroCliente.setMaxLength(50);
         Button btnBuscar = new Button("Buscar");
         btnBuscar.addStyleName("default");
         
         //Crear Tabla
         tblClientes = new Table();
         tblClientes.setSizeFull();    
-        tblClientes.setContainerDataSource(handler.obtenerHeadersContainer());
-        tblClientes.setSelectable(true);
-        tblClientes.addGeneratedColumn("", new ColumnGenerator() {			
-			@Override
-			public Object generateCell(final Table source, final Object itemId, Object columnId) {
-				HorizontalLayout botonesAccion = new HorizontalLayout();
-				
-				Button btnEditar = new Button();
-				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
-				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-			        handler.irEditarCliente(idCliente);
-			      }
-			    });
-				
-				Button btnEliminar = new Button();
-				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
-				btnEliminar.addClickListener(new ClickListener() {			 
-			      @Override 
-			      public void buttonClick(ClickEvent event) {				    	  
-			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
-				        new ConfirmDialog.Listener() {
-				            public void onClose(ConfirmDialog dialog) {
-				                if (dialog.isConfirmed()) {
-				                    // Confirmed to continue
-				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-				                	System.out.println("eliminar");
-				                } else {
-				                    // User did not confirm
-				                	System.out.println("cancelar");
-				                }
-				            }
-				        });			        			      
-			      }
-			    });
-			 
-				botonesAccion.addComponent(btnEditar);
-				botonesAccion.addComponent(btnEliminar);
-			    return botonesAccion;
-			}
-		} ); 
-        tblClientes.setVisibleColumns((Object []) BuscarClienteController.obtenerColumnasVisiblesCliente());
+
                 
         HorizontalLayout toolbar = new HorizontalLayout();
         toolbar.setWidth("100%");
