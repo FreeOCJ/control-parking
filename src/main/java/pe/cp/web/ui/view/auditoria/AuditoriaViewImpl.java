@@ -45,7 +45,6 @@ public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaVie
 	
 	@Override
 	public void init() {		
-        System.out.println("init auditoria");
 		construirBase();
 	}
 	
@@ -83,11 +82,11 @@ public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaVie
 	    txtUsuario.setInputPrompt("Usuario");	    	    
         cbTipoEvento = new ComboBox();
         cbTipoEvento.setInputPrompt("Tipo Evento");
-        cbTipoEvento.setWidth("200px");        
+        cbTipoEvento.setWidth("150px");        
         dfFechaInicio = new DateField();
-        dfFechaInicio.setWidth("200px");
+        dfFechaInicio.setWidth("80px");
         dfFechaFin = new DateField();
-        dfFechaFin.setWidth("200px");        
+        dfFechaFin.setWidth("80px");        
         btnBuscar = new Button("Buscar");
         btnBuscar.addStyleName("default");
                 
@@ -104,11 +103,17 @@ public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaVie
         toolbar.setComponentAlignment(cbTipoEvento, Alignment.MIDDLE_LEFT);
         toolbar.addComponent(dfFechaInicio);
         toolbar.setComponentAlignment(dfFechaInicio, Alignment.MIDDLE_LEFT);
+        toolbar.addComponent(new Label());
         toolbar.addComponent(dfFechaFin);
         toolbar.setComponentAlignment(dfFechaFin, Alignment.MIDDLE_LEFT);
+        toolbar.addComponent(new Label());
         toolbar.addComponent(btnBuscar);
         toolbar.setComponentAlignment(btnBuscar, Alignment.BOTTOM_LEFT);
         toolbar.setExpandRatio(btnBuscar, 1);
+        
+        //Tabla resultados
+        tblResultados = new Table();
+        areaPrincipal.addComponent(tblResultados);
         
 		return areaPrincipal;
 	}

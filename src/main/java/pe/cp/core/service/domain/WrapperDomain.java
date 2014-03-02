@@ -155,7 +155,7 @@ public class WrapperDomain {
 	
 	public static AuditoriaView ViewMapper(Auditoria audit) {
 		AuditoriaView view = new AuditoriaView();
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY dd:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy dd:mm");
 		
 		view.setDescripcion(audit.getEvento());
 		view.setFechaHora(sdf.format(audit.getFechaCreacion()));

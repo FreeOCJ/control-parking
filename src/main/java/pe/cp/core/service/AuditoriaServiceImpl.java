@@ -15,6 +15,7 @@ import pe.cp.core.service.domain.AuditoriaView;
 import pe.cp.core.service.domain.WrapperDomain;
 import pe.cp.core.service.messages.BuscarAuditoriaRequest;
 import pe.cp.core.service.messages.BuscarAuditoriaResponse;
+import pe.cp.core.service.messages.ObtenerTipoEventosResponse;
 
 @Service
 public class AuditoriaServiceImpl implements AuditoriaService {
@@ -60,6 +61,28 @@ public class AuditoriaServiceImpl implements AuditoriaService {
 			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}
+		
+		return response;
+	}
+
+	@Override
+	public ObtenerTipoEventosResponse obtenerTipoEventos() {
+		ObtenerTipoEventosResponse response = new ObtenerTipoEventosResponse();
+		response.setTipoEventos(new ArrayList<String>());
+		new ArrayList<String>();
+		response.getTipoEventos().add(ELIMINAR_CLIENTE);
+		response.getTipoEventos().add(ELIMINAR_OPERACION);
+		response.getTipoEventos().add(ELIMINAR_UNIDAD_OP);
+		response.getTipoEventos().add(ELIMINAR_USUARIO);
+		response.getTipoEventos().add(INSERTAR_CLIENTE);
+		response.getTipoEventos().add(INSERTAR_OPERACION);
+		response.getTipoEventos().add(INSERTAR_UNIDAD_OP);
+		response.getTipoEventos().add(INSERTAR_USUARIO);
+		response.getTipoEventos().add(MODIFICAR_CLIENTE);
+		response.getTipoEventos().add(MODIFICAR_OPERACION);
+		response.getTipoEventos().add(MODIFICAR_UNIDAD_OP);
+		response.getTipoEventos().add(MODIFICAR_USUARIO);
+		response.setResultadoEjecucion(true);
 		
 		return response;
 	}
