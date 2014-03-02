@@ -66,7 +66,7 @@ public class UtilServiceImpl implements UtilService {
 
        message.addRecipient(Message.RecipientType.TO, toAddress);
        message.setSubject("Portal Control Parking | Usuario de acceso.");
-       message.setText("Estimado usuario: Su clave es: "+ PASSWORD);
+       message.setText("Estimado usuario: Su clave es: "+ pwd);
            
        //String attachmentName = "C:\\Tempo\\ultimus.pdf";
        //FileDataSource fileDataSource = new FileDataSource(attachmentName);

@@ -5,16 +5,18 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import pe.cp.core.service.LoginService;
+import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.messages.RecuperarContrasenaRequest;
 import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.NavegacionUtil;
-
+import pe.cp.core.domain.Usuario;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification;
+
 
 public class RecuperarContrasenaController implements
 		IRecuperarContrasenaHandler {
@@ -26,6 +28,13 @@ public class RecuperarContrasenaController implements
 	@Autowired
 	private LoginService loginService;
 	
+	@Autowired
+	private UsuarioService usuarioService;
+	
+	@Autowired
+	private Usuario usuario;
+	
+	
 	private final String ERR_FORMATO_EMAIL = "Debe ingresar un email válido";
 	
 	public RecuperarContrasenaController(IRecuperarContrasenaView view) {
@@ -36,21 +45,40 @@ public class RecuperarContrasenaController implements
 	
 	@Override
 	public void enviarContrasena() {
-		String email = view.getCorreoElectronico().getValue();
-		//TODO Validar formato mail!
+		String login = view.getLogin().getValue();
 		
-		if (email != null && !email.isEmpty()) {
-			Response response = loginService.recuperaContrasena(new RecuperarContrasenaRequest(email));
+		
+		if (login != null && !login.isEmpty()) {
+			
+			usuarioService = ac.getBean(UsuarioService.class);
+			usuario = usuarioService.buscarPorLogin(login);
+			
+			if (usuario == null) {
+				
+				notification = new Notification("No existe el usuario ingresado.");
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());
+				return;
+			} 
+			
+			
+			Response response = loginService.recuperaContrasena(new RecuperarContrasenaRequest(login));
 			
 			notification = new Notification(response.getMensaje());
 			if (response.isResultadoEjecucion()) {
+				
+				notification = new Notification("Se envió la contraseña al correo configurado.");
+				notification.setPosition(Position.TOP_CENTER);
+				notification.show(Page.getCurrent());
+				
 			    NavegacionUtil.irLogin();	
 			} else {
 				notification.setPosition(Position.TOP_CENTER);
 				notification.show(Page.getCurrent());
+				
 			}
 		} else {
-			notification = new Notification(ERR_FORMATO_EMAIL);
+			notification = new Notification("Usuario no válido.");
 			notification.setPosition(Position.TOP_CENTER);
 			notification.show(Page.getCurrent());
 		}

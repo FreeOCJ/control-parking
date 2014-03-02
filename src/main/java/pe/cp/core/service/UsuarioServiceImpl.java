@@ -96,7 +96,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 				usuario.setCliente(clientedao.buscar(request.getIdCliente()));
 			else
 				usuario.setCliente(null);
-			usuario.setPassword(generarContrasenaTemporal());
+			usuario.setPassword(request.getPwd());
 		
 		if (validarNuevoUsuario(usuario)){
 			Integer idUsuario = usuariodao.agregar(usuario);

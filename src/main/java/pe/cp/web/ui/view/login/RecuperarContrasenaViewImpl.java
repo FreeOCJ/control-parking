@@ -20,7 +20,7 @@ import com.vaadin.ui.VerticalLayout;
 @SuppressWarnings("serial")
 public class RecuperarContrasenaViewImpl extends HorizontalLayout implements IRecuperarContrasenaView {
 
-	private TextField txtCorreoEletronico;
+	private TextField txtLogin;
 	private Button btnEnviar;
 	private Button btnCancelar;
 	private CssLayout contenido;
@@ -60,11 +60,11 @@ public class RecuperarContrasenaViewImpl extends HorizontalLayout implements IRe
 	    //Formulario
 	    FormLayout formulario = new FormLayout();
 		areaPrincipal.addComponent(formulario);
-		txtCorreoEletronico = new TextField("Ingresar Correo Electrónico");
-		txtCorreoEletronico.setMaxLength(100);
-		txtCorreoEletronico.setWidth("250px");
+		txtLogin = new TextField("Ingresar Usuario");
+		txtLogin.setMaxLength(100);
+		txtLogin.setWidth("250px");
 		
-		formulario.addComponent(txtCorreoEletronico);
+		formulario.addComponent(txtLogin);
 		
 		HorizontalLayout buttons = new HorizontalLayout();
 		btnEnviar = new Button("Enviar");
@@ -81,8 +81,8 @@ public class RecuperarContrasenaViewImpl extends HorizontalLayout implements IRe
 	}
 
 	@Override
-	public TextField getCorreoElectronico() {
-		return txtCorreoEletronico;
+	public TextField getLogin() {
+		return txtLogin;
 	}
 
 	@Override

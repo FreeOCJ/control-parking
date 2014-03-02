@@ -11,6 +11,7 @@ public class InsertarUsuarioRequest {
 	private int idCliente;
 	private List<Integer> idRoles;
 	private int idUsuarioModificador;
+	private String pwd;
 	
 	public InsertarUsuarioRequest(int idUsuarioModificador) {
 		this.idUsuarioModificador = idUsuarioModificador;
@@ -60,5 +61,13 @@ public class InsertarUsuarioRequest {
 	}
 	public void setIdRoles(List<Integer> idRoles) {
 		this.idRoles = idRoles;
+	}
+	
+	public String getPwd()	{
+		return pwd;
+	}
+	
+	public void setPwd(String Pwd) {
+		this.pwd = Pwd;
 	}
 }

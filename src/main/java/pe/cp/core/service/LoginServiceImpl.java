@@ -100,12 +100,14 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public void recuperarContrasena(String login, String contrasena) {
 		// TODO Auto-generated method stub
+		
+		
 
 	}
 
 	@Override
 	public String generarContrasenaTemporal() {
-		String contrasena = generatePswd(5, 9, 4, 2, 1).toString();
+		String contrasena = generatePswd(7, 9, 4, 2, 1).toString();
 		return contrasena;
 	}
 
@@ -121,9 +123,7 @@ public class LoginServiceImpl implements LoginService {
 		Response response = new Response();
 		
 		try {
-			String contrasena = generatePswd(5, 9, 4, 2, 1).toString();
-			//IMPLEMENTAR ESTO OMAR
-			
+			String contrasena = generatePswd(7, 9, 4, 2, 1).toString();
 			response.setResultadoEjecucion(true);
 		} catch (Exception e) {
 			response.setResultadoEjecucion(false);
@@ -142,7 +142,7 @@ public class LoginServiceImpl implements LoginService {
             throw new IllegalArgumentException("Min. Length > Max. Length!");
         if( (noOfCAPSAlpha + noOfDigits + noOfSplChars) > minLen )
             throw new IllegalArgumentException
-            ("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!");
+            ("Min. Length should be atleast sum of (CAPS, DIGITS, SPL CHARS) Length!!!");
         Random rnd = new Random();
         int len = rnd.nextInt(maxLen - minLen + 1) + minLen;
         char[] pswd = new char[len];

@@ -37,6 +37,8 @@ import pe.cp.core.service.messages.ValidarDatosUsuarioResponse;
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 
+
+
 @Component
 @Scope("prototype")
 public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
@@ -47,6 +49,14 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 	private UsuarioService usuarioservice;
 	@Autowired
 	private RolService rolservice;
+	
+	@Autowired
+	private UtilService utilService;
+
+	@Autowired
+	private LoginService loginService;
+	
+	private String pass;
 	
 	public NuevoUsuarioController(INuevoUsuarioView view){
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
@@ -104,6 +114,9 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		
 		if (!validarDatosEntrada()) return;
 		else{
+			
+			loginService = ac.getBean(LoginService.class);
+			
 			Subject currentUser = SecurityUtils.getSubject();
 			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 			InsertarUsuarioRequest request = new InsertarUsuarioRequest(idUsuario);
@@ -114,6 +127,8 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 			request.setNombres(view.getNombres().getValue().trim());
 			request.setIdRoles(new ArrayList<Integer>());
 			request.setIdCliente(view.getIdCliente());
+			pass = loginService.generarContrasenaTemporal();
+			request.setPwd(pass);
 			
 			@SuppressWarnings({ "unchecked", "rawtypes" })
 			ArrayList<RolView> rolesView = new ArrayList<RolView>((Collection)view.getRoles().getValue());
@@ -123,6 +138,9 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 					
 			InsertarUsuarioResponse response = usuarioservice.agregar(request);
 			if (response.isResultadoEjecucion()){
+				System.out.println("PRUEBA1");
+				enviarMail();
+				System.out.println("PRUEBA2");
 				currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 				if (view.getIdCliente()==0){
 					UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);}
@@ -178,9 +196,9 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 	
 	private void enviarMail(){
 		
-		UtilService util = null; 
-		LoginService login = null;
-		util.enviarEmail(view.getCorreoElectronico().getValue(), login.generarContrasenaTemporal());
+		loginService = ac.getBean(LoginService.class);
+		utilService = ac.getBean(UtilService.class);
+		utilService.enviarEmail(view.getCorreoElectronico().getValue(), pass);
 		
 	}
 
