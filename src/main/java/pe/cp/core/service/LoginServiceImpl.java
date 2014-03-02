@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 
 
+
 import com.vaadin.server.VaadinService;
 
 import pe.cp.core.dao.UsuarioDao;
@@ -23,6 +24,8 @@ import pe.cp.core.domain.Usuario;
 import pe.cp.core.domain.filters.UsuarioFilter;
 import pe.cp.core.service.messages.LoginRequest;
 import pe.cp.core.service.messages.LoginResponse;
+import pe.cp.core.service.messages.RecuperarContrasenaRequest;
+import pe.cp.core.service.messages.Response;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -103,6 +106,24 @@ public class LoginServiceImpl implements LoginService {
 			String contrasena) {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public Response recuperaContrasena(RecuperarContrasenaRequest request) {
+		Response response = new Response();
+		
+		try {
+			//IMPLEMENTAR ESTO OMAR
+			
+			response.setResultadoEjecucion(true);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje("Error !!");
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
 	}
 
 }

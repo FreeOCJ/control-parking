@@ -1,12 +1,17 @@
 package pe.cp.web.ui.view.login;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.vaadin.activelink.ActiveLink;
+import org.vaadin.activelink.ActiveLink.LinkActivatedEvent;
+import org.vaadin.activelink.ActiveLink.LinkActivatedListener;
 
 import pe.cp.web.ui.ControlParkingUI;
+import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.view.login.ILoginView;
 import pe.cp.web.ui.view.login.ILoginViewHandler;
 
@@ -41,14 +46,17 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	private TextField txtUsername;
 	private PasswordField txtPassword;
 	private Button btnLogin;
+	private Button btnRecuperarContrasena;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		
+		handler.cargar();
+		Logger.getAnonymousLogger().log(Level.WARNING, "enter login view");
 	}
 	
 	public LoginViewImpl(){
 		init();
+		
 	}
 
 	@Override
@@ -114,10 +122,10 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
         
         VerticalLayout passwordUtilsContainer = new VerticalLayout();
         passwordUtilsContainer.setSizeFull();                
-        Link lrecoverPassword = new Link();
-        lrecoverPassword.setCaption("Recuperar Contraseña");
-        passwordUtilsContainer.addComponent(lrecoverPassword);
-        passwordUtilsContainer.setComponentAlignment(lrecoverPassword, Alignment.TOP_RIGHT);        
+        btnRecuperarContrasena = new Button("Recuperar Contraseña");
+        btnRecuperarContrasena.setStyleName("link");
+        passwordUtilsContainer.addComponent(btnRecuperarContrasena);
+        passwordUtilsContainer.setComponentAlignment(btnRecuperarContrasena, Alignment.TOP_RIGHT);        
         
         loginInfo.addComponent(fields);                  
         loginInfo.setExpandRatio(logo, 1);
@@ -154,6 +162,11 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	@Override
 	public void setHandler(ILoginViewHandler handler) {
 		this.handler = handler;		
+	}
+
+	@Override
+	public Button getBtnRecuperarContrasena() {
+		return btnRecuperarContrasena;
 	}
 
 }

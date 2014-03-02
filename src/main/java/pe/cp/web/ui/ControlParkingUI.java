@@ -34,8 +34,10 @@ import pe.cp.web.ui.view.configuracion.usuario.IEditarUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.INuevoUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.NuevoUsuarioViewImpl;
 import pe.cp.web.ui.view.login.ILoginView;
+import pe.cp.web.ui.view.login.IRecuperarContrasenaView;
 import pe.cp.web.ui.view.login.LoginController;
 import pe.cp.web.ui.view.login.LoginViewImpl;
+import pe.cp.web.ui.view.login.RecuperarContrasenaViewImpl;
 import pe.cp.web.ui.view.main.IMain;
 import pe.cp.web.ui.view.main.MainViewImpl;
 import pe.cp.web.ui.view.operaciones.EditarOperacionViewImpl;
@@ -84,6 +86,7 @@ public class ControlParkingUI extends UI {
 	public static final String NUEVA_OPERACION = "nueva_operacion";
 	public static final String EDITAR_OPERACION = "editar_operacion";
 	public static final String INCIDENCIA = "incidencia";
+	public static final String RECUPERAR_CONTRASENA = "recuperar_contrasena";
 	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
@@ -117,6 +120,7 @@ public class ControlParkingUI extends UI {
 		INuevaOperacionView nuevaOperacionView = new NuevaOperacionViewImpl();
 		IEditarOperacionView editarOperacionView = new EditarOperacionViewImpl();
 		IIncidenciaView incidenciaView = new IncidenciaViewImpl();
+		IRecuperarContrasenaView recuperarPwdView = new RecuperarContrasenaViewImpl();
 		
 		navigator.addView(MAIN, mainView);
 		navigator.addView(OPERACIONES, operacionesView);
@@ -134,6 +138,7 @@ public class ControlParkingUI extends UI {
 		navigator.addView(NUEVA_OPERACION, nuevaOperacionView);
 		navigator.addView(EDITAR_OPERACION, editarOperacionView);
 		navigator.addView(INCIDENCIA, incidenciaView);
+		navigator.addView(RECUPERAR_CONTRASENA, recuperarPwdView);
 		
 		setNavigator(navigator);
 		navigator.navigateTo("");

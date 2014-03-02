@@ -1,5 +1,7 @@
 package pe.cp.web.ui.view.login;
 
+import org.vaadin.activelink.ActiveLink;
+
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.PasswordField;
@@ -11,6 +13,7 @@ public interface ILoginView extends View {
 	TextField getTxtUsername();
 	PasswordField getTxtPassword();
 	Button getBtnLogin();
+	Button getBtnRecuperarContrasena();
 	
 	void afterSuccessfulLogin();
 	void setHandler(ILoginViewHandler handler);

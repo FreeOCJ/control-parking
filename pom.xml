@@ -286,6 +286,13 @@
             <version>1.6.1</version>
             <scope>test</scope>
         </dependency>
+        
+        <!-- Active Link -->
+        <dependency>
+   			<groupId>org.vaadin.addons</groupId>
+   			<artifactId>activelink</artifactId>
+   			<version>7.0.2</version>
+		</dependency>
 	</dependencies>
 
 	<build>

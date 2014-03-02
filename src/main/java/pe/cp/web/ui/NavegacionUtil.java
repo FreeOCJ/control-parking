@@ -74,4 +74,8 @@ public class NavegacionUtil {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.INCIDENCIA + "/" + idOperacion + "/" + id);
 	}
 	
+	//Contrasena
+	public static void irRecuperarContrasena() {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.RECUPERAR_CONTRASENA);
+	}
 }
