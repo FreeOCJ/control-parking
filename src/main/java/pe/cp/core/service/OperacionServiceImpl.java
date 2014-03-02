@@ -78,43 +78,6 @@ public class OperacionServiceImpl implements OperacionService {
 	private final String ERROR_INSERT_OPERACION = "Error al insertar la operacion";
 	private final String EXITO_AGREGAR_OPERACION = "Se agrego la operacion";
 	private final String ERROR_UNIDAD_OPERATIVA_SIN_TARIFAS = "La unidad operativa no tiene tarifas asociadas";
-	
-	@Override
-	public int agregar(Operacion op) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public void editar(Operacion op) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void eliminar(int idOperacion) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public int agregarIncidencia(int idOperacion, int idIncidencia) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public int removerIncidencia(int idOperacion, int idIncidencia) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public List<Operacion> buscar(String nombreUnidadOp, Date fechaOp,
-			String estadoOp) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public BuscarOperacionResponse buscar(BuscarOperacionesRequest request) {
@@ -628,5 +591,4 @@ public class OperacionServiceImpl implements OperacionService {
 		
 		return response;
 	}
-
 }

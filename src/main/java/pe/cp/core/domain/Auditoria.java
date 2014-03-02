@@ -8,7 +8,7 @@ public class Auditoria {
 	private String evento;
 	private String nombreUsuario;
 	private String loginUsuario;
-	private TipoEvento tipoEvento;
+	private String tipoEvento;
 	
 	public int getId() {
 		return id;
@@ -40,10 +40,10 @@ public class Auditoria {
 	public void setLoginUsuario(String loginUsuario) {
 		this.loginUsuario = loginUsuario;
 	}
-	public TipoEvento getTipoEvento() {
+	public String getTipoEvento() {
 		return tipoEvento;
 	}
-	public void setTipoEvento(TipoEvento tipoEvento) {
+	public void setTipoEvento(String tipoEvento) {
 		this.tipoEvento = tipoEvento;
-	}	
+	}
 }

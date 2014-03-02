@@ -15,4 +15,5 @@ public interface IEditarClienteView extends View {
 	int getIdCliente();
 	Notification getNotification();
 	void setNotification(Notification notification);
+	void limpiar();
 }

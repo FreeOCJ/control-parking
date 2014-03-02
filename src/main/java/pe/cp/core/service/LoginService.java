@@ -10,7 +10,7 @@ public interface LoginService {
 	LoginResponse login(LoginRequest request);
 	void actualizarContrasena(Usuario usuario, String nuevaContrasena);
 	void recuperarContrasena(String login, String contrasena);
-	String generarContrasenaTemporal(String login);
+	String generarContrasenaTemporal();
 	void enviarContrasena(String email, String nombreUsuario, String contrasena);	
 	Response recuperaContrasena(RecuperarContrasenaRequest request);
 }

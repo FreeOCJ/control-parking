@@ -1,8 +1,9 @@
 package pe.cp.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class Incidencia {
+public class Incidencia implements IAuditInfo {
 	private int id;
 	private String descripcion;
 	private TipoIncidencia tipoIncidencia;
@@ -38,5 +39,12 @@ public class Incidencia {
 	}
 	public void setIdOperacion(int idOperacion) {
 		this.idOperacion = idOperacion;
+	}
+	@Override
+	public String getAuditInfo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY HH:mm");
+		String audit = String.format("Incidencia [ID=%s, TIPO=%s, DESCRIPCION=%s, FECHA=%s, IDOPERACION=%s]", 
+                String.valueOf(id), tipoIncidencia, descripcion, sdf.format(fechaIncidencia), String.valueOf(idOperacion));
+        return audit;
 	}	
 }

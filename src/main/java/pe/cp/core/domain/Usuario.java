@@ -2,7 +2,7 @@ package pe.cp.core.domain;
 
 import java.util.List;
 
-public class Usuario {
+public class Usuario implements IAuditInfo{
 	private int id;
 	private String nombres;
 	private String apellidos;
@@ -67,7 +67,10 @@ public class Usuario {
 	public void setRoles(List<Rol> roles) {
 		this.roles = roles;
 	}
-	
-	
+	public String getAuditInfo() {
+		String audit = String.format("Usuario [ID=%s, NOMBRES=%s, APELLIDOS=%s, CARGO=%s, EMAIL=%s, LOGIN=%s]", 
+				                     String.valueOf(id), nombres, apellidos, cargo, email, login);
+		return audit;
+	}
 		
 }

@@ -28,15 +28,8 @@ import pe.cp.core.service.messages.ObtenerOperacionResponse;
 import pe.cp.core.service.messages.ObtenerTipoIncidenciasResponse;
 import pe.cp.core.service.messages.Response;
 
-public interface OperacionService {
-	int agregar(Operacion op);
-	void editar(Operacion op);
-	void eliminar(int idOperacion);
-	int agregarIncidencia(int idOperacion, int idIncidencia);
-	int removerIncidencia(int idOperacion, int idIncidencia);
-	
+public interface OperacionService {	
 	boolean validarNuevaOperacion(int idUnidad, Date fechaOp);
-	List<Operacion> buscar(String nombreUnidadOp, Date fechaOp, String estadoOp);
 	BuscarOperacionResponse buscar(BuscarOperacionesRequest request);
 	AgregarOperacionResponse agregar(AgregarOperacionRequest request);
 	ObtenerOperacionResponse obtener(ObtenerOperacionRequest request);

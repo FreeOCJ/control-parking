@@ -1,5 +1,6 @@
 package pe.cp.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * @author juan
  *
  */
-public class Operacion {
+public class Operacion implements IAuditInfo {
 	private int id;
 	private Date fechaTransaccion;
 	private String oferta;
@@ -187,5 +188,12 @@ public class Operacion {
 	}
 	public void setAuxNombreCliente(String auxNombreCliente) {
 		this.auxNombreCliente = auxNombreCliente;
+	}
+	@Override
+	public String getAuditInfo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY HH:mm");
+		String audit = String.format("Operacion [ID=%s, UNIDAD OP=%s, CLIENTE=%s, FECHA TRANS=%s]", 
+                String.valueOf(id), auxNombreUnidadOperativa, auxNombreCliente, sdf.format(fechaTransaccion));
+        return audit;
 	}
 }

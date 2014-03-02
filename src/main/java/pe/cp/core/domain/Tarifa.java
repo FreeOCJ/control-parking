@@ -1,6 +1,6 @@
 package pe.cp.core.domain;
 
-public class Tarifa {
+public class Tarifa implements IAuditInfo {
 	private int id;
 	private double monto;
 	private String categoria;
@@ -36,5 +36,11 @@ public class Tarifa {
 	}
 	public void setIdUnidadOperativa(int idUnidadOperativa) {
 		this.idUnidadOperativa = idUnidadOperativa;
+	}
+	@Override
+	public String getAuditInfo() {
+		String audit = String.format("Tarifa [ID=%s, MONTO=%s, CATEGORIA=%s, ID UNIDAD OP=%s]", 
+                String.valueOf(id), String.valueOf(monto), categoria, String.valueOf(idUnidadOperativa));
+        return audit;
 	}	
 }

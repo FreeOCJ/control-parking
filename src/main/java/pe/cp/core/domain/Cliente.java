@@ -2,7 +2,7 @@ package pe.cp.core.domain;
 
 import java.util.List;
 
-public class Cliente {
+public class Cliente implements IAuditInfo {
 	private int id;
 	private String ruc;
 	private String razonSocial;
@@ -52,5 +52,10 @@ public class Cliente {
 	}
 	public void setEliminado(boolean eliminado) {
 		this.eliminado = eliminado;
-	}	
+	}
+	public String getAuditInfo() {
+		String audit = String.format("Cliente [ID=%s, RUC=%s, RAZON SOCIAL=%s, NOMBRE=%s]", 
+				                     String.valueOf(id), ruc, razonSocial, nombreComercial);
+		return audit;
+	}
 }

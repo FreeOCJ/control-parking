@@ -172,13 +172,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 		return usuariodao.buscarPorLogin(login);
 	}
 
-	@Override
-	public boolean validarNuevoUsuario(Usuario usuario) {
+	private boolean validarNuevoUsuario(Usuario usuario) {
 		// TODO Auto-generated method stub
 		return true;
 	}
 
-	@Override
 	public boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado) {
 		// TODO Auto-generated method stub
 		return true;

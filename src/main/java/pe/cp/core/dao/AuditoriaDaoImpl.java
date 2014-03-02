@@ -18,6 +18,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Auditoria;
+import pe.cp.core.domain.Cliente;
+import pe.cp.core.domain.IAuditInfo;
+import pe.cp.core.domain.Usuario;
 
 @Repository
 public class AuditoriaDaoImpl implements AuditoriaDao {
@@ -38,10 +41,12 @@ public class AuditoriaDaoImpl implements AuditoriaDao {
 	
 	@Override
 	public int agregar(Auditoria auditoria) {
+		if (auditoria.getEvento().length() > 500) auditoria.setEvento(auditoria.getEvento().substring(0, 499));
 		Map<String, Object> parameters = new HashMap<String, Object>(1);
 		parameters.put("FECHA", new Date());
-		parameters.put("USUARIO", auditoria.getNombreUsuario());
-		parameters.put("IDTIPOEVENTO", auditoria.getTipoEvento());
+		parameters.put("USUARIO", auditoria.getLoginUsuario());
+		parameters.put("EVENTO", auditoria.getEvento());
+		parameters.put("TIPOEVENTO", auditoria.getTipoEvento());
 		Number key = insertarAuditoria.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
@@ -58,11 +63,31 @@ public class AuditoriaDaoImpl implements AuditoriaDao {
 						auditoria.setId(rs.getInt("IDAUDITORIA"));
 						auditoria.setFechaCreacion(rs.getDate("FECHA"));
 						auditoria.setNombreUsuario(rs.getString("USUARIO"));
-						auditoria.setTipoEvento(tEventoDao.buscar(rs.getInt("IDTIPOEVENTO")));						
+						//auditoria.setTipoEvento(tEventoDao.buscar(rs.getInt("IDTIPOEVENTO")));						
 												
 						return auditoria;
 					}
 				});
 	}
+	
+	@Override
+	public int agregarAuditoria(Usuario modificador, IAuditInfo auditInfo, String tipoEvento) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("El usuario ");
+		sb.append(modificador.getLogin());
+		sb.append(" ");
+		sb.append(tipoEvento);
+		sb.append(" al ");
+		sb.append(auditInfo.getAuditInfo());
+		
+		Auditoria audit = new Auditoria();
+		audit.setFechaCreacion(new Date());
+		audit.setLoginUsuario(modificador.getLogin());
+		audit.setTipoEvento(tipoEvento);
+		audit.setEvento(sb.toString());
+		
+		return agregar(audit);
+	}
+	
 
 }

@@ -8,9 +8,11 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pe.cp.core.dao.AuditoriaDao;
 import pe.cp.core.dao.ClienteDao;
+import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Cliente;
-import pe.cp.core.domain.filters.ClienteFilter;
+import pe.cp.core.domain.Usuario;
 import pe.cp.core.service.domain.ClienteView;
 import pe.cp.core.service.domain.WrapperDomain;
 import pe.cp.core.service.messages.ActualizarClienteRequest;
@@ -29,14 +31,22 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Autowired
 	private ClienteDao cdao;
+	@Autowired
+	private AuditoriaDao auditDao;
+	@Autowired
+	private UsuarioDao usuarioDao;
 	
 	private final String ERR_ELIMINAR_CLIENTE = "Error al eliminar al cliente";
+	private final String ERR_VALIDAR_CLIENTE = "Error al validar al cliente";
 	private final String EXITO_ELIMINAR_CLIENTE = "Se eliminó al cliente de manera satisfactoria";
+	private final String EXITO_INSERTAR_CLIENTE = "Se insertó al cliente exitosamente";
+	private final String ERR_MODIFICAR_CLIENTE = "Error al modificar al cliente";
 	
 	@Override
 	public InsertarClienteResponse agregar(InsertarClienteRequest request) {
 		InsertarClienteResponse response = new InsertarClienteResponse();
 		
+		Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 		Cliente cliente = new Cliente();
 		cliente.setNombreComercial(request.getNombreComercial());
 		cliente.setRazonSocial(request.getRazonSocial());
@@ -45,12 +55,14 @@ public class ClienteServiceImpl implements ClienteService {
 		if (validarNuevoCliente(cliente)){
 			Integer idCliente = cdao.agregar(cliente);
 			if (idCliente != null){
+				cliente.setId(idCliente);
+				auditDao.agregarAuditoria(modificador, cliente, AuditoriaServiceImpl.INSERTAR_CLIENTE);
 				response.setIdCliente(idCliente);
-				response.setMensaje("Se insertó al cliente exitosamente");
+				response.setMensaje(EXITO_INSERTAR_CLIENTE);
 				response.setResultadoEjecucion(true);
 			}						
 		}else{
-			response.setMensaje("Error de validación");
+			response.setMensaje(ERR_VALIDAR_CLIENTE);
 			response.setResultadoEjecucion(false);
 		}
 				
@@ -61,23 +73,32 @@ public class ClienteServiceImpl implements ClienteService {
 	public ActualizarClienteResponse actualizar(ActualizarClienteRequest request) {
 		ActualizarClienteResponse response = new ActualizarClienteResponse();
 				
-		Cliente cliente = cdao.buscar(request.getIdCliente());
-		Cliente clienteMod = new Cliente();
-		clienteMod.setNombreComercial(request.getNombreComercial());
-		clienteMod.setRazonSocial(request.getRazonSocial());
-		clienteMod.setRuc(request.getRuc());
-		
-		if (validarModificarCliente(cliente, clienteMod)){
-			cliente.setNombreComercial(request.getNombreComercial());
-			cliente.setRazonSocial(request.getRazonSocial());
-			cliente.setRuc(request.getRuc());
-			cdao.actualizar(cliente);	
+		try {
+			Usuario modificador = usuarioDao.buscar(request.getIdUsuario());
+			Cliente cliente = cdao.buscar(request.getIdCliente());
+			Cliente clienteMod = new Cliente();
+			clienteMod.setNombreComercial(request.getNombreComercial());
+			clienteMod.setRazonSocial(request.getRazonSocial());
+			clienteMod.setRuc(request.getRuc());
 			
-			response.setResultadoEjecucion(true);
-			response.setMensaje("Se actualizaron los datos del cliente exitosamente");
-		}else{
+			if (validarModificarCliente(cliente, clienteMod)){
+				cliente.setNombreComercial(request.getNombreComercial());
+				cliente.setRazonSocial(request.getRazonSocial());
+				cliente.setRuc(request.getRuc());
+				cdao.actualizar(cliente);	
+				
+				auditDao.agregarAuditoria(modificador, cliente, AuditoriaServiceImpl.MODIFICAR_CLIENTE);
+				response.setResultadoEjecucion(true);
+				response.setMensaje("Se actualizaron los datos del cliente exitosamente");
+			}else{
+				response.setResultadoEjecucion(false);
+				response.setMensaje("Error al validar los datos del cliente");
+			}	
+		} catch (Exception e) {
 			response.setResultadoEjecucion(false);
-			response.setMensaje("Error al validar los datos del cliente");
+			response.setMensaje(ERR_MODIFICAR_CLIENTE);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
 		}
 		
 		return response;
@@ -141,7 +162,11 @@ public class ClienteServiceImpl implements ClienteService {
 		Response response = new Response();
 		
 		try {
+			Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
+			Cliente cliente = cdao.buscar(request.getIdCliente());
+			
 			cdao.eliminar(request.getIdCliente());
+			auditDao.agregarAuditoria(modificador, cliente, AuditoriaServiceImpl.MODIFICAR_CLIENTE);
 			response.setResultadoEjecucion(true);
 			response.setMensaje(EXITO_ELIMINAR_CLIENTE);
 		} catch (Exception e) {

@@ -1,9 +1,10 @@
 package pe.cp.core.domain;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class UnidadOperativa {
+public class UnidadOperativa implements IAuditInfo {
 	private int id;
 	private String nombre;
 	private int numeroCajones;
@@ -109,5 +110,12 @@ public class UnidadOperativa {
 	}
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
+	}
+	@Override
+	public String getAuditInfo() {
+		SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+		String audit = String.format("Unidad Operativa [ID=%s, NOMBRE=%s, HORA INICIO=%s, HORA FIN=%s]", 
+                String.valueOf(id), nombre, sdf.format(horaInicio), sdf.format(horaFin));
+        return audit;
 	}	
 }

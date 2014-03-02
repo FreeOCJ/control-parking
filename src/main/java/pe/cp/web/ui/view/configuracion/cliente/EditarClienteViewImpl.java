@@ -268,4 +268,9 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		return idCliente;
 	}
 
+	@Override
+	public void limpiar() {
+		removeAllComponents();
+	}
+
 }

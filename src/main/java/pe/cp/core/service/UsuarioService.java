@@ -32,7 +32,5 @@ public interface UsuarioService {
 	ObtenerUsuarioPorUnidadOpResponse obtenerUsuariosPorUnidadOP(ObtenerUsuarioPorUnidadOpRequest request);
 	ValidarDatosUsuarioResponse validarDatosUsuario(ValidarDatosUsuarioRequest request);
 	Response eliminarUsuario(EliminarUsuarioRequest request);
-	boolean validarNuevoUsuario(Usuario usuario);
-	boolean validarUsuarioModificado(Usuario usuario, Usuario usuarioModificado);
 	String generarContrasenaTemporal();
 }

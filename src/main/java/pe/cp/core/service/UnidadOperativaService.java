@@ -30,17 +30,8 @@ public interface UnidadOperativaService {
 	ObtenerConsTarifasResponse obtenerTarifas(ObtenerConsTarifasRequest request);
 	ObtenerUnidadesOpProcesarResponse obtenerParaProcesar(ObtenerUnidadesOpProcesarRequest request);
 	Response eliminarUnidadOperativa(EliminarUnidadOpRequest request);
-	void eliminar(int idUnidadOperativa);
-	int agregarTarifa(int idUnidadOp, int idTarifa);
-	int removerTarifa(int idUnidadOperativa, int idTarifa);
 	Response agregarUsuario(AgregarUsuarioUnidadOperativaRequest request);
 	Response removerTarifa(RemoverTarifaRequest request);
-	int agregarOperador(int idUnidadOp, int idUsuario);
-	int removerOperador(int idUnidadOp, int idUsuario);
-	int agregarAprobador(int idUnidadOp, int idUsuario);
-	int removerAprobador(int idUnidadOp, int idUsuario);
-	int agregarUsuarioCliente(int idUnidadOp, int idUsuario);
-	int removerUsuarioCliente(int idUnidadOp, int idUsuario);
 	String getConstanteRaudos();
 	String getConstantePernoctados();
 	String getConstanteRegular();
