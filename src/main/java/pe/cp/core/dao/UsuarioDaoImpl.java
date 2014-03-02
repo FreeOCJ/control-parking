@@ -276,7 +276,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		else{
 			StringBuilder sb = new StringBuilder();
 			sb.append("select * from cp_core_db.usuario u, cp_core_db.rol r, cp_core_db.rolxusuario ru ");
-			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol");
+			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol and ELIMINADO='F'");
 			sql = sb.toString();
 			args.put("rol", rol);
 		}
@@ -294,7 +294,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> obtenerUsuariosPorCliente(int idCliente) {
-		final String sql = "select * from usuario where idCliente = :idCliente";		
+		final String sql = "select * from usuario where idCliente = :idCliente and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("idCliente", idCliente);		

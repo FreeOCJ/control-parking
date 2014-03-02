@@ -10,7 +10,15 @@ public class ActualizarUsuarioRequest {
 	private String cargo;
 	private String email;
 	private List<Integer> idRoles;
+	private int idUsuarioModificador;
 	
+	public ActualizarUsuarioRequest(int idUsuarioModificador) {
+		this.idUsuarioModificador = idUsuarioModificador;
+	}
+	
+	public int getIdUsuarioModificador() {
+		return idUsuarioModificador;
+	}
 	public Integer getIdUsuario() {
 		return idUsuario;
 	}

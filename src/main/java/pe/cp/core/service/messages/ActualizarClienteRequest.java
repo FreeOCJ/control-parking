@@ -5,7 +5,14 @@ public class ActualizarClienteRequest {
 	private String nombreComercial;
 	private String ruc;
 	private int idCliente;
+	private int idUsuario;
 	
+	public ActualizarClienteRequest(int idUsuario) {
+		this.idUsuario = idUsuario;
+	}
+	public int getIdUsuario() {
+		return idUsuario;
+	}
 	public String getRazonSocial() {
 		return razonSocial;
 	}

@@ -4,13 +4,18 @@ public class AgregarUsuarioUnidadOperativaRequest {
    private int idUnidadOperativa;
    private String rol;
    private int[] idsUsuarios;
+   private int idUsuarioModificador;
    
-   public AgregarUsuarioUnidadOperativaRequest(int idUnidadOp, String rol, int[] idsUsuarios) {
+   public AgregarUsuarioUnidadOperativaRequest(int idUnidadOp, String rol, int[] idsUsuarios, int idUsuarioModificador) {
 	   this.idUnidadOperativa = idUnidadOp;
 	   this.rol = rol;
 	   this.idsUsuarios = idsUsuarios;
+	   this.idUsuarioModificador = idUsuarioModificador;
    }
    
+   public int getIdUsuarioModificador() {
+	   return idUsuarioModificador;
+   }
    public int getIdUnidadOperativa() {
 	return idUnidadOperativa;
    }

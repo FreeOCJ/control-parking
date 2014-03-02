@@ -10,7 +10,15 @@ public class InsertarUsuarioRequest {
 	private String email;
 	private int idCliente;
 	private List<Integer> idRoles;
+	private int idUsuarioModificador;
 	
+	public InsertarUsuarioRequest(int idUsuarioModificador) {
+		this.idUsuarioModificador = idUsuarioModificador;
+	}
+	
+	public int getIdUsuarioModificador() {
+    	return idUsuarioModificador;
+    }
 	public String getLogin() {
 		return login;
 	}

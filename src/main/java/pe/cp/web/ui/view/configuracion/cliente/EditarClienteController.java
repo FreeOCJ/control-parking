@@ -11,15 +11,23 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
+import com.vaadin.ui.Table.ColumnGenerator;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
@@ -30,12 +38,14 @@ import pe.cp.core.service.domain.UnidadOperativaView;
 import pe.cp.core.service.domain.UsuarioView;
 import pe.cp.core.service.messages.ActualizarClienteRequest;
 import pe.cp.core.service.messages.ActualizarClienteResponse;
+import pe.cp.core.service.messages.EliminarUsuarioRequest;
 import pe.cp.core.service.messages.ObtenerClienteRequest;
 import pe.cp.core.service.messages.ObtenerClienteResponse;
 import pe.cp.core.service.messages.ObtenerUnidadOpPorClienteRequest;
 import pe.cp.core.service.messages.ObtenerUnidadpOpPorClienteResponse;
 import pe.cp.core.service.messages.ObtenerUsuarioPorClienteRequest;
 import pe.cp.core.service.messages.ObtenerUsuarioPorClienteResponse;
+import pe.cp.core.service.messages.Response;
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 
@@ -70,6 +80,8 @@ public class EditarClienteController implements IEditarClienteHandler {
 	@Autowired
 	private UsuarioService usuarioService;
 	
+	private Notification notification;
+	
 	public EditarClienteController(IEditarClienteView view){
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
 		clienteService = ac.getBean(ClienteService.class);
@@ -90,22 +102,28 @@ public class EditarClienteController implements IEditarClienteHandler {
 	
 	@Override
 	public void guardar() {
-		ActualizarClienteRequest request = new ActualizarClienteRequest();
-		request.setIdCliente(view.getIdCliente());
-		request.setNombreComercial(view.getNombreComercial().getValue().trim());
-		request.setRazonSocial(view.getRazonSocial().getValue().trim());
-		request.setRuc(view.getRuc().getValue().trim());
+		Subject currentUser = SecurityUtils.getSubject();
 		
-		ActualizarClienteResponse response = clienteService.actualizar(request);
-		
-		Notification notification = new Notification(response.getMensaje());
-		if (response.isResultadoEjecucion()){		
-			cargar();		
+		if (currentUser != null) {
+			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+			ActualizarClienteRequest request = new ActualizarClienteRequest(idUsuario);
+			request.setIdCliente(view.getIdCliente());
+			request.setNombreComercial(view.getNombreComercial().getValue().trim());
+			request.setRazonSocial(view.getRazonSocial().getValue().trim());
+			request.setRuc(view.getRuc().getValue().trim());
+			
+			ActualizarClienteResponse response = clienteService.actualizar(request);
+			
+			Notification notification = new Notification(response.getMensaje());
+			if (response.isResultadoEjecucion()){		
+				cargar();		
+			}
+			
+			notification.setPosition(Position.TOP_CENTER);
+			notification.show(Page.getCurrent());	
+		} else {
+		    //TODO	
 		}
-		
-		notification.setPosition(Position.TOP_CENTER);
-		notification.show(Page.getCurrent());	
-		
 	}
 
 	@Override
@@ -120,6 +138,7 @@ public class EditarClienteController implements IEditarClienteHandler {
 		ObtenerClienteResponse response = clienteService.obtenerPorId(request);
 		
 		if (response.isResultadoEjecucion()){
+			prepararTablaUsuarios();
 			view.getNombreComercial().setValue(response.getClienteView().getNombreComercial());
 			view.getRazonSocial().setValue(response.getClienteView().getRazonSocial());
 			view.getRuc().setValue(response.getClienteView().getRuc());
@@ -221,7 +240,8 @@ public class EditarClienteController implements IEditarClienteHandler {
 			if (currentUser.getSession().getAttribute("mensaje") != null){
 				Notification notification = (Notification) currentUser.getSession().getAttribute("mensaje");
 				notification.setPosition(Position.TOP_CENTER);
-				notification.show(Page.getCurrent());				
+				notification.show(Page.getCurrent());	
+				currentUser.getSession().setAttribute("mensaje", null);
 			}
 		}		
 		
@@ -232,6 +252,58 @@ public class EditarClienteController implements IEditarClienteHandler {
 		
 		
 		
+	}
+	
+	@SuppressWarnings("serial")
+	private void prepararTablaUsuarios() {
+		final Table tblUsuarios = view.getUsuarios();
+		
+		tblUsuarios.setContainerDataSource(obtenerHeadersUsuariosContainer());
+		tblUsuarios.addGeneratedColumn("", new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			        irEditarUsuario(idUsuario,view.getIdCliente());
+			      }
+			    });
+				
+				Button btnEliminar = new Button();	
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                	Subject currentUser = SecurityUtils.getSubject();
+				                	int idUsuarioModif = (Integer) currentUser.getSession().getAttribute("id_usuario");
+				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
+			                		Response response = usuarioService.eliminarUsuario(new EliminarUsuarioRequest(idUsuario, idUsuarioModif));
+				                	
+				                	notification = new Notification(response.getMensaje());
+				                	if (response.isResultadoEjecucion()) tblUsuarios.removeAllItems();
+				                	notification.setPosition(Position.TOP_CENTER);
+				    				notification.show(Page.getCurrent());
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} ); 
+		tblUsuarios.setVisibleColumns((Object[]) EditarClienteController.obtenerColumnasVisiblesUsuario());
+		tblUsuarios.setColumnWidth(BOTONES_USUARIO, 120);
 	}
 
 }

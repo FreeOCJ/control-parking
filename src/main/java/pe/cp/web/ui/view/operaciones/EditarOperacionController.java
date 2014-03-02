@@ -299,72 +299,79 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void guardar() {
-		ActualizarOperacionRequest request = new ActualizarOperacionRequest();
-		request.setIdOperacion(view.getIdOperacion());
-		request.setOferta(view.getTxtOferta().getValue());
-		request.setPernoctadosHoy(Integer.valueOf(view.getTxtPernoctadosHoy().getValue()));
-		request.setRecaudacion(Float.valueOf(view.getTxtTotalRecaudacion().getValue()));
-		request.setTicketFinal(Integer.valueOf(view.getTxtTicketFinal().getValue()));
-		request.setTicketInicial(Integer.valueOf(view.getTxtTicketInicial().getValue()));
-		request.setTotalCarros(Integer.valueOf(view.getTxtTotalCarrosTarifa().getValue()));
-		request.setTotalDia(Integer.valueOf(view.getTxtTotalDia().getValue()));
-		request.setTotalIngresos(Integer.valueOf(view.gdtTxtTotalIngresos().getValue()));
-		request.setTotalPersonas(Integer.valueOf(view.getTxtTotalPersonas().getValue()));
-		request.setTotalSalidas(Integer.valueOf(view.getTxtTotalSalidas().getValue()));
-		request.setAjuste(Integer.valueOf(view.getTxtAjuste().getValue()));
-		request.setPernoctadosAyer(Integer.valueOf(view.getTxtPernoctadosAnteriores().getValue()));
-        
-		request.setDetalles(new ArrayList<OperacionDetalleView>());
-		for (Iterator i = view.getTblOperacionesPorHorario().getItemIds().iterator(); i.hasNext();) {
-			int iid = (Integer) i.next();
-			Item item = view.getTblOperacionesPorHorario().getItem(iid);
-			
-			int idDetalle = (Integer) (item.getItemProperty(ID_DETALLE).getValue());
-			TextField txtIngreso = (TextField) (item.getItemProperty(INGRESO_DETALLE).getValue());
-			TextField txtSalida = (TextField) (item.getItemProperty(SALIDA_DETALLE).getValue());
-			TextField txtPersonas = (TextField) (item.getItemProperty(PERSONAS_DETALLE).getValue());
-			
-			OperacionDetalleView opDetalle = new OperacionDetalleView();
-			opDetalle.setCantidadIngreso(Integer.valueOf(txtIngreso.getValue()));
-			opDetalle.setCantidadPersonas(Integer.valueOf(txtPersonas.getValue()));
-			opDetalle.setCantidadSalida(Integer.valueOf(txtSalida.getValue()));
-			opDetalle.setIdOperacionDetalle(idDetalle);
-			
-			request.getDetalles().add(opDetalle);
-		}
-		
-		request.setTarifas(new ArrayList<OperacionPorTarifaView>());
-		for (Iterator i = view.getTblControlTarifas().getItemIds().iterator(); i.hasNext();) {
-			int iid = (Integer) i.next();
-			Item item = view.getTblControlTarifas().getItem(iid);
-			
-			int id = (Integer)(item.getItemProperty(ID_OP_TARIFA).getValue());
-			TextField txtCantidad = (TextField) (item.getItemProperty(CANTIDAD_TARIFAS).getValue());
-			TextField txtRecaudacion = (TextField) (item.getItemProperty(TOTAL_RECAUDACION).getValue());
-			String descripcion = (String) (item.getItemProperty(CAT_TARIFA_TARIFAS).getValue());
-			
-			OperacionPorTarifaView tarifa = new OperacionPorTarifaView();
-			tarifa.setCantidad(Integer.valueOf(txtCantidad.getValue()));
-			tarifa.setMonto(Float.valueOf(txtRecaudacion.getValue()));
-			tarifa.setIdOpTarifa(id);
-			tarifa.setDescripcion(descripcion);
-			
-			request.getTarifas().add(tarifa);
-		}
-		
 		Subject currentUser = SecurityUtils.getSubject();
-		request.setLoginModificador(currentUser.getSession().getAttribute("login").toString());
 		
-		Response response = opService.actualizarOperacion(request);
-		Notification notificacion = new Notification(response.getMensaje());
-		notificacion.setPosition(Position.TOP_CENTER);
-		notificacion.show(Page.getCurrent());
+		if (currentUser != null) {
+			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+		
+			ActualizarOperacionRequest request = new ActualizarOperacionRequest(idUsuario);
+			request.setIdOperacion(view.getIdOperacion());
+			request.setOferta(view.getTxtOferta().getValue());
+			request.setPernoctadosHoy(Integer.valueOf(view.getTxtPernoctadosHoy().getValue()));
+			request.setRecaudacion(Float.valueOf(view.getTxtTotalRecaudacion().getValue()));
+			request.setTicketFinal(Integer.valueOf(view.getTxtTicketFinal().getValue()));
+			request.setTicketInicial(Integer.valueOf(view.getTxtTicketInicial().getValue()));
+			request.setTotalCarros(Integer.valueOf(view.getTxtTotalCarrosTarifa().getValue()));
+			request.setTotalDia(Integer.valueOf(view.getTxtTotalDia().getValue()));
+			request.setTotalIngresos(Integer.valueOf(view.gdtTxtTotalIngresos().getValue()));
+			request.setTotalPersonas(Integer.valueOf(view.getTxtTotalPersonas().getValue()));
+			request.setTotalSalidas(Integer.valueOf(view.getTxtTotalSalidas().getValue()));
+			request.setAjuste(Integer.valueOf(view.getTxtAjuste().getValue()));
+			request.setPernoctadosAyer(Integer.valueOf(view.getTxtPernoctadosAnteriores().getValue()));
+	        
+			request.setDetalles(new ArrayList<OperacionDetalleView>());
+			for (Iterator i = view.getTblOperacionesPorHorario().getItemIds().iterator(); i.hasNext();) {
+				int iid = (Integer) i.next();
+				Item item = view.getTblOperacionesPorHorario().getItem(iid);
+				
+				int idDetalle = (Integer) (item.getItemProperty(ID_DETALLE).getValue());
+				TextField txtIngreso = (TextField) (item.getItemProperty(INGRESO_DETALLE).getValue());
+				TextField txtSalida = (TextField) (item.getItemProperty(SALIDA_DETALLE).getValue());
+				TextField txtPersonas = (TextField) (item.getItemProperty(PERSONAS_DETALLE).getValue());
+				
+				OperacionDetalleView opDetalle = new OperacionDetalleView();
+				opDetalle.setCantidadIngreso(Integer.valueOf(txtIngreso.getValue()));
+				opDetalle.setCantidadPersonas(Integer.valueOf(txtPersonas.getValue()));
+				opDetalle.setCantidadSalida(Integer.valueOf(txtSalida.getValue()));
+				opDetalle.setIdOperacionDetalle(idDetalle);
+				
+				request.getDetalles().add(opDetalle);
+			}
+			
+			request.setTarifas(new ArrayList<OperacionPorTarifaView>());
+			for (Iterator i = view.getTblControlTarifas().getItemIds().iterator(); i.hasNext();) {
+				int iid = (Integer) i.next();
+				Item item = view.getTblControlTarifas().getItem(iid);
+				
+				int id = (Integer)(item.getItemProperty(ID_OP_TARIFA).getValue());
+				TextField txtCantidad = (TextField) (item.getItemProperty(CANTIDAD_TARIFAS).getValue());
+				TextField txtRecaudacion = (TextField) (item.getItemProperty(TOTAL_RECAUDACION).getValue());
+				String descripcion = (String) (item.getItemProperty(CAT_TARIFA_TARIFAS).getValue());
+				
+				OperacionPorTarifaView tarifa = new OperacionPorTarifaView();
+				tarifa.setCantidad(Integer.valueOf(txtCantidad.getValue()));
+				tarifa.setMonto(Float.valueOf(txtRecaudacion.getValue()));
+				tarifa.setIdOpTarifa(id);
+				tarifa.setDescripcion(descripcion);
+				
+				request.getTarifas().add(tarifa);
+			}
+			
+			request.setLoginModificador(currentUser.getSession().getAttribute("login").toString());
+			
+			Response response = opService.actualizarOperacion(request);
+			Notification notificacion = new Notification(response.getMensaje());
+			notificacion.setPosition(Position.TOP_CENTER);
+			notificacion.show(Page.getCurrent());
+		}
 	}
 
 	@Override
 	public void enviarAprobar() {
 		Subject currentUser = SecurityUtils.getSubject();
-		Response response = opService.enviarAprobarOperacion(new EnviarAprobarOperacionRequest(view.getIdOperacion()));
+		int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+		
+		Response response = opService.enviarAprobarOperacion(new EnviarAprobarOperacionRequest(view.getIdOperacion(), idUsuario));
         if (response.isResultadoEjecucion()) {
         	currentUser.getSession().setAttribute("mensaje", response.getMensaje());
         	NavegacionUtil.irOperaciones();
@@ -392,7 +399,9 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 		        new ConfirmDialog.Listener() {
 		            public void onClose(ConfirmDialog dialog) {
 		                if (dialog.isConfirmed()) {
-		                    Response response = opService.eliminarIncidencia(new EliminarIncidenciaRequest(idIncidencia));
+		                	Subject currentUser = SecurityUtils.getSubject();
+		                	int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+		                    Response response = opService.eliminarIncidencia(new EliminarIncidenciaRequest(idIncidencia, idUsuario));
 		                	if (response.isResultadoEjecucion()) {
 		                		cargarIncidencias();
 		                	} else {
@@ -406,7 +415,8 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 	@Override
 	public void aprobar() {
 		Subject currentUser = SecurityUtils.getSubject();
-		Response response = opService.aprobarOperacion(new AprobarOperacionRequest(view.getIdOperacion()));
+		int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+		Response response = opService.aprobarOperacion(new AprobarOperacionRequest(view.getIdOperacion(), idUsuario));
         if (response.isResultadoEjecucion()) {
         	currentUser.getSession().setAttribute("mensaje", response.getMensaje());
         	NavegacionUtil.irOperaciones();

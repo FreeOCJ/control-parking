@@ -6,11 +6,13 @@ public class AgregarOperacionRequest {
    private int idUnidadOperativa;
    private Date fechaOperacion;
    private String loginCreador;
+   private int idUsuarioModificador;
    
-   public AgregarOperacionRequest(int idUnidadOp, Date fechaOp, String login) {
+   public AgregarOperacionRequest(int idUnidadOp, Date fechaOp, String login, int idUsuarioModificador) {
 	   this.idUnidadOperativa = idUnidadOp;
 	   this.fechaOperacion = fechaOp;
 	   this.loginCreador = login;
+	   this.idUsuarioModificador = idUsuarioModificador;
    }
    
    public int getIdUnidadOperativa() {
@@ -23,5 +25,9 @@ public class AgregarOperacionRequest {
    
    public String getLogin() {
 	   return loginCreador;
+   }
+   
+   public int getIdUsuarioModificador() {
+	   return idUsuarioModificador;
    }
 }

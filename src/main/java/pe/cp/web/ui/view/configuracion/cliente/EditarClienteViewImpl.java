@@ -143,52 +143,6 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		tblUsuarios = new Table();
 		tblUsuarios.setWidth("100%");  
 		tblUsuarios.setHeight("150px");
-		tblUsuarios.setContainerDataSource(handler.obtenerHeadersUsuariosContainer());
-		tblUsuarios.setSelectable(true);
-		
-		tblUsuarios.addGeneratedColumn("", new ColumnGenerator() {			
-			@Override
-			public Object generateCell(final Table source, final Object itemId, Object columnId) {
-				HorizontalLayout botonesAccion = new HorizontalLayout();
-				
-				Button btnEditar = new Button();
-				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
-				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-			        handler.irEditarUsuario(idUsuario,idCliente);
-			      }
-			    });
-				
-				Button btnEliminar = new Button();	
-				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
-				btnEliminar.addClickListener(new ClickListener() {			 
-			      @Override 
-			      public void buttonClick(ClickEvent event) {				    	  
-			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
-				        new ConfirmDialog.Listener() {
-				            public void onClose(ConfirmDialog dialog) {
-				                if (dialog.isConfirmed()) {
-				                    // Confirmed to continue
-				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-				                	System.out.println("eliminar");
-				                	handler.elimiarUsuario();
-				                } else {
-				                    // User did not confirm
-				                	System.out.println("cancelar");
-				                }
-				            }
-				        });			        			      
-			      }
-			    });
-			 
-				botonesAccion.addComponent(btnEditar);
-				botonesAccion.addComponent(btnEliminar);
-			    return botonesAccion;
-			}
-		} ); 
-	    
-		tblUsuarios.setVisibleColumns((Object[]) EditarClienteController.obtenerColumnasVisiblesUsuario());
 		
 		areaPrincipal.addComponent(barraTituloUsuarios);
 		areaPrincipal.addComponent(tblUsuarios);
@@ -301,14 +255,12 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 
 	@Override
 	public Table getUsuarios() {
-		// TODO Auto-generated method stub
-		return null;
+		return tblUsuarios;
 	}
 
 	@Override
 	public Table getUnidadesOperativas() {
-		// TODO Auto-generated method stub
-		return null;
+		return tblUnidadesOperativas;
 	}
 
 	@Override

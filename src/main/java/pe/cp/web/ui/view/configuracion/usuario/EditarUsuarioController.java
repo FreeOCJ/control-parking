@@ -78,7 +78,7 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 			view.getRoles().setImmediate(true);
 			
 			//Los roles solo son editables cuando son usuarios de Control Parking
-			if (view.getIdCliente() == 0)
+			if (view.getIdCliente() != 0)
 				view.getRoles().setVisible(false);
 		}
 	}
@@ -130,40 +130,43 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		return true;
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void actualizar() {
-		System.out.println(validarDatosEntrada());
-		
-		if (!validarDatosEntrada()) return;
-		
-		ActualizarUsuarioRequest request = new ActualizarUsuarioRequest();
-		request.setIdUsuario(view.getIdUsuario());
-		request.setApellidos(view.getApellidos().getValue().trim());
-		request.setCargo(view.getCargo().getValue().trim());
-		request.setEmail(view.getCorreoElectronico().getValue().trim());
-		request.setLogin(view.getLogin().getValue().trim().toLowerCase());
-		request.setNombres(view.getNombres().getValue().trim());
-		request.setIdRoles(new ArrayList<Integer>());
-		
-		ArrayList<RolView> rolesView = new ArrayList<RolView>((Collection)view.getRoles().getValue());
-		for (RolView rolView : rolesView) {
-			request.getIdRoles().add(rolView.getId());
-		}
-		
-		ActualizarUsuarioResponse response = usuarioservice.actualizar(request);
 		Subject currentUser = SecurityUtils.getSubject();
 		
-		if (response.isResultadoEjecucion()){		
-			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
-			if (view.getIdCliente()==0){
-				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);}
-			else{
-				NavegacionUtil.irEditarCliente(view.getIdCliente());
-			}					
-		}else{
-			view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
-			view.getNotification().setPosition(Position.TOP_CENTER);
-			view.getNotification().show(Page.getCurrent());
+		if (currentUser != null) {
+			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+		
+			if (!validarDatosEntrada()) return;
+			ActualizarUsuarioRequest request = new ActualizarUsuarioRequest(idUsuario);
+			request.setIdUsuario(view.getIdUsuario());
+			request.setApellidos(view.getApellidos().getValue().trim());
+			request.setCargo(view.getCargo().getValue().trim());
+			request.setEmail(view.getCorreoElectronico().getValue().trim());
+			request.setLogin(view.getLogin().getValue().trim().toLowerCase());
+			request.setNombres(view.getNombres().getValue().trim());
+			request.setIdRoles(new ArrayList<Integer>());
+			
+			ArrayList<RolView> rolesView = new ArrayList<RolView>((Collection)view.getRoles().getValue());
+			for (RolView rolView : rolesView) {
+				request.getIdRoles().add(rolView.getId());
+			}
+			
+			ActualizarUsuarioResponse response = usuarioservice.actualizar(request);
+			
+			if (response.isResultadoEjecucion()){		
+				currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+				if (view.getIdCliente()==0){
+					UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);}
+				else{
+					NavegacionUtil.irEditarCliente(view.getIdCliente());
+				}					
+			}else{
+				view.setNotification(new Notification(response.getMensaje(),Type.WARNING_MESSAGE));
+				view.getNotification().setPosition(Position.TOP_CENTER);
+				view.getNotification().show(Page.getCurrent());
+			}
 		}
 	}
 

@@ -3,6 +3,8 @@ package pe.cp.web.ui.view.operaciones;
 import java.util.Date;
 import java.util.Iterator;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -50,47 +52,59 @@ public class IncidenciaController implements IIncidenciaHandler {
 	}
 	
 	private void actualizarIncidencia() {
-		if (validar()) {
-			String descripcion = view.getTxtDescripcion().getValue().trim();
-			Date fecha = view.getTxtHora().getValue();
-			Object tipoSelectId = view.getCbTipo().getValue();
-			int idTipo = Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
-			
-			ActualizarIncidenciaRequest request = new ActualizarIncidenciaRequest();
-			request.setDescripcion(descripcion);
-			request.setHora(fecha);
-			request.setIdIncidencia(view.getIdIncidencia());
-			request.setIdTipo(idTipo);
-			Response response = opService.actualizarIncidencia(request);
-			
-			if (response.isResultadoEjecucion()) {
-				NavegacionUtil.irEditarOperacion(view.getIdOperacion());
-			} else {
-				//TODO
+		Subject currentUser = SecurityUtils.getSubject();
+		
+		if (currentUser != null) {
+			if (validar()) {
+				int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+				String descripcion = view.getTxtDescripcion().getValue().trim();
+				Date fecha = view.getTxtHora().getValue();
+				Object tipoSelectId = view.getCbTipo().getValue();
+				int idTipo = Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
+				
+				ActualizarIncidenciaRequest request = new ActualizarIncidenciaRequest(idUsuario);
+				request.setDescripcion(descripcion);
+				request.setHora(fecha);
+				request.setIdIncidencia(view.getIdIncidencia());
+				request.setIdTipo(idTipo);
+				Response response = opService.actualizarIncidencia(request);
+				
+				if (response.isResultadoEjecucion()) {
+					NavegacionUtil.irEditarOperacion(view.getIdOperacion());
+				} else {
+					//TODO
+				}
 			}
+		} else {
+			//TODO
 		}
 	}
 	
 	private void agregarNuevaIncidencia() {
-		if (validar()) {
-			String descripcion = view.getTxtDescripcion().getValue().trim();
-			Date fecha = view.getTxtHora().getValue();
-			Object tipoSelectId = view.getCbTipo().getValue();
-			int idTipo = 
-					Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
-			String tipo = view.getCbTipo().getItem(tipoSelectId).getItemProperty(TIPO_INC).toString();
-			
-	        AgregarIncidenciaRequest request = 
-	    		    new AgregarIncidenciaRequest(view.getIdOperacion(), descripcion, fecha, idTipo, tipo);
-	        AgregarIncidenciaResponse response = opService.agregarIncidencia(request);
-	        
-	        if (response.isResultadoEjecucion()) {
-	        	NavegacionUtil.irEditarOperacion(view.getIdOperacion());
-	        } else {
-	        	//TODO
-	        }
-		} else {
-			//En el validar?
+		Subject currentUser = SecurityUtils.getSubject();
+		
+		if (currentUser != null) {
+			if (validar()) {
+				int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+				String descripcion = view.getTxtDescripcion().getValue().trim();
+				Date fecha = view.getTxtHora().getValue();
+				Object tipoSelectId = view.getCbTipo().getValue();
+				int idTipo = 
+						Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
+				String tipo = view.getCbTipo().getItem(tipoSelectId).getItemProperty(TIPO_INC).toString();
+				
+		        AgregarIncidenciaRequest request = 
+		    		    new AgregarIncidenciaRequest(view.getIdOperacion(), descripcion, fecha, idTipo, tipo, idUsuario);
+		        AgregarIncidenciaResponse response = opService.agregarIncidencia(request);
+		        
+		        if (response.isResultadoEjecucion()) {
+		        	NavegacionUtil.irEditarOperacion(view.getIdOperacion());
+		        } else {
+		        	//TODO
+		        }
+			} else {
+				//En el validar?
+			}
 		}
 	}
 	

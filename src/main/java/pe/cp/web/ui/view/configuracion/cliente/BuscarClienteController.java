@@ -171,8 +171,10 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 				        new ConfirmDialog.Listener() {
 				            public void onClose(ConfirmDialog dialog) {
 				                if (dialog.isConfirmed()) {
+				                	Subject currentUser = SecurityUtils.getSubject();
+				                	int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, CODIGO_CLIENTE).getValue();
-				                	Response response = clienteService.eliminarCliente(new EliminarClienteRequest(idCliente));
+				                	Response response = clienteService.eliminarCliente(new EliminarClienteRequest(idCliente, idUsuario));
 				                	
 				                	if (response.isResultadoEjecucion()) {
 				                		buscar();

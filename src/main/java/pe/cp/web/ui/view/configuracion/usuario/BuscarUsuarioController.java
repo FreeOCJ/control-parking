@@ -163,8 +163,10 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 				        new ConfirmDialog.Listener() {
 				            public void onClose(ConfirmDialog dialog) {
 				                if (dialog.isConfirmed()) {
+				                	Subject currentUser = SecurityUtils.getSubject();
+				                	int idUsuarioModif = (Integer) currentUser.getSession().getAttribute("id_usuario");
 				                	Integer idUsuario = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-				                	Response response = usuarioservice.eliminarUsuario(new EliminarUsuarioRequest(idUsuario));
+				                	Response response = usuarioservice.eliminarUsuario(new EliminarUsuarioRequest(idUsuario, idUsuarioModif));
 				                	
 				                	notification = new Notification(response.getMensaje());
 				                	if (response.isResultadoEjecucion()) view.getTblResultados().removeAllItems();

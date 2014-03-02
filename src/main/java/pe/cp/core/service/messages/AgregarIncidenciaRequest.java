@@ -8,14 +8,17 @@ public class AgregarIncidenciaRequest {
     private Date fecha;
     private int idTipo;
     private String tipoIncidencia;
+    private int idUsuarioModificador;
     
     
-    public AgregarIncidenciaRequest(int idOperacion, String descripcion, Date fecha, int idTipo, String tipoIncidencia) {
+    public AgregarIncidenciaRequest(int idOperacion, String descripcion, Date fecha, int idTipo, 
+    		String tipoIncidencia, int idUsuarioModificador) {
     	this.idOperacion = idOperacion;
     	this.descripcion = descripcion;
     	this.fecha = fecha;
     	this.idTipo = idTipo;
     	this.tipoIncidencia = tipoIncidencia;
+    	this.idUsuarioModificador = idUsuarioModificador;
     }
 
 	public int getIdOperacion() {
@@ -36,6 +39,10 @@ public class AgregarIncidenciaRequest {
 
 	public String getTipoIncidencia() {
 		return tipoIncidencia;
+	}
+	
+	public int getIdUsuarioModificador() {
+		return idUsuarioModificador;
 	}
     
 }

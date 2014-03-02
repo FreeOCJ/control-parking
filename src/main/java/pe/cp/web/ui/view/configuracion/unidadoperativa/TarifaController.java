@@ -76,9 +76,11 @@ public class TarifaController implements ITarifaHandler {
 
 	@Override
 	public void guardar() {
+		Subject currentUser = SecurityUtils.getSubject();
 		String mensaje = validar();
 		
 		if (mensaje == null) {
+		   int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 		   double[] montos = new double[view.getListaTarifas().getItemIds().size()];
 		   
 		   int i = 0;
@@ -88,9 +90,8 @@ public class TarifaController implements ITarifaHandler {
 		   }
 		 
 		   AgregarTarifaRequest request = 
-				   new AgregarTarifaRequest(view.getIdUnidadOperativa(), montos, view.getTxtNombre().getValue());
+				   new AgregarTarifaRequest(view.getIdUnidadOperativa(), montos, view.getTxtNombre().getValue(), idUsuario);
 		   Response response = unidadOpService.agregarTarifa(request);
-		   Subject currentUser = SecurityUtils.getSubject();
 		   
 		   if (response.isResultadoEjecucion()) {
 			   currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));

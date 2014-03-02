@@ -4,11 +4,13 @@ public class AgregarTarifaRequest {
    private int idUnidadOperativa;
    private double[] montos;
    private String categoria;
+   private int idUsuarioModificador;
    
-   public AgregarTarifaRequest(int idUnidadOp, double[] montos, String categoria) {
+   public AgregarTarifaRequest(int idUnidadOp, double[] montos, String categoria, int idUsuarioModificador) {
 	   this.idUnidadOperativa = idUnidadOp;
 	   this.montos = montos;
 	   this.categoria = categoria;
+	   this.idUsuarioModificador = idUsuarioModificador;
    }
 
    public int getIdUnidadOperativa() {
@@ -21,5 +23,9 @@ public class AgregarTarifaRequest {
 
    public String getCategoria() {
       return categoria;
+   }
+   
+   public int getIdUsuarioModificador() {
+	   return idUsuarioModificador;
    }
 }

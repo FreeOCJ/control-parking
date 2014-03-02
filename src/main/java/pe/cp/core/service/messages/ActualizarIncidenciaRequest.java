@@ -7,7 +7,14 @@ public class ActualizarIncidenciaRequest {
     private String descripcion;
     private int idTipo;
     private Date hora;
+    private int idUsuarioModificador;
     
+    public ActualizarIncidenciaRequest(int idUsuario) {
+    	this.idUsuarioModificador = idUsuario;
+    }
+    public int getIdUsuarioModificador() {
+    	return idUsuarioModificador;
+    }
 	public int getIdIncidencia() {
 		return idIncidencia;
 	}

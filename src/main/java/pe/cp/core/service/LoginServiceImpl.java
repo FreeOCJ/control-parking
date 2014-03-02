@@ -66,6 +66,7 @@ public class LoginServiceImpl implements LoginService {
 			Usuario usuario = usuarioDao.buscarPorLogin(request.getLoginName());
 			currentUser.getSession().setAttribute("nombre_completo", String.format("%s\n%s", usuario.getNombres(), usuario.getApellidos()));
 			currentUser.getSession().setAttribute("login", usuario.getLogin());
+			currentUser.getSession().setAttribute("id_usuario", usuario.getId());
 			response.setAutorizado(true);
 			response.setResultadoEjecucion(true);
 			

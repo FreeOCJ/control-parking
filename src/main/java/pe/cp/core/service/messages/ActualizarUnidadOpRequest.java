@@ -12,7 +12,15 @@ public class ActualizarUnidadOpRequest {
 	private Date horaInicio;
 	private Date horaCierre;
 	private int nroCajones;
+	private int idUsuarioModificador;
 
+	public ActualizarUnidadOpRequest(int idUsuarioModificador) {
+		this.idUsuarioModificador = idUsuarioModificador;
+	}
+	
+	public int getIdUsuarioModificador() {
+		return idUsuarioModificador;
+	}
 	public int getIdUnidadOperativa() {
 		return idUnidadOperativa;
 	}

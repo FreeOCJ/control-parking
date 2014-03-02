@@ -12,6 +12,15 @@ public class AgregarUnidadOperativaRequest {
 	private Date horaCierre;
 	private int idCliente;
 	private int nroCajones;
+	private int idUsuarioModificador;
+	
+	public AgregarUnidadOperativaRequest(int idUsuarioModificador) {
+		this.idUsuarioModificador = idUsuarioModificador;
+	}
+
+	public int getIdUsuarioModificador() {
+		return idUsuarioModificador;
+	}
 	
 	public String getNombre() {
 		return nombre;

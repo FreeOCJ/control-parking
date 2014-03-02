@@ -4,7 +4,15 @@ public class InsertarClienteRequest {
 	private String razonSocial;
 	private String ruc;
 	private String nombreComercial;
+	private int idUsuarioModificador;
 	
+	public InsertarClienteRequest(int idUsuarioModificador) {
+		this.idUsuarioModificador = idUsuarioModificador;
+	}
+	
+	public int getIdUsuarioModificador() {
+	      return idUsuarioModificador;
+	   }
 	public String getRazonSocial() {
 		return razonSocial;
 	}

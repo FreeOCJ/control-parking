@@ -22,7 +22,15 @@ public class ActualizarOperacionRequest {
     private List<OperacionPorTarifaView> tarifas;
     private String loginModificador;
     private int ajuste;
+    private int idUsuarioModificador;
     
+    public ActualizarOperacionRequest(int idUsuarioModificador) {
+    	this.idUsuarioModificador = idUsuarioModificador;
+    }
+    
+    public int getIdUsuarioModificador() {
+    	return idUsuarioModificador;
+    }
 	public int getIdOperacion() {
 		return idOperacion;
 	}

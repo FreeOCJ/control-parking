@@ -290,11 +290,12 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 				        new ConfirmDialog.Listener() {
 				            public void onClose(ConfirmDialog dialog) {
 				                if (dialog.isConfirmed()) {
+				                	Subject currentUser = SecurityUtils.getSubject();
+				                	int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 				                	String categoria = (String) source.getContainerDataSource().getContainerProperty(itemId, "Categoría").getValue();
-				                	Response responseEliminar = unidadOpService.removerTarifa(new RemoverTarifaRequest(view.getIdUnidadOperativa(), categoria));
+				                	Response responseEliminar = unidadOpService.removerTarifa(new RemoverTarifaRequest(view.getIdUnidadOperativa(), categoria, idUsuario));
 				                	
 				                	if (responseEliminar.isResultadoEjecucion()) {
-				                		Subject currentUser = SecurityUtils.getSubject();
 				                		currentUser.getSession().setAttribute("mensaje", responseEliminar.getMensaje());
 				                		NavegacionUtil.irEditarUnidadOperativa(view.getIdCliente(), view.getIdUnidadOperativa());
 				                	} else {
@@ -326,13 +327,15 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 
 	@Override
 	public void guardar() {
+		Subject currentUser = SecurityUtils.getSubject();
 		String mensaje = validarActualizacion();
 		
 		if (mensaje == null) {
-			if (view.getIdUnidadOperativa() == 0){ 				
+			if (view.getIdUnidadOperativa() == 0){ 		
 				//Caso Nueva Unidad Operativa: Solo se ingresan datos principales. 
 				//Tablas asociadas solo se ingresan por el modo de Edicion
-				AgregarUnidadOperativaRequest request = new AgregarUnidadOperativaRequest();
+				int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+				AgregarUnidadOperativaRequest request = new AgregarUnidadOperativaRequest(idUsuario);
 				request.setDepartamento((String) view.getDepartamento().getValue());
 				request.setDireccion(view.getDireccion().getValue());
 				request.setDistrito((String) view.getDistrito().getValue());
@@ -344,7 +347,6 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 				request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
 				
 				AgregarUnidadOperativaResponse response = unidadOpService.agregar(request);
-				Subject currentUser = SecurityUtils.getSubject();
 				if (response.isResultadoEjecucion()){
 					currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 					UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + response.getIdUnidadOperativa());
@@ -365,25 +367,29 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 
 	@Override
 	public void actualizar() {
-		ActualizarUnidadOpRequest request = new ActualizarUnidadOpRequest();
-		request.setIdUnidadOperativa(view.getIdUnidadOperativa());
-		request.setDepartamento(view.getDepartamento().getValue().toString());
-		request.setDireccion(view.getDireccion().getValue());
-		request.setDistrito(view.getDistrito().getValue().toString());
-		request.setNombre(view.getNombre().getValue().toString());
-		request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
-		request.setProvincia(view.getProvincia().getValue().toString());
-		request.setHoraInicio(view.getHoraApertura().getValue());
-		request.setHoraCierre(view.getHoraCierre().getValue());
-		   
-		ActualizarUnidadOpResponse response = unidadOpService.actualizar(request);
 		Subject currentUser = SecurityUtils.getSubject();
-		if (response.isResultadoEjecucion()) {
-	       currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
-		   UI.getCurrent().getNavigator().navigateTo(
-		      ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
-		} else {
-			   //TODO
+		
+		if (currentUser != null) {
+			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+			ActualizarUnidadOpRequest request = new ActualizarUnidadOpRequest(idUsuario);
+			request.setIdUnidadOperativa(view.getIdUnidadOperativa());
+			request.setDepartamento(view.getDepartamento().getValue().toString());
+			request.setDireccion(view.getDireccion().getValue());
+			request.setDistrito(view.getDistrito().getValue().toString());
+			request.setNombre(view.getNombre().getValue().toString());
+			request.setNroCajones(Integer.valueOf(view.getNumeroCajones().getValue()));
+			request.setProvincia(view.getProvincia().getValue().toString());
+			request.setHoraInicio(view.getHoraApertura().getValue());
+			request.setHoraCierre(view.getHoraCierre().getValue());
+			   
+			ActualizarUnidadOpResponse response = unidadOpService.actualizar(request);
+			if (response.isResultadoEjecucion()) {
+		       currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
+			   UI.getCurrent().getNavigator().navigateTo(
+			      ControlParkingUI.UNIDADOPERATIVA + "/" + view.getIdCliente() + "/" + view.getIdUnidadOperativa());
+			} else {
+				   //TODO
+			}
 		}
 	}
 
@@ -427,6 +433,7 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 	}
 	
 	private void guardarUsuariosPorRol(Collection<UsuarioView> usuariosAgregarView, String rol) {
+		Subject currentUser = SecurityUtils.getSubject();
 	    ArrayList<UsuarioView> usuariosView = new ArrayList<UsuarioView>(usuariosAgregarView);
 		
 		int[] idsUsuarios = null;
@@ -436,10 +443,10 @@ public class UnidadOperativaController implements IUnidadOperativaHandler {
 			   idsUsuarios[i] = usuariosView.get(i).getId();
 		}
 		
+		int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 		AgregarUsuarioUnidadOperativaRequest request = 
-				new AgregarUsuarioUnidadOperativaRequest(view.getIdUnidadOperativa(), rol, idsUsuarios);
+				new AgregarUsuarioUnidadOperativaRequest(view.getIdUnidadOperativa(), rol, idsUsuarios, idUsuario);
 		Response response = unidadOpService.agregarUsuario(request);
-		Subject currentUser = SecurityUtils.getSubject();
 		
 		if (response.isResultadoEjecucion()) {
 			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));

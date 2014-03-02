@@ -102,7 +102,9 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		
 		if (!validarDatosEntrada()) return;
 		else{
-			InsertarUsuarioRequest request = new InsertarUsuarioRequest();
+			Subject currentUser = SecurityUtils.getSubject();
+			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
+			InsertarUsuarioRequest request = new InsertarUsuarioRequest(idUsuario);
 			request.setApellidos(view.getApellidos().getValue().trim());
 			request.setCargo(view.getCargo().getValue().trim());
 			request.setEmail(view.getCorreoElectronico().getValue().trim());
@@ -118,7 +120,6 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 			}
 					
 			InsertarUsuarioResponse response = usuarioservice.agregar(request);
-			Subject currentUser = SecurityUtils.getSubject();
 			if (response.isResultadoEjecucion()){
 				currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje(),Type.HUMANIZED_MESSAGE));
 				if (view.getIdCliente()==0){
