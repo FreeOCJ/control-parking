@@ -40,13 +40,13 @@ public class UtilServiceImpl implements UtilService {
 	
 	
 	@Override
-	public boolean enviarEmail(String to, String pwd )
+	public void enviarEmail(String to, String pwd )
 	{
 		
 		String USER_NAME = "emailusrtest"; 
 	    String PASSWORD = "BCTS*1234"; 
 	    
-	    
+	   
 	    Properties props = System.getProperties();
         String host = "smtp.gmail.com";
         props.put("mail.smtp.starttls.enable", "true");
@@ -75,9 +75,7 @@ public class UtilServiceImpl implements UtilService {
        transport.connect(host, USER_NAME, PASSWORD);
        transport.sendMessage(message, message.getAllRecipients());
        transport.close();
-       
-       
-	   return false;
+                 
        }
        catch (AddressException ae) {
            ae.printStackTrace();

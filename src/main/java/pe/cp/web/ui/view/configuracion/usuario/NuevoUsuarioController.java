@@ -180,7 +180,7 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 		
 		UtilService util = null; 
 		LoginService login = null;
-		util.enviarEmail(view.getCorreoElectronico(), login.generarContrasenaTemporal());
+		util.enviarEmail(view.getCorreoElectronico().getValue(), login.generarContrasenaTemporal());
 		
 	}
 
