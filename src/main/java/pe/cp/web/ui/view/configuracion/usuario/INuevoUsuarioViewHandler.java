@@ -6,4 +6,5 @@ public interface INuevoUsuarioViewHandler {
 	void cargarRoles();
 	void validarUsuario();
 	boolean validarDatosEntrada();
+	//void enviarMail(String from, String pwd);
 }

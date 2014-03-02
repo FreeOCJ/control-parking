@@ -25,8 +25,10 @@ import com.vaadin.ui.UI;
 import com.vaadin.ui.Notification.Type;
 
 import pe.cp.core.domain.Rol;
+import pe.cp.core.service.LoginService;
 import pe.cp.core.service.RolService;
 import pe.cp.core.service.UsuarioService;
+import pe.cp.core.service.UtilService;
 import pe.cp.core.service.domain.RolView;
 import pe.cp.core.service.messages.InsertarUsuarioRequest;
 import pe.cp.core.service.messages.InsertarUsuarioResponse;
@@ -171,6 +173,15 @@ public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
 				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.OPERACIONES);
 			}
 		}
+	}
+	
+	
+	private void enviarMail(){
+		
+		UtilService util = null; 
+		LoginService login = null;
+		util.enviarEmail(view.getCorreoElectronico(), login.generarContrasenaTemporal());
+		
 	}
 
 }
