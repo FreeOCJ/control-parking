@@ -49,6 +49,7 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 		String id = fragment.substring(fragment.indexOf("/") + 1);
 		idCliente = Integer.valueOf(id);
 		init();		
+		handler.prepararTablaUsuarios();
 		handler.cargar();
 		handler.mostrarMensajeInicio();
 	}

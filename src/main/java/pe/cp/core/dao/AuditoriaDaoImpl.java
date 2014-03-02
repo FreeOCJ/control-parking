@@ -2,8 +2,10 @@ package pe.cp.core.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -88,6 +90,45 @@ public class AuditoriaDaoImpl implements AuditoriaDao {
 		
 		return agregar(audit);
 	}
+
+	@Override
+	public List<Auditoria> buscar(String tipoEvento, Date fechaInicio, Date fechaFin, String login) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("SELECT * FROM AUDITORIA WHERE 1=1 ");
+        if (tipoEvento != null && !tipoEvento.isEmpty()) sb.append(" AND TIPOEVENTO=:tipoEvento");
+        if (login != null && !login.isEmpty()) sb.append(" AND USUARIO=:login");
+        if (fechaInicio != null) sb.append(" AND FECHA  >= :fechaInicio");
+        if (fechaFin != null) sb.append(" AND FECHA <= :fechaFin");
+        
+		List<Auditoria> registros = new ArrayList<Auditoria>();		
+		Map<String, Object> args = new HashMap<String, Object>();
+		args.put("tipoEvento", tipoEvento);
+		args.put("login", login);
+		args.put("fechaInicio", fechaInicio);
+		args.put("fechaFin", fechaFin);
+		
+		SqlParameterSource sqlArgs = new MapSqlParameterSource(args);		
+		registros = namedParameterJdbcTemplate.query(sb.toString(), sqlArgs, new RowMapper<Auditoria>(){
+			@Override
+			public Auditoria mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return auditMapRow(rs, rowNum);
+			}
+			
+		} );
+		
+		return registros;
+	}
 	
+	public Auditoria auditMapRow(ResultSet rs, int n) throws SQLException {
+		Auditoria auditoria = new Auditoria();
+		auditoria.setEvento(rs.getString("EVENTO"));
+		auditoria.setFechaCreacion(rs.getTimestamp("FECHA"));
+		auditoria.setId(rs.getInt("IDAUDITORIA"));
+		auditoria.setLoginUsuario(rs.getString("USUARIO"));
+		auditoria.setNombreUsuario(rs.getString("USUARIO"));
+		auditoria.setTipoEvento(rs.getString("TIPOEVENTO"));
+		
+		return auditoria;
+	}
 
 }

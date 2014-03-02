@@ -73,7 +73,7 @@ import com.vaadin.ui.Table.ColumnGenerator;
 @Scope("prototype")
 public class UnidadOperativaController implements IUnidadOperativaHandler {
 
-	ApplicationContext ac;
+	private ApplicationContext ac;
 	private IUnidadOperativaView view;
 	private Container categoriasContainer;
 	

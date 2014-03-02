@@ -21,6 +21,7 @@ import pe.cp.web.ui.NavegacionUtil;
 
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Notification.Type;
@@ -55,8 +56,8 @@ public class NuevaOperacionController implements INuevaOperacionHandler {
 		if (view.getUnidadOperativa().getValue() != null && view.getFechaOperacion().getValue() != null) {
 			int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 			Object unidadSelectId = view.getUnidadOperativa().getValue();
-			int idUnidadSeleccionada = 
-					Integer.valueOf(view.getUnidadOperativa().getItem(unidadSelectId).getItemProperty(ID_UNIDAD).toString());
+			Object valor = view.getUnidadOperativa().getItem(unidadSelectId).getItemProperty(ID_UNIDAD).getValue();
+			int idUnidadSeleccionada = Integer.valueOf(valor.toString());
 			AgregarOperacionRequest request = 
 					new AgregarOperacionRequest(idUnidadSeleccionada, view.getFechaOperacion().getValue(), login, idUsuario);
 			AgregarOperacionResponse response = opService.agregar(request);

@@ -15,6 +15,7 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 
@@ -22,18 +23,24 @@ import com.vaadin.ui.VerticalLayout;
 @Scope("prototype")
 @SuppressWarnings("serial")
 @Theme("controlparking")
-public class AuditoriaView extends HorizontalLayout implements IAuditoriaView {
+public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaView {
 
 	private CssLayout contenido;
+	private Button btnBuscar;
+	private TextField txtUsuario;
+	private DateField dfFechaInicio;
+	private DateField dfFechaFin;
+	private ComboBox cbTipoEvento;
+	private Table tblResultados;
+	
+	private IAuditHandler handler;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		// TODO Auto-generated method stub
-
-	}
-
-	public AuditoriaView(){
+		removeAllComponents();
+		handler = new AuditoriaController(this);
 		init();
+		handler.cargar();
 	}
 	
 	@Override
@@ -72,16 +79,16 @@ public class AuditoriaView extends HorizontalLayout implements IAuditoriaView {
 	    header.addComponent(title); 
 		
         //Crear Tools Busqueda
-	    TextField txtUsuario = new TextField();
+	    txtUsuario = new TextField();
 	    txtUsuario.setInputPrompt("Usuario");	    	    
-        ComboBox cbTipoEvento = new ComboBox();
+        cbTipoEvento = new ComboBox();
         cbTipoEvento.setInputPrompt("Tipo Evento");
         cbTipoEvento.setWidth("200px");        
-        DateField dfFechaInicio = new DateField();
+        dfFechaInicio = new DateField();
         dfFechaInicio.setWidth("200px");
-        DateField dfFechaFin = new DateField();
+        dfFechaFin = new DateField();
         dfFechaFin.setWidth("200px");        
-        Button btnBuscar = new Button("Buscar");
+        btnBuscar = new Button("Buscar");
         btnBuscar.addStyleName("default");
                 
         HorizontalLayout toolbar = new HorizontalLayout();
@@ -104,5 +111,35 @@ public class AuditoriaView extends HorizontalLayout implements IAuditoriaView {
         toolbar.setExpandRatio(btnBuscar, 1);
         
 		return areaPrincipal;
+	}
+
+	@Override
+	public Table getTblResultados() {
+		return tblResultados;
+	}
+
+	@Override
+	public TextField getTxtUsuari() {
+		return txtUsuario;
+	}
+
+	@Override
+	public DateField getDfFechaInicio() {
+		return dfFechaInicio;
+	}
+
+	@Override
+	public DateField getDfFechaFin() {
+		return dfFechaFin;
+	}
+
+	@Override
+	public Button getBtnBuscar() {
+		return btnBuscar;
+	}
+
+	@Override
+	public ComboBox getCbTipoEvento() {
+		return cbTipoEvento;
 	}
 }

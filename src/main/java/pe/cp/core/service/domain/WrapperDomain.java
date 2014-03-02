@@ -1,8 +1,8 @@
 package pe.cp.core.service.domain;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+import pe.cp.core.domain.Auditoria;
 import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.Operacion;
@@ -149,6 +149,19 @@ public class WrapperDomain {
 		TipoIncidenciaView view = new TipoIncidenciaView();
 		view.setId(tipo.getId());
 		view.setTipo(tipo.getDescripcion());
+		
+		return view;
+	}
+	
+	public static AuditoriaView ViewMapper(Auditoria audit) {
+		AuditoriaView view = new AuditoriaView();
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY dd:mm");
+		
+		view.setDescripcion(audit.getEvento());
+		view.setFechaHora(sdf.format(audit.getFechaCreacion()));
+		view.setId(view.getId());
+		view.setTipoEvento(audit.getTipoEvento());
+		view.setUsuario(audit.getLoginUsuario());
 		
 		return view;
 	}

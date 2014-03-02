@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import pe.cp.web.ui.view.auditoria.IAuditoriaView;
-import pe.cp.web.ui.view.auditoria.AuditoriaView;
+import pe.cp.web.ui.view.auditoria.AuditoriaViewImpl;
 import pe.cp.web.ui.view.configuracion.IConfigView;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
 import pe.cp.web.ui.view.configuracion.cliente.BuscarClienteViewImpl;
@@ -108,7 +108,7 @@ public class ControlParkingUI extends UI {
 		IReportesView reportesView = new ReportesView();
 		IBuscarOperacionesView operacionesView = new BuscarOperacionesViewImpl();
 		IConfigView configuracionView = new ConfigViewImpl();
-		IAuditoriaView auditoriaView = new AuditoriaView();
+		IAuditoriaView auditoriaView = new AuditoriaViewImpl();
 		IBuscarUsuarioView buscarUsuarioView = new BuscarUsuarioViewImpl();
 		INuevoUsuarioView nuevoUsuarioView = new NuevoUsuarioViewImpl();
 		IEditarUsuarioView editarUsuarioView = new EditarUsuarioViewImpl();

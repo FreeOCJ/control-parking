@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import pe.cp.web.ui.view.auditoria.AuditoriaView;
+import pe.cp.web.ui.view.auditoria.AuditoriaViewImpl;
 import pe.cp.web.ui.view.configuracion.ConfigViewImpl;
 import pe.cp.web.ui.view.operaciones.OperacionesComponent;
 import pe.cp.web.ui.view.reportes.ReportesView;

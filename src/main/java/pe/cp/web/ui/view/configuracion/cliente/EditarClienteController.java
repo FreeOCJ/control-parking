@@ -138,7 +138,6 @@ public class EditarClienteController implements IEditarClienteHandler {
 		ObtenerClienteResponse response = clienteService.obtenerPorId(request);
 		
 		if (response.isResultadoEjecucion()){
-			prepararTablaUsuarios();
 			view.getNombreComercial().setValue(response.getClienteView().getNombreComercial());
 			view.getRazonSocial().setValue(response.getClienteView().getRazonSocial());
 			view.getRuc().setValue(response.getClienteView().getRuc());
@@ -175,7 +174,7 @@ public class EditarClienteController implements IEditarClienteHandler {
            Logger.getAnonymousLogger().log(Level.WARNING, "No se pudo obtener al cliente");		
 		}					
 	}
-
+	
 	@Override
 	public Container obtenerHeadersUsuariosContainer() {
 		usuariosContainer = new IndexedContainer(); 
@@ -255,7 +254,8 @@ public class EditarClienteController implements IEditarClienteHandler {
 	}
 	
 	@SuppressWarnings("serial")
-	private void prepararTablaUsuarios() {
+	@Override
+	public void prepararTablaUsuarios() {
 		final Table tblUsuarios = view.getUsuarios();
 		
 		tblUsuarios.setContainerDataSource(obtenerHeadersUsuariosContainer());

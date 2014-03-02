@@ -276,7 +276,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 		else{
 			StringBuilder sb = new StringBuilder();
 			sb.append("select * from cp_core_db.usuario u, cp_core_db.rol r, cp_core_db.rolxusuario ru ");
-			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol and ELIMINADO='F'");
+			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol and u.ELIMINADO='F'");
 			sql = sb.toString();
 			args.put("rol", rol);
 		}
