@@ -82,4 +82,29 @@ public class NavegacionUtil {
 	public static void irConfiguracionUsuario() {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.CONFIGURAR_USUARIO);
 	}
+	
+	//Reportes
+	public static void irReportes() {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTES);
+	}
+	
+	public static void irReporteIngresosSalidas(int idCliente, int idUnidadOp) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_INGRESOS_SALIDAS + "/" + idCliente + "/" + idUnidadOp);
+	}
+	
+	public static void irReporteRecaudacion(int idCliente, int idUnidadOp) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_RECAUDACION + "/" + idCliente + "/" + idUnidadOp);
+	}
+	
+	public static void irReporteVisitas(int idCliente, int idUnidadOp) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_VISITAS + "/" + idCliente + "/" + idUnidadOp);
+	}
+	
+	public static void irReporteIncidencias(int idCliente, int idUnidadOp) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTES_INCIDENCIAS + "/" + idCliente + "/" + idUnidadOp);
+	}
+	
+	public static void irReporteConsolidado() {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_CONSOLIDADO);
+	}
 }
