@@ -104,7 +104,7 @@ public class NavegacionUtil {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTES_INCIDENCIAS + "/" + idCliente + "/" + idUnidadOp);
 	}
 	
-	public static void irReporteConsolidado() {
-		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_CONSOLIDADO);
+	public static void irReporteConsolidado(int idCliente, int idUnidadOp) {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.REPORTE_CONSOLIDADO + "/" + idCliente + "/" + idUnidadOp);
 	}
 }

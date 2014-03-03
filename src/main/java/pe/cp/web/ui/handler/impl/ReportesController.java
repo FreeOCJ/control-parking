@@ -194,7 +194,15 @@ public class ReportesController implements IReportesViewHandler{
 
 	@Override
 	public void irReporteConsolidado() {
-		NavegacionUtil.irReporteConsolidado();
+		int idCliente = getIdClienteSeleccionado();
+		int idUnidadOperativa = getIdUnidadOpSeleccionada();
+		
+		if (idCliente + idUnidadOperativa > 1) {
+			NavegacionUtil.irReporteConsolidado(idCliente, idUnidadOperativa);
+		} else {
+			notificacion = new Notification(ERR_SELECCIONAR_COMBOS);
+			notificacion.show(Page.getCurrent());
+		}	
 	}
 	
 	@SuppressWarnings("serial")
