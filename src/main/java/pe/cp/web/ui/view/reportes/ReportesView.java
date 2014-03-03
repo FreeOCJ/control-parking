@@ -8,8 +8,12 @@ import pe.cp.web.ui.view.main.SideBar;
 import pe.cp.web.ui.view.reportes.IReportesView;
 
 import com.vaadin.annotations.Theme;
+import com.vaadin.data.Property.ValueChangeEvent;
+import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -24,31 +28,29 @@ import com.vaadin.ui.Button.ClickListener;
 public class ReportesView extends HorizontalLayout implements IReportesView {
 
 	private CssLayout contenido;
+	private ComboBox cbUnidadOperativa;
+	private ComboBox cbCliente;
+	
+
+	private Button btnReportesIncidencias;
 	
 	@Autowired
 	private IReportesViewHandler handler;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		removeAllComponents();
 		handler = new ReportesController(this);
-
-	}
-	
-	public ReportesView(){
 		init();
+		handler.cargar();
 	}
-
 	
+		
 	@Override
 	public void init() {		
         System.out.println("init reportes");
-		construirBase();
-	}
-	
-	private void construirBase(){
-		setSizeFull();		
-		addStyleName("main-view");
-		
+        setSizeFull();		
+		addStyleName("main-view");		
 		SideBar barraControl = new SideBar();
 		addComponent(barraControl);
 		
@@ -74,8 +76,32 @@ public class ReportesView extends HorizontalLayout implements IReportesView {
 	    Label title = new Label("Reportes");
 	    title.addStyleName("h1");         
 	    header.addComponent(title); 
+	    
+	    //Combos
+	    cbCliente = new ComboBox();
+	    cbCliente.setInputPrompt("Cliente");
+	    cbCliente.setWidth("400px");
+	    cbCliente.setItemCaptionPropertyId("NOMBRE");
+	    cbUnidadOperativa = new ComboBox();
+	    cbUnidadOperativa.setInputPrompt("Unidad Operativa");
+	    cbUnidadOperativa.setWidth("400px");
+	    cbUnidadOperativa.setItemCaptionPropertyId("NOMBRE");
+	    
+	    HorizontalLayout toolbar = new HorizontalLayout();
+	    toolbar.setWidth("100%");
+	    toolbar.setSpacing(true);
+        toolbar.setMargin(true);
+        toolbar.addStyleName("toolbar");
+        areaPrincipal.addComponent(toolbar);
+        
+        toolbar.addComponent(cbCliente);
+        toolbar.setComponentAlignment(cbCliente, Alignment.MIDDLE_LEFT);
+        toolbar.addComponent(cbUnidadOperativa);
+        toolbar.setComponentAlignment(cbUnidadOperativa, Alignment.MIDDLE_LEFT);
+        toolbar.setExpandRatio(cbUnidadOperativa, 1);
+	    
 		
-	    Button btnReportesIncidencias = new Button("Reporte de Incidencias");
+	    btnReportesIncidencias = new Button("Reporte de Incidencias");
 	    VerticalLayout configLayout = new VerticalLayout();
 	    configLayout.addComponent(btnReportesIncidencias);
 	    
@@ -85,10 +111,29 @@ public class ReportesView extends HorizontalLayout implements IReportesView {
 				handler.irReportesIncidencias();		
 			}
 		});
+	    
+	    cbCliente.addValueChangeListener(new ValueChangeListener(){
+			@Override
+			public void valueChange(ValueChangeEvent event) {
+				handler.cargarUnidadesOperativaPorCliente();				
+			}	    	
+	    });
 	    		
 	    areaPrincipal.addComponent(configLayout);
 	    areaPrincipal.setExpandRatio(configLayout, 1);
 		return areaPrincipal;
 	}
+
+	@Override
+	public ComboBox getCbCliente() {
+		return cbCliente;
+	}
+
+	@Override
+	public ComboBox getCbUnidadOp() {
+		return cbUnidadOperativa;
+	}
+	
+	
 
 }

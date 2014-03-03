@@ -9,5 +9,9 @@ public class BuscarClienteRequest {
 
 	public void setNombreComercial(String nombreComercial) {
 		this.nombreComercial = nombreComercial;
-	}	
+	}
+
+	
+	
+	
 }

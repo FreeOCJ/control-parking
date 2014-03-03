@@ -1,25 +1,17 @@
 package pe.cp.web.ui.view.operaciones;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.vaadin.dialogs.ConfirmDialog;
 
-import pe.cp.web.ui.view.configuracion.cliente.BuscarClienteController;
 import pe.cp.web.ui.view.main.SideBar;
 import pe.cp.web.ui.view.operaciones.IBuscarOperacionesView;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.Page;
 import com.vaadin.server.ThemeResource;
-import com.vaadin.shared.Position;
-import com.vaadin.shared.ui.label.ContentMode;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -27,14 +19,11 @@ import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Notification;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
-import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Table.ColumnGenerator;
 
 @Component
@@ -74,7 +63,8 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
         addComponent(contenido);
         contenido.setSizeFull();
         contenido.addStyleName("view-content");       
-        setExpandRatio(contenido, 1);        
+        setExpandRatio(contenido, 1);   
+        
         contenido.addComponent(cargarContenido());	
 	}
 

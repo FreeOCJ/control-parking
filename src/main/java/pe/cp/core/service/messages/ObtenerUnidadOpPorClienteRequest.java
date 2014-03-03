@@ -10,4 +10,5 @@ public class ObtenerUnidadOpPorClienteRequest {
 	public int getIdCliente() {
 		return idCliente;
 	}
+	
 }
