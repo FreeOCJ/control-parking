@@ -8,12 +8,14 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pe.cp.core.dao.AuditoriaDao;
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.dao.TarifaDao;
 import pe.cp.core.dao.UnidadOperativaDao;
 import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Tarifa;
 import pe.cp.core.domain.UnidadOperativa;
+import pe.cp.core.domain.Usuario;
 import pe.cp.core.service.domain.TarifaConsolidadoView;
 import pe.cp.core.service.domain.TarifaView;
 import pe.cp.core.service.domain.UnidadOperativaView;
@@ -52,19 +54,19 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 	
 	@Autowired
 	private UnidadOperativaDao unidadOpDao;
-	
 	@Autowired
 	private ClienteDao clienteDao;
-	
 	@Autowired
 	private UsuarioDao usuarioDao;
-	
 	@Autowired
 	private TarifaDao tarifaDao;
+	@Autowired
+	private AuditoriaDao auditDao;
 	
 	@Override
 	public AgregarUnidadOperativaResponse agregar(AgregarUnidadOperativaRequest request) {
 		AgregarUnidadOperativaResponse response = new AgregarUnidadOperativaResponse();
+		Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 		
 		UnidadOperativa unidadOp = new UnidadOperativa();
 		unidadOp.setNombre(request.getNombre());
@@ -81,7 +83,7 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 		if (idUnidadOperativa != null && idUnidadOperativa > 0){
 			//Cada nueva unidad operativa debe contar con tarifas por defecto: REGULAR, RAUDOS, PERNOCTADOS
 			agregarTarifasDefecto(idUnidadOperativa);
-			
+			auditDao.agregarAuditoria(modificador, unidadOp, AuditoriaServiceImpl.INSERTAR_UNIDAD_OP);
 			response.setIdUnidadOperativa(idUnidadOperativa);
 			response.setResultadoEjecucion(true);
 			response.setMensaje("Se agregó la unidad operativa exitosamente");
@@ -115,6 +117,7 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 	@Override
 	public ActualizarUnidadOpResponse actualizar(ActualizarUnidadOpRequest request) {
 		ActualizarUnidadOpResponse response = new ActualizarUnidadOpResponse();
+		Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 		
 		UnidadOperativa unidadOp = new UnidadOperativa();
 		unidadOp.setId(request.getIdUnidadOperativa());
@@ -129,6 +132,7 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 		
 		try{
 			unidadOpDao.actualizar(unidadOp);
+			auditDao.agregarAuditoria(modificador, unidadOp, AuditoriaServiceImpl.MODIFICAR_UNIDAD_OP);
 			response.setResultadoEjecucion(true);
 			response.setMensaje("Se actualizó la unidad operativa satisfactoriamente");
 		}catch (Exception e){
@@ -357,7 +361,10 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 		Response response = new Response();
 		
 		try {
+			UnidadOperativa unidadOp = unidadOpDao.buscar(request.getIdUnidadOperativa());
+			Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 			unidadOpDao.eliminar(request.getIdUnidadOperativa());
+			auditDao.agregarAuditoria(modificador, unidadOp, AuditoriaServiceImpl.ELIMINAR_UNIDAD_OP);
 			response.setResultadoEjecucion(true);
 			response.setMensaje(EXITO_ELIMINAR_UNIDAD);
 		} catch (Exception e) {

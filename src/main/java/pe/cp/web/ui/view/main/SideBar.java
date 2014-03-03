@@ -110,7 +110,7 @@ public class SideBar extends VerticalLayout implements ISideBarView {
         });
         
         
-        for (final String view : new String[] { "operaciones", "reportes",
+        for (final String view : new String[] { "main", "operaciones", "reportes",
                 								"configuracion", "auditoria"}) {
             Button b = new NativeButton(view.substring(0, 1).toUpperCase()
                     + view.substring(1).replace('-', ' '));

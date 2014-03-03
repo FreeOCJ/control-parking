@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import pe.cp.core.dao.AuditoriaDao;
 import pe.cp.core.dao.ClienteDao;
 import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.Rol;
@@ -42,9 +43,10 @@ public class UsuarioServiceImpl implements UsuarioService{
 
 	@Autowired
 	private UsuarioDao usuariodao;
-	
 	@Autowired
 	private ClienteDao clientedao;
+	@Autowired
+	private AuditoriaDao auditDao;
 	
 	private final String ERR_ELIMINAR_USUARIO = "Error al eliminar el usuario";
 	private final String EXITO_ELIMINAR_USUARIO = "Se eliminó al usuario satisfactoriamente";
@@ -58,6 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 	@Override
 	public ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request) {
 		ActualizarUsuarioResponse response = new ActualizarUsuarioResponse();
+		Usuario modificador = usuariodao.buscar(request.getIdUsuarioModificador());
 		Usuario usuario = usuariodao.buscar(request.getIdUsuario());
 		Usuario nuevoMod = new Usuario();
 		
@@ -80,6 +83,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 				usuariodao.agregarRol(usuario.getId(), idRol);
 			}
 			
+			auditDao.agregarAuditoria(modificador, usuario, AuditoriaServiceImpl.MODIFICAR_USUARIO);
 			response.setResultadoEjecucion(true);	
 			response.setMensaje("Se modificó al usuario exitosamente");
 		}else{
@@ -94,24 +98,26 @@ public class UsuarioServiceImpl implements UsuarioService{
 	public InsertarUsuarioResponse agregar(InsertarUsuarioRequest request) {
 		InsertarUsuarioResponse response = new InsertarUsuarioResponse();
 		
+		Usuario modificador = usuariodao.buscar(request.getIdUsuarioModificador());
 		Usuario usuario = new Usuario();
-			usuario.setApellidos(request.getApellidos());
-			usuario.setCargo(request.getCargo());
-			usuario.setEmail(request.getEmail());
-			usuario.setLogin(request.getLogin());
-			usuario.setNombres(request.getNombres());
-			if (request.getIdCliente() > 0)				
-				usuario.setCliente(clientedao.buscar(request.getIdCliente()));
-			else
-				usuario.setCliente(null);
-			usuario.setPassword(request.getPwd());
+		usuario.setApellidos(request.getApellidos());
+		usuario.setCargo(request.getCargo());
+		usuario.setEmail(request.getEmail());
+		usuario.setLogin(request.getLogin());
+		usuario.setNombres(request.getNombres());
+		if (request.getIdCliente() > 0)				
+			usuario.setCliente(clientedao.buscar(request.getIdCliente()));
+		else usuario.setCliente(null);
+		usuario.setPassword(request.getPwd());
 		
 		if (validarNuevoUsuario(usuario)){
 			Integer idUsuario = usuariodao.agregar(usuario);
 			if (idUsuario != null){
+				usuario.setId(idUsuario);
 				for (Integer idRol : request.getIdRoles()) {
 					usuariodao.agregarRol(idUsuario, idRol);
 				}
+				auditDao.agregarAuditoria(modificador, usuario, AuditoriaServiceImpl.INSERTAR_USUARIO);
 				response.setResultadoEjecucion(true);
 				response.setMensaje("Se insertó al usuario exitosamente");
 			}	
@@ -281,7 +287,11 @@ public class UsuarioServiceImpl implements UsuarioService{
 		Response response = new Response();
 		
 		try {
+			Usuario modificador = usuariodao.buscar(request.getIdUsuarioModificador());
+			Usuario usuario = usuariodao.buscar(request.getIdUsuario());
+			
 			usuariodao.eliminar(request.getIdUsuario());
+			auditDao.agregarAuditoria(modificador, usuario, AuditoriaServiceImpl.ELIMINAR_USUARIO);
 			response.setResultadoEjecucion(true);
 			response.setMensaje(EXITO_ELIMINAR_USUARIO);
 		} catch (Exception e) {
@@ -302,6 +312,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 			Usuario usuario = usuariodao.buscar(request.getIdUsuario());
 			usuario.setEmail(request.getCorreo());
 			usuariodao.actualizar(usuario);
+			auditDao.agregarAuditoria(usuario, usuario, AuditoriaServiceImpl.MODIFICAR_USUARIO);
 			response.setMensaje(EXITO_ACTUALIZAR_CORREO);
 			response.setResultadoEjecucion(true);
 		} catch (Exception e) {
@@ -326,6 +337,7 @@ public class UsuarioServiceImpl implements UsuarioService{
 				if (request.getContrasenaAntigua().equals(usuario.getPassword())) {
 					usuario.setPassword(request.getNuevaContrasena());
 					usuariodao.actualizar(usuario);
+					auditDao.agregarAuditoria(usuario, usuario, AuditoriaServiceImpl.MODIFICAR_USUARIO);
 					response.setMensaje(EXITO_ACTUALIZAR_CONTRASENA);
 					response.setResultadoEjecucion(true);
 				} else {

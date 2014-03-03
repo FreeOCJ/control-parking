@@ -13,11 +13,13 @@ import org.springframework.stereotype.Service;
 
 import com.vaadin.navigator.View;
 
+import pe.cp.core.dao.AuditoriaDao;
 import pe.cp.core.dao.IncidenciaDao;
 import pe.cp.core.dao.OperacionDao;
 import pe.cp.core.dao.RolDao;
 import pe.cp.core.dao.TarifaDao;
 import pe.cp.core.dao.UnidadOperativaDao;
+import pe.cp.core.dao.UsuarioDao;
 import pe.cp.core.domain.DetallePorOperacion;
 import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.Operacion;
@@ -26,6 +28,7 @@ import pe.cp.core.domain.OperacionPorTarifa;
 import pe.cp.core.domain.Tarifa;
 import pe.cp.core.domain.TipoIncidencia;
 import pe.cp.core.domain.UnidadOperativa;
+import pe.cp.core.domain.Usuario;
 import pe.cp.core.service.messages.ActualizarOperacionRequest;
 import pe.cp.core.service.messages.AgregarIncidenciaRequest;
 import pe.cp.core.service.messages.AgregarIncidenciaResponse;
@@ -67,6 +70,10 @@ public class OperacionServiceImpl implements OperacionService {
 	private TarifaDao tarifadao;
 	@Autowired
 	private IncidenciaDao incidenciaDao;
+	@Autowired
+	private AuditoriaDao auditDao;
+	@Autowired
+	private UsuarioDao usuarioDao;
 	
 	private final String ESTADO_EN_PROCESO = "EN PROCESO";
 	private final String ESTADO_POR_APROBAR = "POR APROBAR";
@@ -121,6 +128,7 @@ public class OperacionServiceImpl implements OperacionService {
 		AgregarOperacionResponse response = new AgregarOperacionResponse();
 		
 		try {
+			Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 			UnidadOperativa unidadOp = unidadOpdao.buscar(request.getIdUnidadOperativa());
 			Date horaInicio = unidadOp.getHoraInicio();
 			Date horaFin = unidadOp.getHoraFin();
@@ -153,6 +161,7 @@ public class OperacionServiceImpl implements OperacionService {
 					int idNuevaOperacion = opdao.agregar(op);
 					if (idNuevaOperacion > 0) {
 						//Crear las tablas de detalle
+						op.setId(idNuevaOperacion);
 						while (horaInicio.compareTo(horaFin) < 0) {
 							Date horaFinTemp = new Date(horaInicio.getTime() + 3600 * 1000);
 							if (horaFinTemp.compareTo(horaFin) > 0) horaFinTemp = horaFin;
@@ -175,6 +184,7 @@ public class OperacionServiceImpl implements OperacionService {
 							opdao.agregarOperacionPorTarifa(opPorTarifa);
 						}
 						
+						auditDao.agregarAuditoria(modificador, op, AuditoriaServiceImpl.INSERTAR_OPERACION);
 						response.setIdNuevaOperacion(idNuevaOperacion);
 						response.setResultadoEjecucion(true);
 						response.setMensaje(EXITO_AGREGAR_OPERACION);
@@ -444,6 +454,7 @@ public class OperacionServiceImpl implements OperacionService {
 		Response response = new Response();
 		
 		try {
+			Usuario modificador = usuarioDao.buscar(request.getIdUsuarioModificador());
 			Operacion op = opdao.buscar(request.getIdOperacion());
 		    op.setId(request.getIdOperacion());
 		    op.setAjuste(request.getAjuste());
@@ -480,6 +491,7 @@ public class OperacionServiceImpl implements OperacionService {
 		    }
 		    
 		    opdao.modificar(op);
+		    auditDao.agregarAuditoria(modificador, op, AuditoriaServiceImpl.MODIFICAR_OPERACION);
 		    response.setResultadoEjecucion(true);
 		    response.setMensaje("Se actualizaron los datos de la operación");
 		} catch (Exception e) {
