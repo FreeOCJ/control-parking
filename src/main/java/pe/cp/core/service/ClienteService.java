@@ -20,5 +20,6 @@ public interface ClienteService {
 	ObtenerClienteResponse obtenerPorId(ObtenerClienteRequest request);
 	Response eliminarCliente(EliminarClienteRequest request);
 	boolean validarNuevoCliente(Cliente cliente);
-	boolean validarModificarCliente(Cliente cliente, Cliente clienteMod);	
+	boolean validarModificarCliente(Cliente cliente, Cliente clienteMod);
+	boolean existeCliente(String ruc);
 }

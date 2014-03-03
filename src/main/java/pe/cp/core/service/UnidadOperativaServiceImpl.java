@@ -224,16 +224,26 @@ public class UnidadOperativaServiceImpl implements UnidadOperativaService {
 		Response response = new Response();
 		
 		try {
+			
 			tarifaDao.eliminarPorCategoria(request.getIdUnidadOperativa(), request.getCategoria());
+			
 			for (double monto : request.getMontos()) {
 				UnidadOperativa unidadOp = new UnidadOperativa();
 				unidadOp.setId(request.getIdUnidadOperativa());
+			
+				
 				
 				Tarifa tarifa = new Tarifa();
 				tarifa.setCategoria(request.getCategoria());
 				tarifa.setMonto(monto);
 				tarifa.setIdUnidadOperativa(request.getIdUnidadOperativa());
+				//Existe
+				System.out.println("existePorMonto:"  + tarifaDao.existePorMonto(tarifa));
+				if(tarifaDao.existePorMonto(tarifa)== 0)
 				tarifaDao.agregar(tarifa);
+				else
+				tarifaDao.actualizar(tarifa);
+				
 			}
 			response.setMensaje("Tarifas actualizadas en la unidad operativa");
 			response.setResultadoEjecucion(true);

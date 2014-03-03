@@ -11,4 +11,5 @@ public interface TarifaDao {
 	List<Tarifa> obtenerTarifas(int idUnidadOperativa, String categoria);
 	void eliminarPorCategoria(int idUnidadOperativa, String categoria);
 	List<String> obtenerCategorias(int unidadOperativa);
+	int existePorMonto(Tarifa tarifa);
 }

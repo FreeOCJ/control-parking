@@ -11,4 +11,5 @@ public interface ClienteDao {
 	void eliminar(int idCliente);
 	List<Cliente> buscar(String nombreComercial);
 	Cliente buscar(int idCliente);
+	int existeCliente(String ruc);
 }

@@ -39,7 +39,7 @@ public class ClienteServiceImpl implements ClienteService {
 	private final String ERR_ELIMINAR_CLIENTE = "Error al eliminar al cliente";
 	private final String ERR_VALIDAR_CLIENTE = "Error al validar al cliente";
 	private final String EXITO_ELIMINAR_CLIENTE = "Se eliminó al cliente de manera satisfactoria";
-	private final String EXITO_INSERTAR_CLIENTE = "Se insertó al cliente exitosamente";
+	private final String EXITO_INSERTAR_CLIENTE = "Se creó un registro del cliente en el sistema.";
 	private final String ERR_MODIFICAR_CLIENTE = "Error al modificar al cliente";
 	
 	@Override
@@ -179,4 +179,13 @@ public class ClienteServiceImpl implements ClienteService {
 		return response;
 	}
 
+	public boolean existeCliente(String ruc) {
+		
+		if (cdao.existeCliente(ruc) > 0)
+			return false;
+		else
+			return true;
+		
+		
+	}
 }

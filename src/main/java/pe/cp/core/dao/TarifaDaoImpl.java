@@ -53,7 +53,16 @@ public class TarifaDaoImpl implements TarifaDao {
 
 	@Override
 	public void actualizar(Tarifa tarifa) {
-		// TODO Auto-generated method stub
+		
+		StringBuilder sbSql = new StringBuilder();
+		sbSql.append("UPDATE tarifa SET ELIMINADO = 'F' where IDUNIDADOP=");
+		sbSql.append(tarifa.getIdUnidadOperativa());
+		sbSql.append(" AND CATEGORIA='");
+		sbSql.append(tarifa.getCategoria());
+		sbSql.append("' And MONTOTARIFA = ");
+		sbSql.append(tarifa.getMonto());
+				
+		jdbcTemplate.update(sbSql.toString());
 
 	}
 
@@ -92,8 +101,10 @@ public class TarifaDaoImpl implements TarifaDao {
 		jdbcTemplate.update(sbSql.toString());
 	}
 
+	
 	@Override
 	public List<String> obtenerCategorias(int unidadOperativa) {
+		
 		final String sql = "select distinct categoria from tarifa where IDUNIDADOP = :idUnidadOp AND ELIMINADO = 'F'";
 		
 		List<String> categorias = new ArrayList<String>();
@@ -106,6 +117,25 @@ public class TarifaDaoImpl implements TarifaDao {
 		} );
 		
 		return categorias;
+		
 	}
 
+	@Override
+	public int existePorMonto(Tarifa tarifa) {
+		final String sql = "select count(1) from tarifa where MONTOTARIFA = :monto AND ELIMINADO = 'T' And IDUNIDADOP= :idUnidadOp AND CATEGORIA = :idCategoria";
+		
+		MapSqlParameterSource msp = new MapSqlParameterSource();
+		msp.addValue("monto", tarifa.getMonto());
+		msp.addValue("idUnidadOp", tarifa.getIdUnidadOperativa());
+		msp.addValue("idCategoria", tarifa.getCategoria());
+		
+		SqlParameterSource namedParameters = msp;
+
+		return (int)namedParameterJdbcTemplate.queryForInt(sql, msp);
+				//.queryForObject(sql, namedParameters, new TarifaMapper());
+			
+		
+	}
+
+		
 }

@@ -80,6 +80,7 @@ public class TarifaController implements ITarifaHandler {
 		String mensaje = validar();
 		
 		if (mensaje == null) {
+			
 		   int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 		   double[] montos = new double[view.getListaTarifas().getItemIds().size()];
 		   
@@ -127,6 +128,13 @@ public class TarifaController implements ITarifaHandler {
 				view.getLabelTitulo().setValue("Editar Tarifa");
 				view.getTxtNombre().setValue(view.getCategoriaTarifa());
 				
+				String nombre = view.getTxtNombre().getValue();
+				if (nombre.toUpperCase().equals(unidadOpService.getConstanteRaudos()) ||
+					nombre.toUpperCase().equals(unidadOpService.getConstantePernoctados()) ||
+					nombre.toUpperCase().equals(unidadOpService.getConstanteRegular()))
+					
+					view.getTxtNombre().setEnabled(false);
+				
 				ObtenerTarifasRequest requestTarifas = new ObtenerTarifasRequest(view.getIdUnidadOperativa(), view.getCategoriaTarifa());
 				ObtenerTarifasResponse responseTarifas = unidadOpService.obtenerTarifas(requestTarifas);
 				
@@ -160,14 +168,19 @@ public class TarifaController implements ITarifaHandler {
 	
 	@Override
 	public String validar() {
+		
 		String nombre = view.getTxtNombre().getValue();
 		int cantidad = view.getListaTarifas().getItemIds().size();
 		
 		if (nombre == null || nombre.isEmpty()) return ERR_NOMBRE_VACIO;
-		if (nombre.toUpperCase().equals(unidadOpService.getConstanteRaudos()) ||
+		
+		/* 
+		 * if (nombre.toUpperCase().equals(unidadOpService.getConstanteRaudos()) ||
 			nombre.toUpperCase().equals(unidadOpService.getConstantePernoctados()) ||
 			nombre.toUpperCase().equals(unidadOpService.getConstanteRegular()))
 			   return ERR_NOMBRE_RESERVADO;
+		*/
+		
 		if (cantidad == 0) return ERR_NO_TARIFAS;
 		
 		return null;

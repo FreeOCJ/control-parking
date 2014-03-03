@@ -51,30 +51,40 @@ public class NuevoClienteController implements INuevoClienteHandler {
 			return false;
 		}
 		
-		//2. Validar que el campo RUC tiene el formato v�lido.
+		//2. Validar que el campo RUC tiene el formato válido.
 						
 		view.getRuc().addValidator(new RegexpValidator("\\d{11}", ""));
 		
 		
 		if (!view.getRuc().isValid())
 		{
-			Notification.show("El formato del campo RUC no es correcto, debe tener 11 n�meros", Notification.Type.WARNING_MESSAGE);
+			Notification.show("El formato del campo RUC no es correcto, debe tener 11 números", Notification.Type.WARNING_MESSAGE);
 			return false;
 		}
 		
 		
-		//3. Validar el tama�o de los campos
+		//3. Validar el tamaño de los campos
 		if (view.getRazonSocial().getValue().trim().length() > 50 )
 		{
-			Notification.show("Se ha excedido el tama�o del campo Raz�n Social (m�ximo 50).", Notification.Type.WARNING_MESSAGE);
+			Notification.show("Se ha excedido el tamaño del campo Razón Social (máximo 50).", Notification.Type.WARNING_MESSAGE);
 			return false;
 		}
 		
-		//3. Validar el tama�o de los campos
+		//3. Validar el tamaño de los campos
 		if (view.getNombreComercial().getValue().trim().length() > 100)
 		{
-			Notification.show("Se ha excedido el tama�o del campo Nombre Comercial (m�ximo 100).", Notification.Type.WARNING_MESSAGE);
+			Notification.show("Se ha excedido el tamaño del campo Nombre Comercial (máximo 100).", Notification.Type.WARNING_MESSAGE);
 			return false;
+		}
+		
+		//4. No debe permitir ingresar el mismo RUC para dos empresas.
+		
+		
+		if (clienteService.existeCliente(view.getRuc().getValue())) {
+			
+			Notification.show("El RUC " + view.getRuc().getValue() + " ya fue ingresado");
+			return false;
+			
 		}
 		
 		return true;

@@ -74,4 +74,13 @@ public class ClienteDaoImpl implements ClienteDao {
 		cliente = jdbcTemplate.queryForObject(sql, args, new ClienteMapper());
 		return cliente;
 	}
+	
+	@Override
+	public int existeCliente(String ruc) {
+		
+		final String sql = "SELECT COUNT(1) FROM CLIENTE WHERE IDCLIENTE= ? and ELIMINADO='F'";
+		Object[] args = {ruc};
+		return jdbcTemplate.queryForInt(sql, args);
+		
+	}
 }

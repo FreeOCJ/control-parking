@@ -67,6 +67,7 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 			view.getNombres().setValue(response.getUsuarioView().getNombres());
 			view.getCargo().setValue(response.getUsuarioView().getCargo());
 			view.getLogin().setValue(response.getUsuarioView().getLogin());
+			view.getLogin().setEnabled(false);
 			view.getCorreoElectronico().setValue(response.getUsuarioView().getEmail());
 			
 			HashSet<RolView> preselected = new HashSet<RolView>();
@@ -116,14 +117,14 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 					return false;
 			} else{
 				//Se valida que el login del usuario sea unico
-				ValidarDatosUsuarioRequest request = new ValidarDatosUsuarioRequest(0, view.getLogin().getValue().trim());
-				ValidarDatosUsuarioResponse response = usuarioservice.validarDatosUsuario(request);
+				//ValidarDatosUsuarioRequest request = new ValidarDatosUsuarioRequest(0, view.getLogin().getValue().trim());
+				//ValidarDatosUsuarioResponse response = usuarioservice.validarDatosUsuario(request);
 				
-				if (!response.isResultadoEjecucion())
-					{
-						Notification.show(response.getMensaje(), Notification.Type.WARNING_MESSAGE);
-						return false;
-					}
+				//if (!response.isResultadoEjecucion())
+				//	{
+				//		Notification.show(response.getMensaje(), Notification.Type.WARNING_MESSAGE);
+				//		return false;
+				//	}
 				}
 			}
 	
