@@ -76,14 +76,25 @@ public class SideBar extends VerticalLayout implements ISideBarView {
                                 .show("Not implemented in this demo");
                     }
                 };
-                MenuBar settings = new MenuBar();
-                MenuItem settingsMenu = settings.addItem("",null);
-                settingsMenu.setStyleName("icon-cog");
-                settingsMenu.addItem("Settings", cmd);
-                settingsMenu.addItem("Preferences", cmd);
-                settingsMenu.addSeparator();
-                settingsMenu.addItem("Mi Cuenta", cmd);
-                addComponent(settings);
+                
+                Button conf = new NativeButton("Configuracion");
+                conf.setStyleName("icon-cog");
+                addComponent(conf);
+                conf.addClickListener(new ClickListener() {
+					@Override
+					public void buttonClick(ClickEvent event) {
+						handler.irConfiguracion();
+					}
+				});
+                
+                //MenuBar settings = new MenuBar();
+                //MenuItem settingsMenu = settings.addItem("",null);
+                //settingsMenu.setStyleName("icon-cog");
+                //settingsMenu.addItem("Settings", cmd);
+                //settingsMenu.addItem("Preferences", cmd);
+                //settingsMenu.addSeparator();
+                //settingsMenu.addItem("Mi Cuenta", cmd);
+                //addComponent(settings);
 
                 Button exit = new NativeButton("Exit");
                 exit.addStyleName("icon-cancel");

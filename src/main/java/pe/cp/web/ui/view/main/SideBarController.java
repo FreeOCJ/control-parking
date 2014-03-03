@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import pe.cp.web.ui.NavegacionUtil;
+
 import com.vaadin.ui.UI;
 
 public class SideBarController implements ISideBarHandler {
@@ -35,6 +37,11 @@ public class SideBarController implements ISideBarHandler {
 			Logger.getAnonymousLogger().log(Level.INFO, currentUser.getSession().getAttribute("nombre_completo").toString());
 			view.getLabelUsuario().setCaption(currentUser.getSession().getAttribute("nombre_completo").toString());	
 		}
+	}
+
+	@Override
+	public void irConfiguracion() {
+		NavegacionUtil.irConfiguracionUsuario();
 	}
 
 }

@@ -16,6 +16,8 @@ import pe.cp.core.domain.filters.UsuarioFilter;
 import pe.cp.core.service.domain.RolView;
 import pe.cp.core.service.domain.UsuarioView;
 import pe.cp.core.service.domain.WrapperDomain;
+import pe.cp.core.service.messages.ActualizarContrasenaRequest;
+import pe.cp.core.service.messages.ActualizarEmailUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
@@ -46,6 +48,12 @@ public class UsuarioServiceImpl implements UsuarioService{
 	
 	private final String ERR_ELIMINAR_USUARIO = "Error al eliminar el usuario";
 	private final String EXITO_ELIMINAR_USUARIO = "Se eliminó al usuario satisfactoriamente";
+	private final String ERR_ACTUALIZAR_CORREO = "Error al actualizar el correo";
+	private final String EXITO_ACTUALIZAR_CORREO = "Se actualizó el correo";
+	private final String ERR_ACTUALIZAR_CONTRASENA = "Error al actualizar la contraseña";
+	private final String EXITO_ACTUALIZAR_CONTRASENA = "Se actualizó la contraseña";
+	private final String ERR_CONTRASENAS_DIFERENTES = "Las contraseñas no coinciden";
+	private final String ERR_CONTRASENA_INCORRECTA = "La contraseña ingresada es incorrecta";
 	
 	@Override
 	public ActualizarUsuarioResponse actualizar(ActualizarUsuarioRequest request) {
@@ -279,6 +287,58 @@ public class UsuarioServiceImpl implements UsuarioService{
 		} catch (Exception e) {
 			response.setResultadoEjecucion(false);
 			response.setMensaje(ERR_ELIMINAR_USUARIO);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+	
+	@Override
+	public Response actualizarCorreo(ActualizarEmailUsuarioRequest request) {
+		Response response = new Response();
+		
+		try {
+			Usuario usuario = usuariodao.buscar(request.getIdUsuario());
+			usuario.setEmail(request.getCorreo());
+			usuariodao.actualizar(usuario);
+			response.setMensaje(EXITO_ACTUALIZAR_CORREO);
+			response.setResultadoEjecucion(true);
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ACTUALIZAR_CORREO);
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+	
+	
+	
+	@Override
+	public Response actualizarContrasena(ActualizarContrasenaRequest request) {
+		Response response = new Response();
+		
+		try {
+			if (request.getNuevaContrasena().equals(request.getConfirmacionContrasena())) {
+				Usuario usuario = usuariodao.buscar(request.getIdUsuario());
+				if (request.getContrasenaAntigua().equals(usuario.getPassword())) {
+					usuario.setPassword(request.getNuevaContrasena());
+					usuariodao.actualizar(usuario);
+					response.setMensaje(EXITO_ACTUALIZAR_CONTRASENA);
+					response.setResultadoEjecucion(true);
+				} else {
+					response.setMensaje(ERR_CONTRASENA_INCORRECTA);
+					response.setResultadoEjecucion(false);
+				}
+			} else {
+				response.setMensaje(ERR_CONTRASENAS_DIFERENTES);
+				response.setResultadoEjecucion(false);
+			}
+		} catch (Exception e) {
+			response.setResultadoEjecucion(false);
+			response.setMensaje(ERR_ACTUALIZAR_CONTRASENA);
 			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}

@@ -82,7 +82,7 @@ public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaVie
 	    txtUsuario.setInputPrompt("Usuario");	    	    
         cbTipoEvento = new ComboBox();
         cbTipoEvento.setInputPrompt("Tipo Evento");
-        cbTipoEvento.setWidth("150px");        
+        cbTipoEvento.setWidth("200px");        
         dfFechaInicio = new DateField();
         dfFechaInicio.setWidth("80px");
         dfFechaFin = new DateField();

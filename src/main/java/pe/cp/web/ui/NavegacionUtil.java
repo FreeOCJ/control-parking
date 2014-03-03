@@ -78,4 +78,8 @@ public class NavegacionUtil {
 	public static void irRecuperarContrasena() {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.RECUPERAR_CONTRASENA);
 	}
+	
+	public static void irConfiguracionUsuario() {
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.CONFIGURAR_USUARIO);
+	}
 }

@@ -1,6 +1,8 @@
 package pe.cp.core.service;
 
 import pe.cp.core.domain.Usuario;
+import pe.cp.core.service.messages.ActualizarContrasenaRequest;
+import pe.cp.core.service.messages.ActualizarEmailUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioRequest;
 import pe.cp.core.service.messages.ActualizarUsuarioResponse;
 import pe.cp.core.service.messages.BuscarUsuarioRequest;
@@ -33,4 +35,6 @@ public interface UsuarioService {
 	ValidarDatosUsuarioResponse validarDatosUsuario(ValidarDatosUsuarioRequest request);
 	Response eliminarUsuario(EliminarUsuarioRequest request);
 	String generarContrasenaTemporal();
+	Response actualizarCorreo(ActualizarEmailUsuarioRequest request);
+	Response actualizarContrasena(ActualizarContrasenaRequest request);
 }

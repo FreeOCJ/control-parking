@@ -98,9 +98,9 @@ public class AuditoriaController implements IAuditHandler {
         view.getTblResultados().setContainerDataSource(container);
         view.getTblResultados().setSizeFull();
         view.getTblResultados().setVisibleColumns((Object []) visibles);
-        view.getTblResultados().setColumnWidth(FECHA, 100);
-        view.getTblResultados().setColumnWidth(TIPOEVENTO, 100);
-        view.getTblResultados().setColumnWidth(USUARIO, 100);
+        view.getTblResultados().setColumnWidth(FECHA, 150);
+        view.getTblResultados().setColumnWidth(TIPOEVENTO, 200);
+        view.getTblResultados().setColumnWidth(USUARIO, 150);
         
         view.getBtnBuscar().addClickListener(new ClickListener() {
 			@Override

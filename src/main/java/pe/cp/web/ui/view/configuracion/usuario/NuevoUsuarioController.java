@@ -42,7 +42,7 @@ import pe.cp.web.ui.NavegacionUtil;
 @Component
 @Scope("prototype")
 public class NuevoUsuarioController implements INuevoUsuarioViewHandler {
-	ApplicationContext ac;
+	private ApplicationContext ac;
 	private INuevoUsuarioView view;
 	
 	@Autowired

@@ -1,7 +1,11 @@
 package pe.cp.web.ui.view.configuracion.usuario;
 
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
+
 import pe.cp.web.ui.view.main.SideBar;
 
+import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -17,7 +21,10 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 
+@Component
+@Scope("prototype")
 @SuppressWarnings("serial")
+@Theme("controlparking")
 public class EditarUsuarioViewImpl extends HorizontalLayout implements IEditarUsuarioView {
 	
 	private int idUsuario;

@@ -4,7 +4,6 @@ package pe.cp.web.ui;
 
 import javax.servlet.annotation.WebServlet;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -25,8 +24,10 @@ import pe.cp.web.ui.view.configuracion.unidadoperativa.ITarifaView;
 import pe.cp.web.ui.view.configuracion.unidadoperativa.NuevaUnidadOperativaViewImpl;
 import pe.cp.web.ui.view.configuracion.unidadoperativa.TarifaViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.BuscarUsuarioViewImpl;
+import pe.cp.web.ui.view.configuracion.usuario.ConfiguracionUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.EditarUsuarioViewImpl;
 import pe.cp.web.ui.view.configuracion.usuario.IBuscarUsuarioView;
+import pe.cp.web.ui.view.configuracion.usuario.IConfiguracionUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.IEditarUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.INuevoUsuarioView;
 import pe.cp.web.ui.view.configuracion.usuario.NuevoUsuarioViewImpl;
@@ -85,6 +86,7 @@ public class ControlParkingUI extends UI {
 	public static final String EDITAR_OPERACION = "editar_operacion";
 	public static final String INCIDENCIA = "incidencia";
 	public static final String RECUPERAR_CONTRASENA = "recuperar_contrasena";
+	public static final String CONFIGURAR_USUARIO = "conf";
 	
 	@WebServlet(value = "/*", asyncSupported = true)
 	@VaadinServletConfiguration(productionMode = false, ui = ControlParkingUI.class)
@@ -120,6 +122,7 @@ public class ControlParkingUI extends UI {
 		IEditarOperacionView editarOperacionView = new EditarOperacionViewImpl();
 		IIncidenciaView incidenciaView = new IncidenciaViewImpl();
 		IRecuperarContrasenaView recuperarPwdView = new RecuperarContrasenaViewImpl();
+		IConfiguracionUsuarioView configurarUsuarioView = new ConfiguracionUsuarioViewImpl();
 		
 		navigator.addView(MAIN, mainView);
 		navigator.addView(OPERACIONES, operacionesView);
@@ -139,6 +142,7 @@ public class ControlParkingUI extends UI {
 		navigator.addView(EDITAR_OPERACION, editarOperacionView);
 		navigator.addView(INCIDENCIA, incidenciaView);
 		navigator.addView(RECUPERAR_CONTRASENA, recuperarPwdView);
+		navigator.addView(CONFIGURAR_USUARIO, configurarUsuarioView);
 		
 		setNavigator(navigator);
 		navigator.navigateTo("");
