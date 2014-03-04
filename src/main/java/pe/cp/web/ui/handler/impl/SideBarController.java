@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import com.vaadin.ui.UI;
+
 import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.ISideBarHandler;
 import pe.cp.web.ui.view.ISideBarView;
@@ -25,8 +27,10 @@ public class SideBarController implements ISideBarHandler {
 
 		if (currentUser.isAuthenticated()) {
 			currentUser.logout();
+			UI.getCurrent().getSession().close();
+			UI.getCurrent().getPage().setLocation("/control-parking");
 		}
-		NavegacionUtil.irLogin();
+		//NavegacionUtil.irLogin();
 	}
 
 	@Override
