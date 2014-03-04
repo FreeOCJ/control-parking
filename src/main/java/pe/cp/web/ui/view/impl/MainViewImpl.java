@@ -1,8 +1,5 @@
 package pe.cp.web.ui.view.impl;
 
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.Subject;
-
 import pe.cp.web.ui.view.IMainView;
 
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
@@ -16,13 +13,9 @@ public class MainViewImpl extends HorizontalLayout implements IMainView {
 	
 	private CssLayout contenido;	
 	
-	public MainViewImpl(){
-		init();
-	}
-	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		
+		init();
 	}
 	
 	@Override

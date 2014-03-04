@@ -6,12 +6,8 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.vaadin.activelink.ActiveLink;
-import org.vaadin.activelink.ActiveLink.LinkActivatedEvent;
-import org.vaadin.activelink.ActiveLink.LinkActivatedListener;
 
 import pe.cp.web.ui.ControlParkingUI;
-import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.ILoginViewHandler;
 import pe.cp.web.ui.view.ILoginView;
 
@@ -26,7 +22,6 @@ import com.vaadin.ui.FormLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Image;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.Link;
 import com.vaadin.ui.PasswordField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
@@ -50,17 +45,14 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		init();
 		handler.cargar();
 		Logger.getAnonymousLogger().log(Level.WARNING, "enter login view");
-	}
-	
-	public LoginViewImpl(){
-		init();
-		
 	}
 
 	@Override
 	public void init() {
+		removeAllComponents();
 		addStyleName("root");
         setSizeFull();
 				

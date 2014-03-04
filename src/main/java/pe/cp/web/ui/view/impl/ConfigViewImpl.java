@@ -1,7 +1,5 @@
 package pe.cp.web.ui.view.impl;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -13,12 +11,10 @@ import pe.cp.web.ui.view.IConfigView;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.ui.Button;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.Panel;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -38,20 +34,13 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		init();
 		handler = new ConfigController(this);
 		handler.validarUsuario();
-	}
-
-	public ConfigViewImpl(){		
-		init();
 	}
 	
 	@Override
 	public void init() {		
-		construirBase();
-	}
-	
-	private void construirBase(){		
 		setSizeFull();		
 		addStyleName("main-view");
 		addComponent(new SideBarViewImpl());

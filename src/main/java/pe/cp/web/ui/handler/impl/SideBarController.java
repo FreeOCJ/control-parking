@@ -10,14 +10,13 @@ import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.ISideBarHandler;
 import pe.cp.web.ui.view.ISideBarView;
 
-import com.vaadin.ui.UI;
-
 public class SideBarController implements ISideBarHandler {
 	
 	ISideBarView view;
 	
 	public SideBarController(ISideBarView view){
 		this.view = view;
+		cargarDatos();
 	}
 	
 	@Override
@@ -27,8 +26,7 @@ public class SideBarController implements ISideBarHandler {
 		if (currentUser.isAuthenticated()) {
 			currentUser.logout();
 		}
-		UI.getCurrent().getNavigator().navigateTo("");
-
+		NavegacionUtil.irLogin();
 	}
 
 	@Override
@@ -38,6 +36,8 @@ public class SideBarController implements ISideBarHandler {
 		if (currentUser.isAuthenticated()){
 			Logger.getAnonymousLogger().log(Level.INFO, currentUser.getSession().getAttribute("nombre_completo").toString());
 			view.getLabelUsuario().setCaption(currentUser.getSession().getAttribute("nombre_completo").toString());	
+		} else {
+			Logger.getAnonymousLogger().log(Level.INFO, "usuario no autenticado");
 		}
 	}
 
@@ -46,4 +46,5 @@ public class SideBarController implements ISideBarHandler {
 		NavegacionUtil.irConfiguracionUsuario();
 	}
 
+	
 }
