@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.handler.ILoginViewHandler;
+import pe.cp.web.ui.handler.impl.LoginController;
 import pe.cp.web.ui.view.ILoginView;
 
 import com.vaadin.annotations.Theme;
@@ -46,6 +47,7 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	@Override
 	public void enter(ViewChangeEvent event) {
 		init();
+		handler = new LoginController(this);
 		handler.cargar();
 		Logger.getAnonymousLogger().log(Level.WARNING, "enter login view");
 	}
@@ -149,11 +151,6 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 	@Override
 	public void afterSuccessfulLogin() {
 		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.MAIN);
-	}
-
-	@Override
-	public void setHandler(ILoginViewHandler handler) {
-		this.handler = handler;		
 	}
 
 	@Override

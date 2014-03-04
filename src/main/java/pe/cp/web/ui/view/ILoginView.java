@@ -1,9 +1,5 @@
 package pe.cp.web.ui.view;
 
-import org.vaadin.activelink.ActiveLink;
-
-import pe.cp.web.ui.handler.ILoginViewHandler;
-
 import com.vaadin.navigator.View;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.PasswordField;
@@ -18,5 +14,4 @@ public interface ILoginView extends View {
 	Button getBtnRecuperarContrasena();
 	
 	void afterSuccessfulLogin();
-	void setHandler(ILoginViewHandler handler);
 }

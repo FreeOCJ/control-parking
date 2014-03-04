@@ -4,6 +4,8 @@ package pe.cp.web.ui;
 
 import javax.servlet.annotation.WebServlet;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -106,16 +108,20 @@ public class ControlParkingUI extends UI {
 	}
 	
 	@Override
-    protected void init(VaadinRequest request) {		
+    protected void init(VaadinRequest request) {
+		Subject currentUser = SecurityUtils.getSubject();
 		Navigator navigator = new Navigator(this, this);
+		configurarNavigator(navigator);
 		
+		if (!currentUser.isAuthenticated()) {
+			NavegacionUtil.irLogin();
+		} else {
+			NavegacionUtil.irMain();
+		}
+    }
+	
+	private void configurarNavigator(Navigator navigator) {
 		ILoginView loginView = new LoginViewImpl();
-		LoginController loginController = new LoginController(loginView);
-		loginView.setHandler(loginController);
-		loginView.init();
-		navigator.addView("", loginView);
-		
-		//Create navigation
 		IMainView mainView = new MainViewImpl();
 		IBuscarOperacionesView operacionesView = new BuscarOperacionesViewImpl();
 		IConfigView configuracionView = new ConfigViewImpl();
@@ -133,7 +139,6 @@ public class ControlParkingUI extends UI {
 		IIncidenciaView incidenciaView = new IncidenciaViewImpl();
 		IRecuperarContrasenaView recuperarPwdView = new RecuperarContrasenaViewImpl();
 		IConfiguracionUsuarioView configurarUsuarioView = new ConfiguracionUsuarioViewImpl();
-		
 		IReportesView reportesView = new ReportesViewImpl();
 		IReportesIncidenciasView reportesIncidenciasView = new ReportesIncidenciasViewImpl();
 		IReportesConsolidadoView reporteConsolidadView = new ReporteConsolidadoViewImpl();
@@ -164,8 +169,8 @@ public class ControlParkingUI extends UI {
 		navigator.addView(REPORTE_INGRESOS_SALIDAS, reporteIngresosSalidasView);
 		navigator.addView(REPORTE_RECAUDACION, reporteRecaudacionView);
 		navigator.addView(REPORTE_VISITAS, reporteVisitas);
+		navigator.addView("", loginView);
 		
 		setNavigator(navigator);
-		navigator.navigateTo("");
-    }
+	}
 }
