@@ -34,6 +34,7 @@ public class ConfigViewImpl extends HorizontalLayout implements IConfigView {
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
+		removeAllComponents();
 		init();
 		handler = new ConfigController(this);
 		handler.validarUsuario();
