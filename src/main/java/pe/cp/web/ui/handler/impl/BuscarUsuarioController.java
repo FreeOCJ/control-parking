@@ -56,12 +56,14 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	@Autowired
 	private UsuarioService usuarioservice;
 	
+	private final String NO_RESULTADOS = "No se encontraron resultados";
+	
 	public BuscarUsuarioController(IBuscarUsuarioView view){		
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
 		usuarioservice = ac.getBean(UsuarioService.class);		
 		this.view = view;
 	}
-
+	
 	@Override
 	public void  buscarpornombre(String nombresApellidos) {		
 		BuscarUsuarioRequest request = new BuscarUsuarioRequest();
@@ -80,6 +82,10 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 	        		 newItem.getItemProperty("Roles").setValue(usuarioview.getRolesAsString());
 	        		 newItem.getItemProperty("Cargo").setValue(usuarioview.getCargo());
 	        	}        
+	        } else {
+	        	notification = new Notification(NO_RESULTADOS);
+	        	notification.setPosition(Position.TOP_CENTER);
+	        	notification.show(Page.getCurrent());
 	        }
 		} catch (Exception e) {
 			e.printStackTrace();

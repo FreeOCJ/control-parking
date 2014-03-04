@@ -34,6 +34,8 @@ import pe.cp.web.ui.view.IBuscarOperacionesView;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import com.vaadin.server.Page;
+import com.vaadin.shared.Position;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Notification.Type;
@@ -47,6 +49,7 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 	private IBuscarOperacionesView view;
 	private Container container;
 	private Container cbUnidadesContainers;
+	private Notification notification;
 	
 	private final static String CODIGO = "Codigo";
 	private final static String UNIDAD_OPERATIVA = "Unidad Operativa";
@@ -65,6 +68,8 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 	
 	@Autowired
 	private OperacionService opService;
+	
+	private final String NO_RESULTADOS = "No se encontraron resultados";
 	
     public BuscarOperacionesController(IBuscarOperacionesView view) {
     	ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
@@ -175,15 +180,21 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 		BuscarOperacionResponse response = opService.buscar(request);
 		
 		if (response.isResultadoEjecucion()) {
-			for (OperacionView opView : response.getOperacionesView()) {
-				Item itemOperacion = container.getItem(container.addItem());
-				itemOperacion.getItemProperty(CODIGO).setValue(opView.getId());  
-				itemOperacion.getItemProperty(UNIDAD_OPERATIVA).setValue(opView.getNombreUnidadOperativa());
-				itemOperacion.getItemProperty(CLIENTE).setValue(opView.getNombreCliente());
-				itemOperacion.getItemProperty(FECHA).setValue(opView.getFechaTransaccion());
-				itemOperacion.getItemProperty(REGISTRADO_POR).setValue(opView.getCreador());
-				itemOperacion.getItemProperty(ESTADO).setValue(opView.getEstado());
-			}
+			if (response.getOperacionesView().size() > 0)
+				for (OperacionView opView : response.getOperacionesView()) {
+					Item itemOperacion = container.getItem(container.addItem());
+					itemOperacion.getItemProperty(CODIGO).setValue(opView.getId());  
+					itemOperacion.getItemProperty(UNIDAD_OPERATIVA).setValue(opView.getNombreUnidadOperativa());
+					itemOperacion.getItemProperty(CLIENTE).setValue(opView.getNombreCliente());
+					itemOperacion.getItemProperty(FECHA).setValue(opView.getFechaTransaccion());
+					itemOperacion.getItemProperty(REGISTRADO_POR).setValue(opView.getCreador());
+					itemOperacion.getItemProperty(ESTADO).setValue(opView.getEstado());
+				}
+			else {
+	        	notification = new Notification(NO_RESULTADOS);
+	        	notification.setPosition(Position.TOP_CENTER);
+	        	notification.show(Page.getCurrent());
+	        }
 		} else {
 			//TODO
 		}

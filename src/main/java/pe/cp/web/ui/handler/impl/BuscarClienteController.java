@@ -55,6 +55,9 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 	private final static String RUC_CLIENTE = "RUC";
 	private final static String BOTONES_CLIENTE = "";
 	
+	private Notification notification;
+	private final String NO_RESULTADOS = "No se encontraron resultados";
+	
 	@Autowired
 	private ClienteService clienteService;
 	
@@ -74,13 +77,19 @@ public class BuscarClienteController implements IBuscarClienteHandler {
 		BuscarClienteResponse response = clienteService.buscar(request);
 		if (response.isResultadoEjecucion()){
 			List<ClienteView> clientesView = response.getClientesEncontrados();
-			for(ClienteView clienteView : clientesView){        		
-        		 Item newItem = container.getItem(container.addItem());
-        		 newItem.getItemProperty("Código").setValue(clienteView.getId());
-        		 newItem.getItemProperty("Nombre Comercial").setValue(clienteView.getNombreComercial());  
-        		 newItem.getItemProperty("Razón Social").setValue(clienteView.getRazonSocial());
-        		 newItem.getItemProperty("RUC").setValue(clienteView.getRuc());        		 
-        	}   			
+			
+			if (clientesView.size() > 0)
+				for(ClienteView clienteView : clientesView){        		
+	        		 Item newItem = container.getItem(container.addItem());
+	        		 newItem.getItemProperty("Código").setValue(clienteView.getId());
+	        		 newItem.getItemProperty("Nombre Comercial").setValue(clienteView.getNombreComercial());  
+	        		 newItem.getItemProperty("Razón Social").setValue(clienteView.getRazonSocial());
+	        		 newItem.getItemProperty("RUC").setValue(clienteView.getRuc());        		 
+	        	} else {
+		        	notification = new Notification(NO_RESULTADOS);
+		        	notification.setPosition(Position.TOP_CENTER);
+		        	notification.show(Page.getCurrent());
+		        }  			
 		}else{
 			//TODO
 		}		
