@@ -1,18 +1,29 @@
 package pe.cp.web.ui.view.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Alignment;
+import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Button.ClickListener;
 
 import pe.cp.web.ui.handler.IReportesIncidenciasViewHandler;
 import pe.cp.web.ui.handler.impl.ReportesIncidenciasController;
@@ -28,6 +39,8 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	private int idUnidadOperativa;
 	private int idCliente;
 	private Button btnExportToPdf;
+	private Button btnExportToXls;
+	private VerticalLayout content;
 	
 	@Autowired
 	private IReportesIncidenciasViewHandler handler;
@@ -81,29 +94,22 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	    
 	    Label title = new Label("Reporte de Incidencias");
 	    title.addStyleName("h1");         
-	    header.addComponent(title);
+	    header.addComponent(title);	    	    
 	    
-	    Label lblCliente = new Label("Cliente: " + handler.obtenerNombreCliente(idCliente));
-	    Label lblUnidadOperativa = new Label("Unidad Operativa: " + handler.obtenerNombreUnidadOperativa(idUnidadOperativa));
-	    
-	    VerticalLayout datos = new VerticalLayout();
-	    datos.setHeight("20%");
-	    datos.setWidth("400px");
-	    datos.setSpacing(true);
-	    datos.addStyleName("toolbar");
-	    areaPrincipal.addComponent(datos);
-	   	    
-	    datos.addComponent(lblCliente);
-	    datos.addComponent(lblUnidadOperativa);
-	    
-	    VerticalLayout content = new VerticalLayout();
+	    content = new VerticalLayout();
 	    content.setSizeFull();
-	    content.setHeight("60%");
+	    content.setHeight("100%");
 	    content.setWidth("100%");
 	    content.setSpacing(true);
 	    
-	    Label lblContent = new Label("Contenido PDF : ");
-	    content.addComponent(lblContent);
+	    StreamResource.StreamSource streamSource = new PdfSource();
+		StreamResource resource = new StreamResource(streamSource, "C:\\reportes.pdf");
+		
+		BrowserFrame browser = new BrowserFrame("",resource);
+		browser.setHeight("800px");
+		browser.setWidth("1200px");
+		content.addComponent(browser);
+		content.setComponentAlignment(browser, Alignment.TOP_CENTER);
 	    
 	    areaPrincipal.addComponent(content);
 	    
@@ -116,10 +122,40 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	    btnExportToPdf = new Button("PDF");
 	    btnExportToPdf.addStyleName("default");
 	    footer.addComponent(btnExportToPdf);
-	    footer.setComponentAlignment(btnExportToPdf, Alignment.BOTTOM_RIGHT);
+	    footer.setComponentAlignment(btnExportToPdf, Alignment.BOTTOM_CENTER);
+	    
+	    btnExportToXls = new Button("Excel");
+	    btnExportToXls.addStyleName("default");
+	    footer.addComponent(btnExportToXls);
+	    footer.setComponentAlignment(btnExportToXls, Alignment.BOTTOM_CENTER);
+	    
+	    btnExportToPdf.addClickListener(new ClickListener(){
+
+			@Override
+			public void buttonClick(ClickEvent event) {
+		        //Enviar por correo como PDF							
+			}	
+			
+			
+	    });
 	    
 	    header.addComponent(title);
 	    return areaPrincipal;
+	}
+	
+	class PdfSource implements StreamResource.StreamSource {
+		@Override
+		public InputStream getStream() {
+			try {
+				return new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream("C:\\reportes.pdf")));
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return null;
+			}					
+		}		
 	}
 
 }
