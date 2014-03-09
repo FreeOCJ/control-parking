@@ -181,10 +181,13 @@ public class ClienteServiceImpl implements ClienteService {
 
 	public boolean existeCliente(String ruc) {
 		
+		System.out.println("Existe RUC");
+		System.out.println(cdao.existeCliente(ruc));
+		
 		if (cdao.existeCliente(ruc) > 0)
-			return false;
-		else
 			return true;
+		else
+			return false;
 		
 		
 	}
