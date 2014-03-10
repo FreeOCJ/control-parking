@@ -191,7 +191,7 @@ public class Operacion implements IAuditInfo {
 	}
 	@Override
 	public String getAuditInfo() {
-		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-YYYY HH:mm");
+		SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
 		String audit = String.format("Operacion [ID=%s, UNIDAD OP=%s, CLIENTE=%s, FECHA TRANS=%s]", 
                 String.valueOf(id), auxNombreUnidadOperativa, auxNombreCliente, sdf.format(fechaTransaccion));
         return audit;
