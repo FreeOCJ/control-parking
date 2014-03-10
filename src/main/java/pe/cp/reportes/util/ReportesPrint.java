@@ -27,8 +27,8 @@ public class ReportesPrint implements Serializable{
 	private JasperPrint print; 
 
 	//exportar reporte a axcel 
-	public void reporteaExcel(InputStream rutaJrxml,
-							String rutaArchivoXLS,Map<String, Object> parametros,
+	public void reporteaExcel(String rutaArchivoXLS,
+							InputStream rutaJrxml,Map<String, Object> parametros,
 							Connection conexion) throws JRException, FileNotFoundException
 	{ 
 		this.reporte=JasperCompileManager.compileReport(rutaJrxml);
@@ -57,11 +57,13 @@ public class ReportesPrint implements Serializable{
 		//Gurdamos una copia en el computador Ejemplo c:/reportes.jrprint
 		JRSaver.saveObject(this.print,ruta+".jrprint"); 
 		//Gurdamos una copia en el computador Ejemplo c:/reportes.pdf 
-		jtrtf.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, ruta+".pdf"); 
+		jtrtf.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, ruta); 
 		//este metodo exporta a los diferentes formatos en este caso pdf 
+		System.out.println("ruta " + ruta+".pdf");
 		jtrtf.exportReport(); 
+		System.out.println("export report");
 		//Metodo que se encarga de mostrar el reporte en la pantalla 
-		JasperViewer.viewReport(this.print,false,Locale.getDefault()); 
+		//JasperViewer.viewReport(this.print,false,Locale.getDefault()); 
 		return true;
 	}
 

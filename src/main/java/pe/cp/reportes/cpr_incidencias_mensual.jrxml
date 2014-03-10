@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteincidencias" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="32c00f67-ebc6-4fba-8dda-4dddb9bf1418">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="635"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_MES" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ANHO" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[SELECT
+       INC.FECHAINCIDENCIA AS FECHA_INCIDENCIA,
+       INC.FECHAINCIDENCIA AS HORA_INCIDENCIA,
+       INC.DESINCIDENCIA AS NOVEDAD,
+       INC.ACCION AS ACCION_TOMADA,
+       C.RAZONSOCIAL,
+       UO.NOMBRE,
+       C.NOMBRECOMERCIAL,
+       MONTH(INC.FECHAINCIDENCIA) AS MES,
+       YEAR(INC.FECHAINCIDENCIA) AS ANHO
+FROM
+   INCIDENCIA INC,
+   OPERACION OP,
+   UNIDADOPERATIVA UO,
+   CLIENTE C
+WHERE
+   INC.IDOPERACION = OP.IDOPERACION AND
+   OP.IDUNIDAD = UO.IDUNIDAD AND
+   UO.IDCLIENTE = C.IDCLIENTE AND
+   UO.IDUNIDAD = $P{P_ID_UNIDAD} AND
+   MONTH(INC.FECHAINCIDENCIA) = $P{P_MES} AND
+   YEAR(INC.FECHAINCIDENCIA) = $P{P_ANHO}]]>
+	</queryString>
+	<field name="FECHA_INCIDENCIA" class="java.sql.Timestamp"/>
+	<field name="HORA_INCIDENCIA" class="java.sql.Timestamp"/>
+	<field name="NOVEDAD" class="java.lang.String"/>
+	<field name="ACCION_TOMADA" class="java.lang.String"/>
+	<field name="RAZONSOCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRECOMERCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="MES" class="java.lang.Long"/>
+	<field name="ANHO" class="java.lang.Long"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="87" splitType="Stretch">
+			<image>
+				<reportElement x="3" y="3" width="100" height="80" uuid="2156fe50-9b21-4554-bef1-c3577a325965"/>
+				<imageExpression><![CDATA["C:/Users/BPM001/Downloads/LogoCP.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="116" y="18" width="378" height="20" uuid="452cae23-053a-4ac1-afc0-27dc7ff5a2e1"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[REPORTE MENSUAL DE IINCIDENCIAS]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="163" y="60" width="172" height="22" uuid="72929fa5-9984-4904-a957-50fc6bea1a6a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="345" y="38" width="80" height="22" backcolor="#999999" uuid="042ae486-7e99-4aff-98b4-0107670dd493"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="116" y="60" width="47" height="22" backcolor="#999999" uuid="23780280-2faf-491c-87b8-f21f2c492ce9"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="345" y="39" width="77" height="20" forecolor="#FFFFFF" uuid="a5679165-7074-4359-8edf-13ed40b180cc"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Mes]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="116" y="39" width="47" height="22" backcolor="#999999" uuid="74b8c73f-9f27-4eb3-bc43-0694f6ab2a82"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="116" y="39" width="45" height="20" forecolor="#FFFFFF" uuid="ef0a1f4b-8188-4215-95c0-bb5ed284fa5a"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="163" y="39" width="172" height="22" uuid="b986ba47-a717-4ae1-a55d-f72ad8d13351"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="439" y="59" width="80" height="22" uuid="27180810-ce94-4158-a90a-a25d8655c095"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="439" y="38" width="80" height="22" backcolor="#999999" uuid="3b286824-6250-4f07-8354-4a38e9b9b459"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="439" y="39" width="77" height="20" forecolor="#FFFFFF" uuid="73011724-074f-4f67-a826-ed1d00d17e48"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Año]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="345" y="59" width="80" height="22" uuid="db561410-ad86-46ac-97eb-b85a82d7e43d"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="122" y="61" width="37" height="20" forecolor="#FFFFFF" backcolor="#999999" uuid="bccddf55-c392-463e-977b-bf17143b9c6c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Unidad]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="168" y="62" width="167" height="20" uuid="356eba30-8ee7-4efd-b022-ca04f7cb2782"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="168" y="41" width="167" height="20" uuid="59ea0079-d389-4fd9-aa38-cfb66d51214d"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRECOMERCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="350" y="59" width="72" height="20" uuid="70bc8f21-d345-4677-af09-fa05ecb333a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{MES}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="60" width="77" height="20" uuid="df8a4940-2c17-48c0-965a-78661596eccf"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{P_ANHO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<rectangle>
+				<reportElement x="345" y="2" width="210" height="20" forecolor="#000000" backcolor="#CC0033" uuid="40bb9485-09bf-4905-b32f-ba578758a66c"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="0" y="2" width="72" height="20" backcolor="#CC0033" uuid="126f75e9-dd78-4be3-9bcb-3317e1a9ce04"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="3" y="2" width="69" height="20" forecolor="#FFFFFF" uuid="e6512480-2316-442d-9f12-bf9c70183b6f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="72" y="2" width="68" height="20" backcolor="#CC0033" uuid="afe31941-51d0-49e9-bbf1-2b78ffca5c48"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="72" y="2" width="68" height="20" forecolor="#FFFFFF" uuid="84992b0a-55f8-4cb0-889a-fd416e6ac235"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hora ]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="140" y="2" width="205" height="20" forecolor="#000000" backcolor="#CC0033" uuid="ff27ebd0-7ba5-4c7d-9622-5d21586c6fc4"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="140" y="2" width="205" height="20" forecolor="#FFFFFF" uuid="5bcd7487-2c4c-4ed9-a19b-b03677d8d077"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Novedad]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="2" width="210" height="20" forecolor="#FFFFFF" uuid="f2ffd975-c6f1-4427-a95e-717256a3dd45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Acción Tomada]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField pattern="dd-MMM">
+				<reportElement x="3" y="0" width="69" height="20" uuid="28d301b9-9b98-486e-88d3-1faa789b7c04"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{FECHA_INCIDENCIA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="HH.mm">
+				<reportElement x="72" y="0" width="65" height="20" uuid="88abaf36-61b3-411c-a789-302caba51a6e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{HORA_INCIDENCIA}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="146" y="0" width="199" height="20" uuid="e77a94c8-9b6e-4440-a186-d8cec5a4a4c3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOVEDAD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="350" y="0" width="205" height="20" uuid="51ab460b-4aaf-4efc-b612-92264dbc5487"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ACCION_TOMADA}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="3" y="19" width="550" height="1" uuid="f927ff8e-c68d-4f7e-a92c-aac282399454"/>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="45" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>
