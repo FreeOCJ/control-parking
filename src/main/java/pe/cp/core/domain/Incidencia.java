@@ -6,10 +6,17 @@ import java.util.Date;
 public class Incidencia implements IAuditInfo {
 	private int id;
 	private String descripcion;
+	private String accionTomada;
 	private TipoIncidencia tipoIncidencia;
 	private Date fechaIncidencia;
 	private int idOperacion;
 	
+	public String getAccionTomada() {
+		return accionTomada;
+	}
+	public void setAccionTomada(String accionTomada) {
+		this.accionTomada = accionTomada;
+	}
 	public int getId() {
 		return id;
 	}

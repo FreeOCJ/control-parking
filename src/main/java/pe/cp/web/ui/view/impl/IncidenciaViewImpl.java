@@ -33,6 +33,7 @@ public class IncidenciaViewImpl extends HorizontalLayout implements IIncidenciaV
 
 	private CssLayout contenido;
 	private TextArea txtDescripcion;
+	private TextArea txtAccion;
 	private TimeField txtHora;
 	private ComboBox cbTipo;
 	private Label lblTitulo;
@@ -104,9 +105,13 @@ public class IncidenciaViewImpl extends HorizontalLayout implements IIncidenciaV
 	    txtDescripcion = new TextArea("Descripción");
 	    txtDescripcion.setWidth("200px");
 	    txtDescripcion.setHeight("200px");
+	    txtAccion = new TextArea("Acción Tomada");
+	    txtAccion.setWidth("200px");
+	    txtAccion.setHeight("200px");
 	    formularioLayout.addComponent(cbTipo);
 	    formularioLayout.addComponent(txtHora);
 	    formularioLayout.addComponent(txtDescripcion);
+	    formularioLayout.addComponent(txtAccion);
 	    
 	    HorizontalLayout buttons = new HorizontalLayout();
 	    formularioLayout.addComponent(buttons);
@@ -165,6 +170,11 @@ public class IncidenciaViewImpl extends HorizontalLayout implements IIncidenciaV
 	@Override
 	public int getIdOperacion() {
 		return idOperacion;
+	}
+
+	@Override
+	public TextArea getTxtAccion() {
+		return txtAccion;
 	}
 
 }

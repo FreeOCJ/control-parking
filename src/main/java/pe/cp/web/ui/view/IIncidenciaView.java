@@ -11,6 +11,7 @@ import com.vaadin.ui.TextField;
 public interface IIncidenciaView extends View {
     void init();
     TextArea getTxtDescripcion();
+    TextArea getTxtAccion();
     ComboBox getCbTipo();
     TimeField getTxtHora();
     Label getLblTitulo();

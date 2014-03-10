@@ -42,21 +42,22 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 	
 	@Override
 	public int agregar(Incidencia incidencia) {
-		Map<String, Object> parameters = new HashMap<String, Object>(5);
+		Map<String, Object> parameters = new HashMap<String, Object>(6);
 		parameters.put("DESINCIDENCIA", incidencia.getDescripcion());
 		parameters.put("FECHAINCIDENCIA", incidencia.getFechaIncidencia());
 		parameters.put("IDOPERACION", incidencia.getIdOperacion());
 		parameters.put("ELIMINADO", "F");
 		parameters.put("IDTIPOINC", incidencia.getTipoIncidencia().getId());
+		parameters.put("ACCION", incidencia.getAccionTomada());
 		Number key = insertarIncidencia.executeAndReturnKey(parameters);
 		return key.intValue();
 	}
 
 	@Override
 	public void actualizar(Incidencia incidencia) {
-		jdbcTemplate.update("UPDATE INCIDENCIA SET DESINCIDENCIA = ?, IDTIPOINC = ?, FECHAINCIDENCIA = ? WHERE IDINCIDENCIA = ?", 
+		jdbcTemplate.update("UPDATE INCIDENCIA SET DESINCIDENCIA = ?, IDTIPOINC = ?, FECHAINCIDENCIA = ?, ACCION = ? WHERE IDINCIDENCIA = ?", 
 				incidencia.getDescripcion(), incidencia.getTipoIncidencia().getId(), incidencia.getFechaIncidencia(), 
-				incidencia.getId());
+				incidencia.getAccionTomada(), incidencia.getId());
 	}
 
 	@Override

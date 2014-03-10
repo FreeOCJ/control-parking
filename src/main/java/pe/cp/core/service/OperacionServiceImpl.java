@@ -323,6 +323,7 @@ public class OperacionServiceImpl implements OperacionService {
 			tipo.setId(request.getIdTipo());
 			
 			incidencia.setDescripcion(request.getDescripcion());
+		    incidencia.setAccionTomada(request.getAccion());
 			incidencia.setFechaIncidencia(calendar.getTime());
 			incidencia.setIdOperacion(request.getIdOperacion());
 			incidencia.setTipoIncidencia(tipo);
@@ -393,6 +394,7 @@ public class OperacionServiceImpl implements OperacionService {
 			tipo.setId(request.getIdTipo());
 			
 			incidencia.setDescripcion(request.getDescripcion());
+			incidencia.setAccionTomada(request.getAccionTomada());
 			incidencia.setFechaIncidencia(calendar.getTime());
 			incidencia.setId(request.getIdIncidencia());
 			incidencia.setTipoIncidencia(tipo);

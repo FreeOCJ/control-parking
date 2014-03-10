@@ -46,11 +46,11 @@ public class IncidenciaController implements IIncidenciaHandler {
 	
 	@Override
 	public void guardar() {
-	       if (view.getIdIncidencia() > 0) {
-				actualizarIncidencia();
-			} else {
-				agregarNuevaIncidencia();	
-			}
+       if (view.getIdIncidencia() > 0) {
+			actualizarIncidencia();
+		} else {
+			agregarNuevaIncidencia();	
+		}
 	}
 	
 	private void actualizarIncidencia() {
@@ -60,6 +60,7 @@ public class IncidenciaController implements IIncidenciaHandler {
 			if (validar()) {
 				int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 				String descripcion = view.getTxtDescripcion().getValue().trim();
+				String accion = view.getTxtAccion().getValue().trim();
 				Date fecha = view.getTxtHora().getValue();
 				Object tipoSelectId = view.getCbTipo().getValue();
 				int idTipo = Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
@@ -69,6 +70,7 @@ public class IncidenciaController implements IIncidenciaHandler {
 				request.setHora(fecha);
 				request.setIdIncidencia(view.getIdIncidencia());
 				request.setIdTipo(idTipo);
+				request.setAccionTomada(accion);
 				Response response = opService.actualizarIncidencia(request);
 				
 				if (response.isResultadoEjecucion()) {
@@ -89,14 +91,15 @@ public class IncidenciaController implements IIncidenciaHandler {
 			if (validar()) {
 				int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
 				String descripcion = view.getTxtDescripcion().getValue().trim();
+				String accion = view.getTxtAccion().getValue().trim();
 				Date fecha = view.getTxtHora().getValue();
 				Object tipoSelectId = view.getCbTipo().getValue();
 				int idTipo = 
-						Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).toString());
+						Integer.valueOf(view.getCbTipo().getItem(tipoSelectId).getItemProperty(ID_TIPO_INC).getValue().toString());
 				String tipo = view.getCbTipo().getItem(tipoSelectId).getItemProperty(TIPO_INC).toString();
 				
 		        AgregarIncidenciaRequest request = 
-		    		    new AgregarIncidenciaRequest(view.getIdOperacion(), descripcion, fecha, idTipo, tipo, idUsuario);
+		    		    new AgregarIncidenciaRequest(view.getIdOperacion(), descripcion, accion, fecha, idTipo, tipo, idUsuario);
 		        AgregarIncidenciaResponse response = opService.agregarIncidencia(request);
 		        
 		        if (response.isResultadoEjecucion()) {

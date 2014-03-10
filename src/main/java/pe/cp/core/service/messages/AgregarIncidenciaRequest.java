@@ -5,13 +5,14 @@ import java.util.Date;
 public class AgregarIncidenciaRequest {
     private int idOperacion;
     private String descripcion;
+    private String accion;
     private Date fecha;
     private int idTipo;
     private String tipoIncidencia;
     private int idUsuarioModificador;
     
     
-    public AgregarIncidenciaRequest(int idOperacion, String descripcion, Date fecha, int idTipo, 
+    public AgregarIncidenciaRequest(int idOperacion, String descripcion, String accion, Date fecha, int idTipo, 
     		String tipoIncidencia, int idUsuarioModificador) {
     	this.idOperacion = idOperacion;
     	this.descripcion = descripcion;
@@ -19,6 +20,7 @@ public class AgregarIncidenciaRequest {
     	this.idTipo = idTipo;
     	this.tipoIncidencia = tipoIncidencia;
     	this.idUsuarioModificador = idUsuarioModificador;
+    	this.accion = accion;
     }
 
 	public int getIdOperacion() {
@@ -45,4 +47,8 @@ public class AgregarIncidenciaRequest {
 		return idUsuarioModificador;
 	}
     
+	public String getAccion() {
+		return accion;
+	}
+	
 }

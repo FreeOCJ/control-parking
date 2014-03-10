@@ -5,6 +5,7 @@ import java.util.Date;
 public class ActualizarIncidenciaRequest {
     private int idIncidencia;
     private String descripcion;
+    private String accionTomada;
     private int idTipo;
     private Date hora;
     private int idUsuarioModificador;
@@ -38,5 +39,11 @@ public class ActualizarIncidenciaRequest {
 	}
 	public void setHora(Date hora) {
 		this.hora = hora;
+	}
+	public String getAccionTomada() {
+		return accionTomada;
+	}
+	public void setAccionTomada(String accionTomada) {
+		this.accionTomada = accionTomada;
 	}
 }
