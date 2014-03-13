@@ -85,13 +85,12 @@ public class ReporteIngresosSalidasViewImpl extends HorizontalLayout implements 
 	    
 	    filtersLayout.addComponent(cbVista);
 	    filtersLayout.addComponent(dfFechaFiltro);
-	    filtersLayout.addComponent(new Label(" "));
+	    filtersLayout.addComponent(new Label("   "));
 	    filtersLayout.addComponent(btnExportarPDF);
 	    filtersLayout.addComponent(btnExportarExcel);
 	    
 	    reporteLayout = new VerticalLayout();
 	    reporteLayout.setSizeFull();
-	    reporteLayout.setMargin(true);
 	    areaPrincipal.addComponent(reporteLayout);
 	    
 	    return areaPrincipal;

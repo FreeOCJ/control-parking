@@ -1,7 +1,7 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -10,9 +10,11 @@ import java.util.Locale;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.ui.BrowserFrame;
+import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
@@ -27,6 +29,7 @@ public class ReporteIngresosSalidasController implements
 		IReporteIngresosSalidasHandler {
 
 	IReportesIngresosSalidasView view;
+	Notification notification;
 	PdfSource pdfSource;
 	String rutaArchivo;
 	int idCliente;
@@ -48,6 +51,7 @@ public class ReporteIngresosSalidasController implements
 	private final String REP_ING_SAL_MENSUAL = "/pe/cp/reportes/cpr_ingresos_salidas_mensual.jrxml";
 	private final String REP_ING_SAL_SEMANAL = "/pe/cp/reportes/cpr_ingresos_salidas_semanal.jrxml";
 	private final String REP_ING_SAL_ANUAL = "/pe/cp/reportes/cpr_ingresos_salidas_anual.jrxml";
+	private final String ERR_DATOS_DISPONIBLES = "No existe datos disponibles";
 	
 	public ReporteIngresosSalidasController(IReportesIngresosSalidasView view) {
 		this.view = view;
@@ -114,7 +118,7 @@ public class ReporteIngresosSalidasController implements
 		
 		params.put(PARAM_ID_UNIDAD, idUnidadOp);
 		params.put(PARAM_FECHA_OPERACION, cal.getTime());
-		params.put(PARAM_REPORT_LOCALE, Locale.ROOT);
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		
 		obtenerReporte(formato, params, REP_ING_SAL_DIARIOS);
 	}
@@ -127,6 +131,8 @@ public class ReporteIngresosSalidasController implements
 		
 		params.put(PARAM_ID_UNIDAD, idUnidadOp);
 		params.put(PARAM_MES, cal.get(Calendar.MONTH) + 1);
+		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		
 		obtenerReporte(formato, params, REP_ING_SAL_SEMANAL);
 	}
@@ -140,6 +146,7 @@ public class ReporteIngresosSalidasController implements
 		params.put(PARAM_ID_UNIDAD, idUnidadOp);
 		params.put(PARAM_MES, cal.get(Calendar.MONTH));
 		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		
 		obtenerReporte(formato, params, REP_ING_SAL_MENSUAL);
 	}
@@ -152,6 +159,7 @@ public class ReporteIngresosSalidasController implements
 		
 		params.put(PARAM_ID_UNIDAD, idUnidadOp);
 		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		
 		obtenerReporte(formato, params, REP_ING_SAL_ANUAL);
 	}
@@ -189,13 +197,17 @@ public class ReporteIngresosSalidasController implements
 				StreamResource resource = new StreamResource(streamSource, rutaArchivo + ".pdf");
 				BrowserFrame frameReporte = new BrowserFrame("",resource);
 				frameReporte.setWidth("100%");
-				frameReporte.setHeight("100%");
+				frameReporte.setHeight("560px");
+				view.getLayoutReporte().removeAllComponents();
 				view.getLayoutReporte().addComponent(frameReporte);
-				
 				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());
 			}else
 				rprint.reporteaExcel(generarRuta() + ".xls", iStream, params, rpconexion.getConexion());
-		} catch (Exception e) {
+		} catch (FileNotFoundException fe) {
+			notification = new Notification(ERR_DATOS_DISPONIBLES);
+			notification.show(Page.getCurrent());
+			fe.printStackTrace();
+		}  catch (Exception e) {
 			e.printStackTrace();
 		} finally{
 			try {
