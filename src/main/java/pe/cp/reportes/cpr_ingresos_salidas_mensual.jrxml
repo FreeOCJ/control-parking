@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cpr_ingresos_salidas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb4bc0f8-3fa6-466a-8d24-f8c378517ab3">
-	<property name="ireport.zoom" value="1.5"/>
-	<property name="ireport.x" value="234"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="13"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -38,6 +38,7 @@
 	<subDataset name="ocupacion" uuid="b6c2d217-f750-4e77-b1e3-62d67282436d">
 		<parameter name="ocupacion_id_unidad" class="java.lang.Integer" isForPrompting="false"/>
 		<parameter name="ocupacion_mes" class="java.lang.Integer" isForPrompting="false"/>
+		<parameter name="ocupacion_anho" class="java.lang.Integer" isForPrompting="false"/>
 		<queryString>
 			<![CDATA[SELECT
     o.FECOPERACION,
@@ -52,7 +53,8 @@ WHERE
    d.IDOPERACION = o.IDOPERACION and
    o.IDUNIDAD = u.IDUNIDAD and
    u.IDUNIDAD = $P{ocupacion_id_unidad} and
-   MONTH(o.FECOPERACION) = $P{ocupacion_mes}]]>
+   MONTH(o.FECOPERACION) = $P{ocupacion_mes} and
+   YEAR(o.FECOPERACION) = $P{ocupacion_anho}]]>
 		</queryString>
 		<field name="FECOPERACION" class="java.sql.Timestamp">
 			<fieldDescription><![CDATA[]]></fieldDescription>
@@ -79,12 +81,13 @@ WHERE
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
 	</subDataset>
-	<parameter name="mes" class="java.lang.Integer">
+	<parameter name="P_MES" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="id_unidad_operativa" class="java.lang.Integer">
+	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_ANHO" class="java.lang.Integer"/>
 	<queryString>
 		<![CDATA[SELECT
    o.IDOPERACION, o.FECOPERACION, o.DESOFERTA, o.TICKETINICIO,
@@ -93,9 +96,10 @@ FROM
    operacion o, unidadoperativa u, cliente c
 WHERE
    o.IDUNIDAD = u.IDUNIDAD and
-   MONTH(o.FECOPERACION) = $P{mes} and
+   MONTH(o.FECOPERACION) = $P{P_MES} and
    u.IDCLIENTE = c.IDCLIENTE and
-   u.idunidad = $P{id_unidad_operativa}]]>
+   u.idunidad = $P{P_ID_UNIDAD} and
+   YEAR(o.FECOPERACION) = $P{P_ANHO}]]>
 	</queryString>
 	<field name="IDOPERACION" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -220,12 +224,15 @@ WHERE
 			<componentElement>
 				<reportElement key="table" style="table" x="0" y="0" width="349" height="425" uuid="0a8ea950-6934-4499-ae21-372b2728223f"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ocupacion" uuid="5cd0d47b-cb4a-4374-9612-2708036be9af">
+					<datasetRun subDataset="ocupacion" uuid="c77f8e76-5c8f-4f56-9511-46f69d4fde11">
 						<datasetParameter name="ocupacion_id_unidad">
-							<datasetParameterExpression><![CDATA[$P{id_unidad_operativa}]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
 						</datasetParameter>
 						<datasetParameter name="ocupacion_mes">
-							<datasetParameterExpression><![CDATA[$P{mes}]]></datasetParameterExpression>
+							<datasetParameterExpression><![CDATA[$P{P_MES}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="ocupacion_anho">
+							<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
@@ -339,10 +346,13 @@ WHERE
 					<dataset>
 						<datasetRun subDataset="ocupacion" uuid="1d86505d-7b50-41b4-89de-4f0694ed0bf2">
 							<datasetParameter name="ocupacion_id_unidad">
-								<datasetParameterExpression><![CDATA[$P{id_unidad_operativa}]]></datasetParameterExpression>
+								<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
 							</datasetParameter>
 							<datasetParameter name="ocupacion_mes">
-								<datasetParameterExpression><![CDATA[$P{mes}]]></datasetParameterExpression>
+								<datasetParameterExpression><![CDATA[$P{P_MES}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="ocupacion_anho">
+								<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
 							</datasetParameter>
 							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>

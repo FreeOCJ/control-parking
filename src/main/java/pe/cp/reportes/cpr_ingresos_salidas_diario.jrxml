@@ -85,10 +85,10 @@ WHERE
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
 	</subDataset>
-	<parameter name="fecha_operacion" class="java.util.Date">
+	<parameter name="P_FECHA_OPERACION" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="id_unidad_operativa" class="java.lang.Integer">
+	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
@@ -99,9 +99,9 @@ FROM
    operacion o, unidadoperativa u, cliente c
 WHERE
    o.IDUNIDAD = u.IDUNIDAD and
-   o.FECOPERACION = $P{fecha_operacion} and
+   o.FECOPERACION = $P{P_FECHA_OPERACION} and
    u.IDCLIENTE = c.IDCLIENTE and
-   u.idunidad = $P{id_unidad_operativa}]]>
+   u.idunidad = $P{P_ID_UNIDAD}]]>
 	</queryString>
 	<field name="IDOPERACION" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -304,7 +304,7 @@ WHERE
 			<componentElement>
 				<reportElement key="table" style="table" x="0" y="0" width="349" height="370" uuid="0a8ea950-6934-4499-ae21-372b2728223f"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ocupacion" uuid="d904aadb-b380-4798-807a-f4dd5ac41aa1">
+					<datasetRun subDataset="ocupacion" uuid="ce272c5e-7f38-477e-9eaf-4bb43644c8cd">
 						<datasetParameter name="ocupacion_id_operacion">
 							<datasetParameterExpression><![CDATA[$F{IDOPERACION}]]></datasetParameterExpression>
 						</datasetParameter>
