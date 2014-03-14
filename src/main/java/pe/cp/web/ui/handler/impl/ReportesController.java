@@ -14,12 +14,10 @@ import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
 import pe.cp.core.service.messages.ObtenerUnidadOpPorClienteRequest;
 import pe.cp.core.service.messages.ObtenerUnidadpOpPorClienteResponse;
-import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.IReportesViewHandler;
 import pe.cp.web.ui.view.IReportesView;
 
-import com.fasterxml.jackson.databind.util.Provider;
 import com.vaadin.annotations.Theme;
 import com.vaadin.data.Container;
 import com.vaadin.data.Item;
@@ -27,7 +25,6 @@ import com.vaadin.data.Property;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
 

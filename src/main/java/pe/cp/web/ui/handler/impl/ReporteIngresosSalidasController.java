@@ -46,11 +46,13 @@ public class ReporteIngresosSalidasController implements
 	private final String PARAM_FECHA_OPERACION = "P_FECHA_OPERACION";
 	private final String PARAM_MES = "P_MES";
 	private final String PARAM_ANHO = "P_ANHO";
+	private final String PARAM_LOGO= "P_LOGO";
 	private final String PARAM_REPORT_LOCALE = "REPORT_LOCALE";
 	private final String REP_ING_SAL_DIARIOS = "/pe/cp/reportes/cpr_ingresos_salidas_diario.jrxml";
 	private final String REP_ING_SAL_MENSUAL = "/pe/cp/reportes/cpr_ingresos_salidas_mensual.jrxml";
 	private final String REP_ING_SAL_SEMANAL = "/pe/cp/reportes/cpr_ingresos_salidas_semanal.jrxml";
 	private final String REP_ING_SAL_ANUAL = "/pe/cp/reportes/cpr_ingresos_salidas_anual.jrxml";
+	private final String LOGO = "/pe/cp/reportes/LogoCP.jpg";
 	private final String ERR_DATOS_DISPONIBLES = "No existe datos disponibles";
 	
 	public ReporteIngresosSalidasController(IReportesIngresosSalidasView view) {
@@ -114,54 +116,81 @@ public class ReporteIngresosSalidasController implements
 	public void generarReporteDiario(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(view.getDfFiltro().getValue());
-		
-		params.put(PARAM_ID_UNIDAD, idUnidadOp);
-		params.put(PARAM_FECHA_OPERACION, cal.getTime());
-		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
-		
-		obtenerReporte(formato, params, REP_ING_SAL_DIARIOS);
+		if (view.getDfFiltro().getValue() != null){
+			cal.setTime(view.getDfFiltro().getValue());
+			
+			params.put(PARAM_ID_UNIDAD, idUnidadOp);
+			params.put(PARAM_FECHA_OPERACION, cal.getTime());
+			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+			obtenerReporte(formato, params, REP_ING_SAL_DIARIOS);
+		}else{
+			notification = new Notification("Seleccionar fecha");
+			notification.show(Page.getCurrent());
+		}		
 	}
 
 	@Override
 	public void generarReporteSemanal(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(view.getDfFiltro().getValue());
+		if (view.getDfFiltro().getValue() != null){
+			cal.setTime(view.getDfFiltro().getValue());
+			
+			params.put(PARAM_ID_UNIDAD, idUnidadOp);
+			params.put(PARAM_MES, cal.get(Calendar.MONTH) + 1);
+			params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+			obtenerReporte(formato, params, REP_ING_SAL_SEMANAL);
+		}else{
+			notification = new Notification("Seleccionar fecha");
+			notification.show(Page.getCurrent());
+		}
 		
-		params.put(PARAM_ID_UNIDAD, idUnidadOp);
-		params.put(PARAM_MES, cal.get(Calendar.MONTH) + 1);
-		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
-		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
-		
-		obtenerReporte(formato, params, REP_ING_SAL_SEMANAL);
 	}
 
 	@Override
 	public void generarReporteMensual(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(view.getDfFiltro().getValue());
+		if (view.getDfFiltro().getValue() != null){
+			cal.setTime(view.getDfFiltro().getValue());
+			
+			params.put(PARAM_ID_UNIDAD, idUnidadOp);
+			params.put(PARAM_MES, cal.get(Calendar.MONTH));
+			params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+			obtenerReporte(formato, params, REP_ING_SAL_MENSUAL);
+		}else{
+			notification = new Notification("Seleccionar fecha");
+			notification.show(Page.getCurrent());
+		}
 		
-		params.put(PARAM_ID_UNIDAD, idUnidadOp);
-		params.put(PARAM_MES, cal.get(Calendar.MONTH));
-		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
-		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
-		
-		obtenerReporte(formato, params, REP_ING_SAL_MENSUAL);
 	}
 
 	@Override
 	public void generarReporteAnual(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(view.getDfFiltro().getValue());
+		if (view.getDfFiltro().getValue() != null){
+			cal.setTime(view.getDfFiltro().getValue());
+			
+			params.put(PARAM_ID_UNIDAD, idUnidadOp);
+			params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
+			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+			obtenerReporte(formato, params, REP_ING_SAL_ANUAL);
+		}else{
+			notification = new Notification("Seleccionar fecha");
+			notification.show(Page.getCurrent());
+		}
 		
-		params.put(PARAM_ID_UNIDAD, idUnidadOp);
-		params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
-		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
-		
-		obtenerReporte(formato, params, REP_ING_SAL_ANUAL);
 	}
 	
 	private String generarRuta(){
@@ -197,7 +226,7 @@ public class ReporteIngresosSalidasController implements
 				StreamResource resource = new StreamResource(streamSource, rutaArchivo + ".pdf");
 				BrowserFrame frameReporte = new BrowserFrame("",resource);
 				frameReporte.setWidth("100%");
-				frameReporte.setHeight("560px");
+				frameReporte.setHeight("700px");
 				view.getLayoutReporte().removeAllComponents();
 				view.getLayoutReporte().addComponent(frameReporte);
 				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());

@@ -41,9 +41,11 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 	private final String PARAM_ID_UNIDAD = "P_ID_UNIDAD";
 	private final String PARAM_MES = "P_MES";
 	private final String PARAM_ANHO = "P_ANHO";
+	private final String PARAM_LOGO= "P_LOGO";
 	private final String PARAM_REPORT_LOCALE = "REPORT_LOCALE";
 	private final String REP_INCIDENCIAS= "/pe/cp/reportes/cpr_incidencias_mensual.jrxml";
 	private final String ERR_DATOS_DISPONIBLES = "No existe datos disponibles";
+	private final String LOGO = "/pe/cp/reportes/LogoCP.jpg";
 	
 	
 	public ReportesIncidenciasController(IReportesIncidenciasView view){
@@ -94,6 +96,7 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 			params.put(PARAM_MES, cal.get(Calendar.MONTH) + 1);
 			params.put(PARAM_ANHO, cal.get(Calendar.YEAR));	
 			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
 			obtenerReporte(formato, params, REP_INCIDENCIAS);
 		}else{

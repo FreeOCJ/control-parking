@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cpr_ingresos_salidas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb4bc0f8-3fa6-466a-8d24-f8c378517ab3">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" forecolor="#CCCCCC" backcolor="#C0C0C0">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#999999">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH_INV" mode="Opaque" backcolor="#FFFFFF">
+		<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH_TOTAL" mode="Opaque" backcolor="#CC0033" hAlign="Center" vAlign="Middle" fontSize="20" isItalic="false" isUnderline="false">
+		<pen lineStyle="Solid" lineColor="#FFFFFF"/>
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#999999">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table TOTAL" mode="Opaque" backcolor="#CC0033">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="visitas" uuid="49ed08d0-80e7-42b0-93e5-f73a387eff54">
+		<parameter name="P_ANHO" class="java.lang.Integer"/>
+		<parameter name="P_ID_UNIDAD" class="java.lang.Integer" isForPrompting="false"/>
+		<queryString>
+			<![CDATA[SELECT
+    YEAR(O.FECOPERACION) AS ANHO,
+    MONTH(O.FECOPERACION) AS MES,
+    SUM(o.CANTIDADPERSONAS),
+    (SUM(o.CANTIDADPERSONAS)/SUM(o.VEHICULOSENTRADA)) AS MEDIA
+FROM
+   operacion o, unidadoperativa u
+WHERE
+   o.IDUNIDAD = u.IDUNIDAD and
+   u.IDUNIDAD = $P{P_ID_UNIDAD} and
+   YEAR(o.FECOPERACION) = $P{P_ANHO}
+GROUP BY
+   ANHO,
+   MES]]>
+		</queryString>
+		<field name="ANHO" class="java.lang.Long"/>
+		<field name="MES" class="java.lang.Long"/>
+		<field name="SUM(o.CANTIDADPERSONAS)" class="java.math.BigDecimal"/>
+		<field name="MEDIA" class="java.math.BigDecimal"/>
+		<variable name="V_TOTAL_VIISTAS" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{SUM(o.CANTIDADPERSONAS)}]]></variableExpression>
+			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+		</variable>
+		<variable name="V_AVG_VISITAS" class="java.lang.Float" calculation="Average">
+			<variableExpression><![CDATA[$F{MEDIA}]]></variableExpression>
+		</variable>
+	</subDataset>
+	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="P_ANHO" class="java.lang.Integer"/>
+	<parameter name="P_LOGO" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT
+    u.NOMBRE, c.NOMBRECOMERCIAL
+FROM
+   unidadoperativa u, cliente c
+WHERE
+   u.IDCLIENTE = c.IDCLIENTE and
+   u.idunidad = $P{P_ID_UNIDAD}]]>
+	</queryString>
+	<field name="NOMBRE" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NOMBRECOMERCIAL" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="variable1" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="107" splitType="Stretch">
+			<rectangle>
+				<reportElement x="142" y="49" width="47" height="22" backcolor="#999999" uuid="d3cb651d-bbf6-42e5-897d-d0e9ee0c22eb"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="142" y="71" width="47" height="22" backcolor="#999999" uuid="dd270e36-e8b7-4c72-a91d-ad2dff48c44a"/>
+			</rectangle>
+			<image>
+				<reportElement x="13" y="12" width="123" height="92" uuid="e7e951f2-7fff-4d7f-8de9-ad991c9ea6f3"/>
+				<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="142" y="23" width="378" height="20" uuid="962017e8-1e86-415f-9cc6-d32c9cb2c2b9"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<text><![CDATA[REPORTE ANUAL DE VISITAS EN VEHICULO]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="371" y="71" width="80" height="22" uuid="4ef2094e-e823-486b-9a4f-1f537eee6e4a"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="371" y="50" width="80" height="22" backcolor="#999999" uuid="90e1fba2-74b0-4f92-af9e-d5b8251d37dd"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="374" y="51" width="77" height="20" forecolor="#FFFFFF" uuid="437e34db-4a3a-4228-af23-40791a19e040"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Año]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="142" y="49" width="45" height="20" forecolor="#FFFFFF" uuid="e11910cc-39f9-40a3-80a6-a82e6f1fe4db"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Cliente]]></text>
+			</staticText>
+			<rectangle>
+				<reportElement x="189" y="49" width="172" height="22" uuid="1e1da916-600f-413e-8448-fef5fdeb50f9"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="189" y="71" width="172" height="22" uuid="43f02de9-0d30-43e5-af84-09cbffd30d3f"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="142" y="71" width="45" height="20" forecolor="#FFFFFF" backcolor="#999999" uuid="5106f3cd-eed5-402a-983f-e594dc8ec9a0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Unidad]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="195" y="72" width="166" height="20" uuid="e9643ff9-8580-4c36-bd5f-edda4f928e48"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRECOMERCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="195" y="51" width="166" height="20" uuid="d4e953c4-2d12-42fc-9d75-e579d53c5aee"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{NOMBRECOMERCIAL}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="374" y="71" width="77" height="20" uuid="4fdf639e-a8a8-450e-8914-06a3a055b7b7"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{P_ANHO}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<summary>
+		<band height="425" splitType="Stretch">
+			<componentElement>
+				<reportElement key="table 1" style="table 1" x="0" y="0" width="360" height="425" uuid="153f59ec-dfcc-43e4-bbcf-e9a3e6019552"/>
+				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="visitas" uuid="2a747567-0210-45fb-9d5c-77d4f3742897">
+						<datasetParameter name="P_ANHO">
+							<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="P_ID_UNIDAD">
+							<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:column width="48" uuid="9893e613-8d44-4e15-8f95-ea6aad771272">
+						<jr:tableHeader height="0" rowSpan="1"/>
+						<jr:tableFooter height="1" rowSpan="1"/>
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="48" height="30" uuid="e126a3b9-135f-4a8a-8baf-14bcb4d8bd04"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Mes]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter height="30" rowSpan="1"/>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="48" height="20" uuid="6fa99f40-ece2-47a8-9a2a-f1b1ddfdeb7e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{MES}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="63d595eb-48bd-493e-888f-9057a431cd77">
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="8ff53e45-b802-4d05-8216-c9b5f085eb0a"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Visitas]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table TOTAL" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="75565375-9d66-4a84-9706-55a9578a3189"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_VIISTAS}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="b06e1fd2-1762-42af-bc5e-f08c1eb3d9f5"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{SUM(o.CANTIDADPERSONAS)}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+					<jr:column width="90" uuid="18a8c510-98d7-4e42-87ab-b0aa5296879d">
+						<jr:tableHeader height="0" rowSpan="1"/>
+						<jr:tableFooter height="1" rowSpan="1"/>
+						<jr:columnHeader style="table 1_CH" height="30" rowSpan="1">
+							<staticText>
+								<reportElement x="0" y="0" width="90" height="30" uuid="bf59ff07-9765-4b5a-bff1-bfec7524360d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Visitas por Vehículo]]></text>
+							</staticText>
+						</jr:columnHeader>
+						<jr:columnFooter style="table TOTAL" height="30" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="865e11c0-6c2e-4993-9ab1-9a8bb7144e86"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{V_AVG_VISITAS}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell height="20" rowSpan="1">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="708b9b3c-af5c-4c2f-ae62-31f4efb993b4"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{MEDIA}]]></textFieldExpression>
+							</textField>
+						</jr:detailCell>
+					</jr:column>
+				</jr:table>
+			</componentElement>
+			<lineChart>
+				<chart isShowLegend="false">
+					<reportElement x="361" y="0" width="441" height="200" uuid="3bf5f98d-d57e-4680-aa77-da99d763aaf0"/>
+					<chartTitle>
+						<titleExpression><![CDATA["Ingreso de Visitas en Vehículo Anual"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="visitas" uuid="2f9960c6-fbc3-4967-95b3-d17c6cb000d2">
+							<datasetParameter name="P_ANHO">
+								<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_ID_UNIDAD">
+								<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[""]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{MES}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{SUM(o.CANTIDADPERSONAS)}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+			<lineChart>
+				<chart>
+					<reportElement x="361" y="225" width="441" height="200" uuid="9d7c1e1c-893e-43ef-a994-85f235052dac"/>
+					<chartTitle position="Top">
+						<titleExpression><![CDATA["Promedio de Visitas por Vehículo Anual"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="visitas" uuid="41cd036c-14f9-4d2c-9b97-59a35e76f0df">
+							<datasetParameter name="P_ANHO">
+								<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_ID_UNIDAD">
+								<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[""]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{MES}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{MEDIA}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<linePlot>
+					<plot/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</linePlot>
+			</lineChart>
+		</band>
+	</summary>
+</jasperReport>

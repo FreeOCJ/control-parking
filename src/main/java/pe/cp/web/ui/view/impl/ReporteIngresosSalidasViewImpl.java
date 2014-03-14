@@ -80,6 +80,7 @@ public class ReporteIngresosSalidasViewImpl extends HorizontalLayout implements 
 	    btnExportarExcel.addStyleName("default");
 	    
 	    HorizontalLayout filtersLayout = new HorizontalLayout();
+	    filtersLayout.setSpacing(true);
 	    header.addComponent(filtersLayout);
 	    header.setComponentAlignment(filtersLayout, Alignment.MIDDLE_RIGHT);
 	    

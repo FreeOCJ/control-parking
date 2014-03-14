@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="reporteincidencias" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="32c00f67-ebc6-4fba-8dda-4dddb9bf1418">
 	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="455"/>
+	<property name="ireport.x" value="1"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -10,6 +10,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="P_ANHO" class="java.lang.Integer"/>
+	<parameter name="P_LOGO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
        INC.FECHAINCIDENCIA AS FECHA_INCIDENCIA,
@@ -56,7 +57,7 @@ WHERE
 		<band height="87" splitType="Stretch">
 			<image>
 				<reportElement x="3" y="3" width="100" height="80" uuid="2156fe50-9b21-4554-bef1-c3577a325965"/>
-				<imageExpression><![CDATA["C:/Users/BPM001/Downloads/LogoCP.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="197" y="16" width="378" height="20" uuid="452cae23-053a-4ac1-afc0-27dc7ff5a2e1"/>

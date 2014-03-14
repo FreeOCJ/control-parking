@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cpr_ingresos_salidas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb4bc0f8-3fa6-466a-8d24-f8c378517ab3">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="107"/>
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
@@ -35,53 +35,59 @@
 			<pen lineWidth="0.5" lineColor="#000000"/>
 		</box>
 	</style>
-	<subDataset name="ocupacion" uuid="b6c2d217-f750-4e77-b1e3-62d67282436d">
-		<parameter name="ocupacion_id_operacion" class="java.lang.Integer" isForPrompting="false"/>
-		<parameter name="ocupacion_pernoctados" class="java.lang.Integer" isForPrompting="false"/>
-		<parameter name="ocupacion_cajones" class="java.lang.Integer" isForPrompting="false"/>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="recaudacion" uuid="b6c2d217-f750-4e77-b1e3-62d67282436d">
+		<parameter name="P_FECHA" class="java.util.Date" isForPrompting="false"/>
+		<parameter name="P_ID_UNIDAD" class="java.lang.Integer" isForPrompting="false"/>
 		<queryString>
 			<![CDATA[SELECT
-    d.HORAINICIO,
-    d.HORAFIN,
-    d.PERSONAS,
-    d.INGRESOS,
-    d.SALIDAS
+    opt.CANTIDADTICKETS,
+    opt.MONTOTOTAL,
+    t.CATEGORIA
 FROM
-   cp_core_db.opdetalle d, cp_core_db.operacion o, cp_core_db.unidadoperativa u
+    cp_core_db.optarifa opt, cp_core_db.operacion op,
+    cp_core_db.unidadoperativa u, cp_core_db.tarifa t
 WHERE
-   d.IDOPERACION = o.IDOPERACION and
-   o.IDUNIDAD = u.IDUNIDAD and
-   o.IDOPERACION = $P{ocupacion_id_operacion}]]>
+    opt.IDOPERACION = op.IDOPERACION and
+	op.IDUNIDAD = u.IDUNIDAD and
+    opt.IDTARIFA = t.IDTARIFA and
+    u.IDUNIDAD = $P{P_ID_UNIDAD} and
+    op.FECOPERACION = $P{P_FECHA}]]>
 		</queryString>
-		<field name="HORAINICIO" class="java.sql.Timestamp">
+		<field name="CANTIDADTICKETS" class="java.lang.Integer">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="HORAFIN" class="java.sql.Timestamp">
+		<field name="MONTOTOTAL" class="java.lang.Float">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="PERSONAS" class="java.lang.Integer">
+		<field name="CATEGORIA" class="java.lang.String">
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
-		<field name="INGRESOS" class="java.lang.Integer">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<field name="SALIDAS" class="java.lang.Integer">
-			<fieldDescription><![CDATA[]]></fieldDescription>
-		</field>
-		<variable name="porcentaje" class="java.lang.Float">
-			<variableExpression><![CDATA[$V{ocupacion}.floatValue() / $P{ocupacion_cajones}]]></variableExpression>
+		<variable name="V_TOTAL_TICKETS" class="java.lang.Integer" calculation="Sum">
+			<variableExpression><![CDATA[$F{CANTIDADTICKETS}]]></variableExpression>
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
-		<variable name="ocupacion" class="java.lang.Integer" calculation="Sum">
-			<variableExpression><![CDATA[$F{INGRESOS} - $F{SALIDAS}]]></variableExpression>
-			<initialValueExpression><![CDATA[$P{ocupacion_pernoctados}]]></initialValueExpression>
-		</variable>
-		<variable name="total_ingreso" class="java.lang.Integer" calculation="Sum">
-			<variableExpression><![CDATA[$F{INGRESOS}]]></variableExpression>
-			<initialValueExpression><![CDATA[0]]></initialValueExpression>
-		</variable>
-		<variable name="total_salida" class="java.lang.Integer" calculation="Sum">
-			<variableExpression><![CDATA[$F{SALIDAS}]]></variableExpression>
+		<variable name="V_TOTAL_RECAUDACION" class="java.lang.Float">
+			<variableExpression><![CDATA[$F{MONTOTOTAL}]]></variableExpression>
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
 	</subDataset>
@@ -152,7 +158,7 @@ WHERE
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[REPORTE DE INGRESO Y SALIDA VEHICULAR]]></text>
+				<text><![CDATA[REPORTE DE RECAUDACION DIARIO]]></text>
 			</staticText>
 			<rectangle>
 				<reportElement x="435" y="49" width="35" height="22" backcolor="#999999" uuid="248dfc73-113e-4358-bac3-45395bfd2dc1"/>
@@ -303,243 +309,136 @@ WHERE
 	<summary>
 		<band height="425" splitType="Stretch">
 			<componentElement>
-				<reportElement key="table" style="table" x="0" y="0" width="349" height="370" uuid="0a8ea950-6934-4499-ae21-372b2728223f"/>
+				<reportElement key="table 1" style="table 1" x="0" y="0" width="360" height="425" uuid="ab0cf9d4-bbeb-47ea-92e4-265569be4b7a"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="ocupacion" uuid="ce272c5e-7f38-477e-9eaf-4bb43644c8cd">
-						<datasetParameter name="ocupacion_id_operacion">
-							<datasetParameterExpression><![CDATA[$F{IDOPERACION}]]></datasetParameterExpression>
+					<datasetRun subDataset="recaudacion" uuid="126fc7fc-5d16-46b9-9b2c-be0347c1cbd5">
+						<datasetParameter name="P_FECHA">
+							<datasetParameterExpression><![CDATA[$P{fecha_operacion}]]></datasetParameterExpression>
 						</datasetParameter>
-						<datasetParameter name="ocupacion_pernoctados">
-							<datasetParameterExpression><![CDATA[$F{PERNOCTADOSINICIO}]]></datasetParameterExpression>
-						</datasetParameter>
-						<datasetParameter name="ocupacion_cajones">
-							<datasetParameterExpression><![CDATA[$F{NROCAJONES}]]></datasetParameterExpression>
+						<datasetParameter name="P_ID_UNIDAD">
+							<datasetParameterExpression><![CDATA[$P{id_unidad_operativa}]]></datasetParameterExpression>
 						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="96" uuid="e62a45b1-4b39-4594-810c-9b1b3a9ede13">
-						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
+					<jr:column width="90" uuid="61fc45ed-6552-49f5-b821-29ed5b45e4bc">
+						<jr:columnHeader style="table_CH" height="30">
 							<staticText>
-								<reportElement x="2" y="3" width="93" height="15" forecolor="#FFFFFF" uuid="5e4ef339-1e26-44cc-b71d-cc30a7aead4f"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle">
-									<font isBold="true"/>
-								</textElement>
-								<text><![CDATA[Hora]]></text>
+								<reportElement x="0" y="0" width="90" height="30" uuid="be34956e-f71b-41a5-adf6-30dacd2d9a3d"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<text><![CDATA[Categoría]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
-							<textField pattern="HH.mm">
-								<reportElement x="43" y="2" width="30" height="20" uuid="ef037ccd-8944-4994-a7dc-00770349a79e"/>
-								<textElement verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{HORAFIN}]]></textFieldExpression>
+						<jr:columnFooter style="table_CH_INV" height="30"/>
+						<jr:detailCell style="table 1_TD" height="20">
+							<textField>
+								<reportElement x="0" y="0" width="90" height="20" uuid="ee664b10-6a55-4c3f-8b19-c4dfcbe79519"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{CATEGORIA}]]></textFieldExpression>
 							</textField>
-							<textField pattern="HH.mm">
-								<reportElement x="2" y="2" width="30" height="20" uuid="16be536e-2d28-4d28-8776-e8f32aabd6b3"/>
-								<textElement verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{HORAINICIO}]]></textFieldExpression>
-							</textField>
-							<staticText>
-								<reportElement x="34" y="2" width="8" height="20" uuid="802f414e-6a9c-463f-a8d1-6da6d47054b5"/>
-								<textElement verticalAlignment="Middle"/>
-								<text><![CDATA[a]]></text>
-							</staticText>
-							<staticText>
-								<reportElement x="74" y="2" width="21" height="20" uuid="efdeecd4-a128-4be7-9943-a7ac54f9a1ae"/>
-								<textElement verticalAlignment="Middle"/>
-								<text><![CDATA[Hrs.]]></text>
-							</staticText>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="64" uuid="dac224cb-b8fa-44ac-92c7-057c5d6821d4">
-						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
+					<jr:column width="90" uuid="c5582e62-20c7-4db8-a4b1-9bad5a1b0fa5">
+						<jr:columnHeader style="table_CH" height="30">
 							<staticText>
-								<reportElement x="0" y="2" width="64" height="15" forecolor="#FFFFFF" uuid="14d6bd01-1b0c-42c9-ab86-604ed11663ab"/>
+								<reportElement x="0" y="0" width="90" height="30" uuid="453f21b8-9ed4-465f-9816-f017fb16ce72"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Ingreso]]></text>
+								<text><![CDATA[Cantidad]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1">
+						<jr:columnFooter style="table_CH_TOTAL" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="64" height="20" forecolor="#FFFFFF" uuid="55caa023-c7ce-4925-9681-fb13873ba88f"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{total_ingreso}]]></textFieldExpression>
+								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="a684429f-768f-4334-8dff-e707dbce949b"/>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_TICKETS}]]></textFieldExpression>
 							</textField>
 						</jr:columnFooter>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="20">
 							<textField>
-								<reportElement x="0" y="2" width="64" height="20" uuid="73fa2dee-d6e8-404f-9ad9-9097a31ac3f3"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{INGRESOS}]]></textFieldExpression>
+								<reportElement x="0" y="0" width="90" height="20" uuid="79c0e905-caef-469e-866b-d562329625ba"/>
+								<textElement verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{CANTIDADTICKETS}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="64" uuid="40251c74-0a06-4931-9682-9894b19bd2f0">
-						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
+					<jr:column width="90" uuid="48900631-5061-4688-b22c-0e204600732c">
+						<jr:columnHeader style="table_CH" height="30">
 							<staticText>
-								<reportElement x="0" y="2" width="64" height="15" forecolor="#FFFFFF" uuid="f7231671-1bc6-4058-a091-be9f854e3a0a"/>
+								<reportElement x="0" y="0" width="90" height="30" uuid="e4f43a11-40b5-45e3-be35-af7e9769acda"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Salida]]></text>
+								<text><![CDATA[Monto Total]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1">
+						<jr:columnFooter style="table_CH_TOTAL" height="30">
 							<textField>
-								<reportElement x="0" y="0" width="64" height="20" forecolor="#FFFFFF" uuid="a6117814-1d77-4b43-bfd1-dd3dfc15cd3b"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{total_salida}]]></textFieldExpression>
+								<reportElement x="0" y="0" width="90" height="30" forecolor="#FFFFFF" uuid="b4c95486-d89e-46ac-9ed2-b2b0f580940e"/>
+								<textFieldExpression><![CDATA[$V{V_TOTAL_RECAUDACION}]]></textFieldExpression>
 							</textField>
 						</jr:columnFooter>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="20">
 							<textField>
-								<reportElement x="0" y="2" width="64" height="20" uuid="b9d65869-4d5a-4e83-b841-7db34f3df458"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{SALIDAS}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="39" uuid="ee37ccd4-9f9b-498c-a4f4-c0b0dd8c678c">
-						<jr:columnHeader height="19" rowSpan="1"/>
-						<jr:columnFooter height="30" rowSpan="1"/>
-						<jr:detailCell height="23" rowSpan="1"/>
-					</jr:column>
-					<jr:column width="55" uuid="5ccef93e-3771-4e0a-b629-b33204ebf753">
-						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="2" width="55" height="17" forecolor="#FFFFFF" uuid="38bf55fb-8647-4ec4-ac01-e85d8372a9c9"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Ocupación]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="3" width="55" height="20" uuid="76bd8fd5-83cc-43ba-b3c9-ef0a5933f2b2"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{ocupacion}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
-					</jr:column>
-					<jr:column width="60" uuid="f3febcee-5404-409b-8734-82aa8666948d">
-						<jr:tableHeader height="0" rowSpan="1"/>
-						<jr:tableFooter height="0" rowSpan="1"/>
-						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="2" width="60" height="16" forecolor="#FFFFFF" uuid="611ec0a1-a659-4dec-97dd-26c65d5aa9be"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[%]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
-							<textField pattern="#,##0.00 %">
-								<reportElement x="0" y="3" width="60" height="20" uuid="6bc4204b-cff4-4be4-b17e-37559c1ba591"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
+								<reportElement x="0" y="0" width="90" height="20" uuid="c63fdb22-10e7-4d15-924d-321ee7376f83"/>
+								<textElement textAlignment="Left" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$F{MONTOTOTAL}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
 				</jr:table>
 			</componentElement>
-			<lineChart>
-				<chart isShowLegend="false">
-					<reportElement x="410" y="0" width="392" height="200" uuid="78e8246f-c310-40ff-8608-3bec7868c47a"/>
-					<box>
-						<pen lineWidth="1.0" lineStyle="Solid"/>
-						<topPen lineWidth="1.0" lineStyle="Solid"/>
-						<leftPen lineWidth="1.0" lineStyle="Solid"/>
-						<bottomPen lineWidth="1.0" lineStyle="Solid"/>
-						<rightPen lineWidth="1.0" lineStyle="Solid"/>
-					</box>
-					<chartTitle position="Top">
-						<titleExpression><![CDATA["Ingreso Vehicular"]]></titleExpression>
-					</chartTitle>
-					<chartSubtitle/>
-					<chartLegend position="Bottom"/>
-				</chart>
-				<categoryDataset>
-					<dataset>
-						<datasetRun subDataset="ocupacion" uuid="1d86505d-7b50-41b4-89de-4f0694ed0bf2">
-							<datasetParameter name="ocupacion_id_operacion">
-								<datasetParameterExpression><![CDATA[$F{IDOPERACION}]]></datasetParameterExpression>
-							</datasetParameter>
-							<datasetParameter name="ocupacion_pernoctados">
-								<datasetParameterExpression><![CDATA[$F{PERNOCTADOSINICIO}]]></datasetParameterExpression>
-							</datasetParameter>
-							<datasetParameter name="ocupacion_cajones">
-								<datasetParameterExpression><![CDATA[$F{NROCAJONES}]]></datasetParameterExpression>
-							</datasetParameter>
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-						</datasetRun>
-					</dataset>
-					<categorySeries>
-						<seriesExpression><![CDATA[""]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{HORAINICIO}.getHours().toString() +
-":" + $F{HORAINICIO}.getMinutes().toString() +
-" - " + $F{HORAFIN}.getHours().toString() +
-":" + $F{HORAFIN}.getMinutes().toString()]]></categoryExpression>
-						<valueExpression><![CDATA[$F{INGRESOS}]]></valueExpression>
-					</categorySeries>
-				</categoryDataset>
-				<linePlot>
-					<plot labelRotation="45.0"/>
-					<categoryAxisFormat labelRotation="45.0">
-						<axisFormat/>
-					</categoryAxisFormat>
-					<valueAxisFormat>
-						<axisFormat/>
-					</valueAxisFormat>
-				</linePlot>
-			</lineChart>
-			<lineChart>
-				<chart isShowLegend="false">
-					<reportElement x="410" y="225" width="392" height="200" uuid="290f19b2-a54c-4fbb-aa7a-608cd53f084d"/>
-					<box>
-						<pen lineWidth="1.0"/>
-						<topPen lineWidth="1.0"/>
-						<leftPen lineWidth="1.0"/>
-						<bottomPen lineWidth="1.0"/>
-						<rightPen lineWidth="1.0"/>
-					</box>
-					<chartTitle position="Top">
-						<titleExpression><![CDATA["Ocupación"]]></titleExpression>
+			<pie3DChart>
+				<chart>
+					<reportElement x="360" y="0" width="442" height="200" uuid="ce7490a1-892e-4125-ae36-eb1136e8168f"/>
+					<chartTitle>
+						<titleExpression><![CDATA["Recaudación por Categoría"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
 					<chartLegend/>
 				</chart>
-				<categoryDataset>
+				<pieDataset>
 					<dataset>
-						<datasetRun subDataset="ocupacion" uuid="6e4e1b8f-cd10-4a61-b919-2f405601481d">
-							<datasetParameter name="ocupacion_id_operacion">
-								<datasetParameterExpression><![CDATA[$F{IDOPERACION}]]></datasetParameterExpression>
+						<datasetRun subDataset="recaudacion" uuid="aa7d9490-52b3-408d-9932-fdacb90c8efd">
+							<datasetParameter name="P_FECHA">
+								<datasetParameterExpression><![CDATA[$P{fecha_operacion}]]></datasetParameterExpression>
 							</datasetParameter>
-							<datasetParameter name="ocupacion_pernoctados">
-								<datasetParameterExpression><![CDATA[$F{PERNOCTADOSINICIO}]]></datasetParameterExpression>
+							<datasetParameter name="P_ID_UNIDAD">
+								<datasetParameterExpression><![CDATA[$P{id_unidad_operativa}]]></datasetParameterExpression>
 							</datasetParameter>
-							<datasetParameter name="ocupacion_cajones">
-								<datasetParameterExpression><![CDATA[$F{NROCAJONES}]]></datasetParameterExpression>
-							</datasetParameter>
-							<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 						</datasetRun>
 					</dataset>
-					<categorySeries>
-						<seriesExpression><![CDATA[""]]></seriesExpression>
-						<categoryExpression><![CDATA[$F{HORAINICIO}.getHours().toString() + ":" +
-$F{HORAINICIO}.getMinutes().toString() + " - " +
-$F{HORAFIN}.getHours().toString() + ":" +
-$F{HORAFIN}.getMinutes().toString()]]></categoryExpression>
-						<valueExpression><![CDATA[$F{PERSONAS}]]></valueExpression>
-					</categorySeries>
-				</categoryDataset>
-				<linePlot>
-					<plot labelRotation="45.0"/>
-					<categoryAxisFormat labelRotation="45.0">
-						<axisFormat/>
-					</categoryAxisFormat>
-					<valueAxisFormat>
-						<axisFormat/>
-					</valueAxisFormat>
-				</linePlot>
-			</lineChart>
+					<keyExpression><![CDATA[$F{CATEGORIA}]]></keyExpression>
+					<valueExpression><![CDATA[$F{MONTOTOTAL}]]></valueExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
+			<pie3DChart>
+				<chart>
+					<reportElement x="361" y="225" width="441" height="200" uuid="674ac049-e7c0-455e-9823-ea54b9affae9"/>
+					<chartTitle>
+						<titleExpression><![CDATA["Cantidad Tickets por Categoría"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<dataset>
+						<datasetRun subDataset="recaudacion" uuid="ea6acc0e-a47a-4996-b972-2a252d61eeca">
+							<datasetParameter name="P_FECHA">
+								<datasetParameterExpression><![CDATA[$P{fecha_operacion}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_ID_UNIDAD">
+								<datasetParameterExpression><![CDATA[$P{id_unidad_operativa}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<keyExpression><![CDATA[$F{CATEGORIA}]]></keyExpression>
+					<valueExpression><![CDATA[$F{CANTIDADTICKETS}]]></valueExpression>
+				</pieDataset>
+				<pie3DPlot>
+					<plot/>
+					<itemLabel/>
+				</pie3DPlot>
+			</pie3DChart>
 		</band>
 	</summary>
 </jasperReport>
