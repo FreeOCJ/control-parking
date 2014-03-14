@@ -1,32 +1,19 @@
 package pe.cp.web.ui.view.impl;
 
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.sql.Date;
-import java.util.Calendar;
-
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
-import com.vaadin.server.StreamResource;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.CssLayout;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.UI;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Button.ClickListener;
 
 import pe.cp.web.ui.handler.IReportesIncidenciasViewHandler;
 import pe.cp.web.ui.handler.impl.ReportesIncidenciasController;
@@ -34,60 +21,35 @@ import pe.cp.web.ui.view.IReportesIncidenciasView;
 
 @Component
 @Scope("prototype")
-@SuppressWarnings("serial")
+@SuppressWarnings({"serial"})
 @Theme("controlparking")
 public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IReportesIncidenciasView{
 
 	private CssLayout contenido;
-	private int idUnidadOperativa;
-	private int idCliente;
 	private Button btnExportToPdf;
 	private Button btnExportToXls;
-	private VerticalLayout content;
-	private String rutaArchivo;
 	private DateField dfFecha;
+	private VerticalLayout reporteLayout;
+	private BrowserFrame browserFrame;
 	
 	@Autowired
 	private IReportesIncidenciasViewHandler handler;
 	
 	@Override
 	public void enter(ViewChangeEvent event) {
-		removeAllComponents();		
+		init();		
 		handler = new ReportesIncidenciasController(this);
-		rutaArchivo = handler.generarRuta();
-		getParamsUrl();
-		generarReporteInicio();
-		init();
-	}
-	
-	
-	
-	private void getParamsUrl(){
-		String fragment = UI.getCurrent().getPage().getUriFragment();
-		int firstSlash = fragment.indexOf('/');
-		int lastSlash = fragment.lastIndexOf('/');
-		
-		String strIdCliente = fragment.substring(firstSlash + 1, lastSlash);
-		String strIdUnidadOperativa = fragment.substring(lastSlash + 1);
-		
-		idCliente = Integer.valueOf(strIdCliente);
-		idUnidadOperativa = Integer.valueOf(strIdUnidadOperativa);
-	}
-	
-	private void generarReporteInicio(){
-		Date date = new Date(Calendar.getInstance().getTimeInMillis());
-		handler.generarReportePDFMensual(idUnidadOperativa, date, rutaArchivo);
+		handler.cargar();
 	}
 	
 	@Override
 	public void init() {
-		System.out.println("init reportes incidencias");
+		removeAllComponents();		
 		setSizeFull();		
 		addStyleName("main-view");		
 		SideBarViewImpl barraControl = new SideBarViewImpl();
 		addComponent(barraControl);
 		
-		// Content
 		contenido = new CssLayout();
         addComponent(contenido);
         contenido.setSizeFull();
@@ -106,11 +68,32 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	    
 	    Label title = new Label("Reporte de Incidencias");
 	    title.addStyleName("h1");         
-	    header.addComponent(title);	    	    
+	    header.addComponent(title);	    	 
 	    
-	    content = new VerticalLayout();
+	    dfFecha = new DateField();
+	    dfFecha.setWidth("120px");
+	    btnExportToPdf = new Button("PDF");
+	    btnExportToPdf.addStyleName("default");
+	    btnExportToXls = new Button("Excel");
+	    btnExportToXls.addStyleName("default");
+	    
+	    HorizontalLayout filtersLayout = new HorizontalLayout();
+	    filtersLayout.setSpacing(true);
+	    header.addComponent(filtersLayout);
+	    header.setComponentAlignment(filtersLayout, Alignment.MIDDLE_RIGHT);
+	    
+	    filtersLayout.addComponent(dfFecha);
+	    filtersLayout.addComponent(new Label("   "));
+	    filtersLayout.addComponent(btnExportToPdf);
+	    filtersLayout.addComponent(btnExportToXls);
+	    
+	    reporteLayout = new VerticalLayout();
+	    reporteLayout.setSizeFull();
+	    areaPrincipal.addComponent(reporteLayout);
+	    
+	    /**content = new HorizontalLayout();
 	    content.setSizeFull();
-	    content.setHeight("80%");
+	    content.setHeight("100%");
 	    content.setWidth("100%");
 	    content.setSpacing(true);
 	    
@@ -118,7 +101,7 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 		StreamResource resource = new StreamResource(streamSource, rutaArchivo + ".pdf");
 		
 		BrowserFrame browser = new BrowserFrame("",resource);
-		browser.setHeight("800px");
+		browser.setHeight("700px");
 		browser.setWidth("1200px");
 		content.addComponent(browser);
 		content.setComponentAlignment(browser, Alignment.TOP_CENTER);
@@ -129,22 +112,28 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	    footer.setHeight("20%");
 	    footer.setWidth("100%");
 	    footer.setSpacing(true);
+	    footer.addStyleName("toolbar");
 	    areaPrincipal.addComponent(footer);
+	    
 	    
 	    dfFecha = new DateField();
         dfFecha.setWidth("120px");
+        
         footer.addComponent(dfFecha);
-        footer.setComponentAlignment(dfFecha, Alignment.BOTTOM_LEFT);
+        footer.setComponentAlignment(dfFecha, Alignment.MIDDLE_RIGHT);
+        
 	        
-	    btnExportToPdf = new Button("PDF");
-	    btnExportToPdf.addStyleName("default");
-	    footer.addComponent(btnExportToPdf);
-	    footer.setComponentAlignment(btnExportToPdf, Alignment.BOTTOM_CENTER);
 	    
-	    btnExportToXls = new Button("Excel");
-	    btnExportToXls.addStyleName("default");
+	    footer.addComponent(new Label("    "));
+	    footer.addComponent(btnExportToPdf);
+	    
+	    
 	    footer.addComponent(btnExportToXls);
-	    footer.setComponentAlignment(btnExportToXls, Alignment.BOTTOM_CENTER);
+	    footer.setComponentAlignment(btnExportToXls, Alignment.MIDDLE_LEFT);
+	    
+	    footer.setExpandRatio(dfFecha, 1);
+	    footer.setExpandRatio(btnExportToXls, 1);
+	   
 	   
 	    btnExportToPdf.addClickListener(new ClickListener(){
 			@Override
@@ -170,23 +159,53 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 			}		
 	    });
 	    
-	    header.addComponent(title);
+	    header.addComponent(title);**/
 	    return areaPrincipal;
 	}
 	
-	class PdfSource implements StreamResource.StreamSource {
-		@Override
-		public InputStream getStream() {
-			try {
-				return new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream(rutaArchivo + ".pdf")));
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return null;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return null;
-			}					
-		}		
+	/**private void getParamsUrl(){
+		String fragment = UI.getCurrent().getPage().getUriFragment();
+		int firstSlash = fragment.indexOf('/');
+		int lastSlash = fragment.lastIndexOf('/');
+		
+		String strIdCliente = fragment.substring(firstSlash + 1, lastSlash);
+		String strIdUnidadOperativa = fragment.substring(lastSlash + 1);
+		
+		idCliente = Integer.valueOf(strIdCliente);
+		idUnidadOperativa = Integer.valueOf(strIdUnidadOperativa);
+	}**/
+	
+	
+
+	@Override
+	public VerticalLayout getLayoutReporte() {
+		return reporteLayout;
+	}
+
+	@Override
+	public DateField getDfFiltro() {
+		return dfFecha;
+	}
+
+
+
+	@Override
+	public Button getBtnExportarPdf() {
+		return btnExportToPdf;
+	}
+
+
+
+	@Override
+	public Button getBtnExportarExcel() {
+		return btnExportToXls;
+	}
+
+
+
+	@Override
+	public BrowserFrame getBrowserFrame() {
+		return browserFrame;
 	}
 
 }
