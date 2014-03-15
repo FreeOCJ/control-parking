@@ -97,6 +97,7 @@ WHERE
 	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
+	<parameter name="P_LOGO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
    o.IDOPERACION, o.FECOPERACION, o.DESOFERTA, o.TICKETINICIO,
@@ -150,7 +151,7 @@ WHERE
 			</rectangle>
 			<image>
 				<reportElement x="13" y="12" width="123" height="92" uuid="e7e951f2-7fff-4d7f-8de9-ad991c9ea6f3"/>
-				<imageExpression><![CDATA["/Users/juan/Dropbox/Proyectos/Sistema Parking/00 - Documentos Referencia/LogoCP.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="142" y="23" width="309" height="20" uuid="962017e8-1e86-415f-9cc6-d32c9cb2c2b9"/>
