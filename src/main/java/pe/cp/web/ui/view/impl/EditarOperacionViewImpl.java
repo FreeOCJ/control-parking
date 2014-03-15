@@ -2,7 +2,6 @@ package pe.cp.web.ui.view.impl;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.vaadin.dialogs.ConfirmDialog;
 
 import pe.cp.web.ui.handler.IEditarOperacionHandler;
 import pe.cp.web.ui.handler.impl.EditarOperacionController;

@@ -11,16 +11,12 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.vaadin.navigator.View;
-
 import pe.cp.core.dao.AuditoriaDao;
 import pe.cp.core.dao.IncidenciaDao;
 import pe.cp.core.dao.OperacionDao;
-import pe.cp.core.dao.RolDao;
 import pe.cp.core.dao.TarifaDao;
 import pe.cp.core.dao.UnidadOperativaDao;
 import pe.cp.core.dao.UsuarioDao;
-import pe.cp.core.domain.DetallePorOperacion;
 import pe.cp.core.domain.Incidencia;
 import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.OperacionDetalle;
@@ -537,6 +533,8 @@ public class OperacionServiceImpl implements OperacionService {
 	private String validarEnvioAprobacion(Operacion op) {
 		String error = null;
 		
+		if (!sonRegistrosCoherentes(op))
+			return "Los registros ingreados no son válidos para la capacidad de la unidad operativa";
 		if (!sonValidosVehiculosIngresantes(op))
 			return "La diferencia entre la cantidad de tickets registrados y las entradas del día es mayor al 5%";
 		if (!sonValidosRegistroTarifas(op))
@@ -544,6 +542,29 @@ public class OperacionServiceImpl implements OperacionService {
 		
 		return error;
 	} 
+	
+	private boolean sonRegistrosCoherentes(Operacion op) {
+		boolean esCoherente = true;
+		UnidadOperativa unidadOp = unidadOpdao.buscar(op.getIdUnidadOperativa());
+		
+		int capacidad = unidadOp.getNumeroCajones();
+		int pernoctadosInicio = op.getCantidadPernoctadosInicio();
+		int acumuladoIngresos = pernoctadosInicio, acumuladoSalidas = 0;
+		
+		List<OperacionDetalle> detOp = opdao.obtenerDetalles(op.getId());
+		for (OperacionDetalle operacionDetalle : detOp) {
+			int ingresos = operacionDetalle.getCantidadIngresos();
+			int salidas = operacionDetalle.getCantidadSalidas();
+			
+			acumuladoIngresos += ingresos;
+			acumuladoSalidas += salidas;
+			
+			if (acumuladoIngresos - acumuladoSalidas < 0) esCoherente = false;
+			else if (acumuladoIngresos - acumuladoSalidas > capacidad) esCoherente = false;
+		}
+		
+		return esCoherente;
+	}
 	
 	private boolean sonValidosVehiculosIngresantes(Operacion op) {
 		boolean valido = false;

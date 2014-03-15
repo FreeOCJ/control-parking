@@ -20,23 +20,18 @@ import com.vaadin.data.Property.ValueChangeListener;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
-import com.vaadin.ui.CheckBox;
-import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Notification.Type;
 
-import pe.cp.core.domain.Operacion;
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.OperacionService;
-import pe.cp.core.service.OperacionServiceImpl;
 import pe.cp.core.service.UnidadOperativaService;
 import pe.cp.core.service.domain.IncidenciaView;
 import pe.cp.core.service.domain.OperacionDetalleView;
 import pe.cp.core.service.domain.OperacionPorTarifaView;
 import pe.cp.core.service.domain.OperacionView;
-import pe.cp.core.service.domain.TarifaConsolidadoView;
 import pe.cp.core.service.messages.ActualizarOperacionRequest;
 import pe.cp.core.service.messages.AprobarOperacionRequest;
 import pe.cp.core.service.messages.EliminarIncidenciaRequest;
@@ -512,7 +507,6 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 		view.getTblIncidencias().setContainerDataSource(incidenciasContainer);
 	}
 	
-
 	@Override
 	public void calcularTotalTickets() {
 		try {
