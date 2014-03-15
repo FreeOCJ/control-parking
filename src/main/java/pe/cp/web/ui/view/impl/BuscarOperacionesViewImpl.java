@@ -121,53 +121,8 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
         toolbar.setComponentAlignment(btnBuscar, Alignment.BOTTOM_LEFT);
         toolbar.setExpandRatio(btnBuscar, 1);
 	    
-        //Crear Tabla
         tblOperaciones = new Table();
         tblOperaciones.setSizeFull();    
-        tblOperaciones.setContainerDataSource(handler.obtenerHeadersContainer());
-        tblOperaciones.setSelectable(true);
-        tblOperaciones.addGeneratedColumn("", new ColumnGenerator() {			
-			@Override
-			public Object generateCell(final Table source, final Object itemId, Object columnId) {
-				HorizontalLayout botonesAccion = new HorizontalLayout();
-				
-				Button btnEditar = new Button();
-				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
-				btnEditar.addClickListener(new ClickListener() {			 
-			      @Override public void buttonClick(ClickEvent event) {			    	  
-			        Integer idOperacion = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Codigo").getValue();
-			        handler.irEditarOperacion(idOperacion);
-			      }
-			    });
-				
-				Button btnEliminar = new Button();
-				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
-				btnEliminar.addClickListener(new ClickListener() {			 
-			      @Override 
-			      public void buttonClick(ClickEvent event) {				    	  
-			    	  ConfirmDialog.show(UI.getCurrent(), "Confirmar Acción", "¿Estás seguro que deseas eliminar al usuario?", "Si", "No", 
-				        new ConfirmDialog.Listener() {
-				            public void onClose(ConfirmDialog dialog) {
-				                if (dialog.isConfirmed()) {
-				                    // Confirmed to continue
-				                	Integer idCliente = (Integer) source.getContainerDataSource().getContainerProperty(itemId, "Código").getValue();
-				                	System.out.println("eliminar");
-				                } else {
-				                    // User did not confirm
-				                	System.out.println("cancelar");
-				                }
-				            }
-				        });			        			      
-			      }
-			    });
-			 
-				botonesAccion.addComponent(btnEditar);
-				botonesAccion.addComponent(btnEliminar);
-			    return botonesAccion;
-			}
-		} ); 
-        tblOperaciones.setColumnWidth("", 130);
-        tblOperaciones.setVisibleColumns((Object []) BuscarOperacionesController.obtenerColumnasVisibles());
         areaPrincipal.addComponent(tblOperaciones); 
         
         btnBuscar.addClickListener(new ClickListener() {

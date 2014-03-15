@@ -137,6 +137,8 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 			cargarDatosTarifas();
 			cargarIncidencias();
 			configurarAccionesDisponibles(response.getOperacionView());
+			calcularTotalIngresoSalidas();
+			calcularTotalTarifas();
 		} else {
 			Logger.getAnonymousLogger().log(Level.WARNING, "nada");
 		}
@@ -584,6 +586,9 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				view.gdtTxtTotalIngresos().removeStyleName("error");
 				view.getTxtTotalSalidas().removeStyleName("error");
 			}
+			
+			int pernoctadosFinDia = totalEntradas + pernoctados - totalSalidas;
+			view.getTxtPernoctadosHoy().setValue(String.valueOf(pernoctadosFinDia));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

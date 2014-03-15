@@ -106,7 +106,7 @@ public class OperacionDaoImpl implements OperacionDao {
 		sbSql.append(" o.PERNOCTADOSFIN, o.IDUNIDAD, o.CREADOPOR, o.ACTUALIZADOPOR, o.FECHACREACION, ");
 		sbSql.append(" o.FECHAACTUALIZA, o.ESTADO, o.AJUSTE, o.ELIMINADO, u.NOMBRE, c.NOMBRECOMERCIAL");
 		sbSql.append(" FROM operacion o, unidadoperativa u, cliente c where ");
-		sbSql.append(" o.IDUNIDAD = u.IDUNIDAD and u.IDCLIENTE = c.IDCLIENTE and o.IDOPERACION=? ");
+		sbSql.append(" o.IDUNIDAD = u.IDUNIDAD and u.IDCLIENTE = c.IDCLIENTE and o.IDOPERACION=? and o.ELIMINADO='F' ");
 		Operacion operacion = null;
 		Object[] args = {idOperacion};
 		operacion = jdbcTemplate.queryForObject(sbSql.toString(), args,new OperacionMapper());
@@ -123,7 +123,7 @@ public class OperacionDaoImpl implements OperacionDao {
 		sbSql.append(" o.PERNOCTADOSFIN, o.IDUNIDAD, o.CREADOPOR, o.ACTUALIZADOPOR, o.FECHACREACION, ");
 		sbSql.append(" o.FECHAACTUALIZA, o.ESTADO, o.AJUSTE, o.ELIMINADO, u.NOMBRE, c.NOMBRECOMERCIAL");
 		sbSql.append(" FROM operacion o, unidadoperativa u, cliente c where ");
-		sbSql.append(" o.IDUNIDAD = u.IDUNIDAD and u.IDCLIENTE = c.IDCLIENTE ");
+		sbSql.append(" o.IDUNIDAD = u.IDUNIDAD and u.IDCLIENTE = c.IDCLIENTE and o.ELIMINADO='F' ");
 		if (idUnidadOp > 0) { 
 			sbSql.append(" and u.idunidad = :idUnidad "); 
 			args.put("idUnidad", idUnidadOp);

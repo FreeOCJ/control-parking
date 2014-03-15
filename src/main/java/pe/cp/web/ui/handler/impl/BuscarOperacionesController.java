@@ -1,7 +1,6 @@
 package pe.cp.web.ui.handler.impl;
 
 import java.util.Date;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,22 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.stereotype.Component;
+import org.vaadin.dialogs.ConfirmDialog;
 
-import pe.cp.core.dao.UnidadOperativaDao;
 import pe.cp.core.domain.Rol;
-import pe.cp.core.service.ClienteService;
 import pe.cp.core.service.OperacionService;
 import pe.cp.core.service.UnidadOperativaService;
-import pe.cp.core.service.UsuarioService;
-import pe.cp.core.service.UtilService;
 import pe.cp.core.service.domain.UnidadOperativaView;
 import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
+import pe.cp.core.service.messages.EliminarOperacionRequest;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarRequest;
 import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarResponse;
+import pe.cp.core.service.messages.Response;
 import pe.cp.core.service.domain.OperacionView;
-import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.IBuscarOperacionesHandler;
 import pe.cp.web.ui.view.IBuscarOperacionesView;
@@ -35,12 +31,17 @@ import com.vaadin.data.Container;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import com.vaadin.server.Page;
+import com.vaadin.server.ThemeResource;
 import com.vaadin.shared.Position;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.UI;
+import com.vaadin.ui.Button.ClickEvent;
+import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.Notification.Type;
-import com.vaadin.ui.themes.Reindeer;
-
+import com.vaadin.ui.Table.ColumnGenerator;
 
 @Scope("prototype")
 public class BuscarOperacionesController implements IBuscarOperacionesHandler {
@@ -62,6 +63,8 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 	private final String EN_PROCESO = "EN PROCESO";
 	private final String POR_APROBAR = "POR APROBAR";
 	private final String APROBADA = "APROBADA";
+	private final String MSG_CONFIRMACION_ELIMINACION = "¿Estás seguro que deseas eliminar la operación?";
+	private final String HEADER_POP_UP_ELIMINAR = "Confirmar Acción";
    
 	@Autowired
 	private UnidadOperativaService unidadOpService;
@@ -155,6 +158,7 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 	public void cargar() {
 		cargarComboUnidadesOp();
 		cargarComboEstados();
+		prepararTabla();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -204,5 +208,67 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 	@Override
 	public void irEditarOperacion(int idOperacion) {
 		NavegacionUtil.irEditarOperacion(idOperacion);
+	}
+	
+	@SuppressWarnings("serial")
+	private void prepararTabla() {
+		Table tblOperaciones = view.getResultados();
+		tblOperaciones.setContainerDataSource(obtenerHeadersContainer());
+		
+		tblOperaciones.addGeneratedColumn(BOTONES, new ColumnGenerator() {			
+			@Override
+			public Object generateCell(final Table source, final Object itemId, Object columnId) {
+				HorizontalLayout botonesAccion = new HorizontalLayout();
+				
+				Button btnEditar = new Button();
+				btnEditar.setIcon(new ThemeResource("icons/18/edit.png"));
+				btnEditar.addClickListener(new ClickListener() {			 
+			      @Override public void buttonClick(ClickEvent event) {			    	  
+			        Integer idOperacion = (Integer) source.getContainerDataSource().getContainerProperty(itemId, CODIGO).getValue();
+			        irEditarOperacion(idOperacion);
+			      }
+			    });
+				
+				Button btnEliminar = new Button();
+				btnEliminar.setIcon(new ThemeResource("icons/18/delete.png"));
+				btnEliminar.addClickListener(new ClickListener() {			 
+			      @Override 
+			      public void buttonClick(ClickEvent event) {				    	  
+			    	  ConfirmDialog.show(UI.getCurrent(), HEADER_POP_UP_ELIMINAR, MSG_CONFIRMACION_ELIMINACION, "Si", "No", 
+				        new ConfirmDialog.Listener() {
+				            public void onClose(ConfirmDialog dialog) {
+				                if (dialog.isConfirmed()) {
+				                	Integer idOperacion = (Integer) source.getContainerDataSource().getContainerProperty(itemId, CODIGO).getValue();
+				                	eliminar(idOperacion);
+				                }
+				            }
+				        });			        			      
+			      }
+			    });
+			 
+				botonesAccion.addComponent(btnEditar);
+				botonesAccion.addComponent(btnEliminar);
+			    return botonesAccion;
+			}
+		} ); 
+		
+        tblOperaciones.setColumnWidth(BOTONES, 130);
+        tblOperaciones.setVisibleColumns((Object []) BuscarOperacionesController.obtenerColumnasVisibles());
+	}
+
+	@Override
+	public void eliminar(int idOperacion) {
+		Subject currentUser = SecurityUtils.getSubject();
+		String login = currentUser.getSession().getAttribute("login").toString();
+		
+		Response response = opService.eliminarOperacion(new EliminarOperacionRequest(idOperacion, login));
+		if (response.isResultadoEjecucion()) {
+			currentUser.getSession().setAttribute("mensaje",new Notification(response.getMensaje()));
+			NavegacionUtil.irOperaciones();
+		} else {
+			notification = new Notification(response.getMensaje());
+			notification.show(Page.getCurrent());
+		}
+		
 	}
 }

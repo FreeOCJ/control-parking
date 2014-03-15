@@ -1,9 +1,7 @@
 package pe.cp.core.service;
 
 import java.util.Date;
-import java.util.List;
 
-import pe.cp.core.domain.Operacion;
 import pe.cp.core.service.messages.ActualizarOperacionRequest;
 import pe.cp.core.service.messages.AgregarIncidenciaRequest;
 import pe.cp.core.service.messages.AgregarIncidenciaResponse;
@@ -14,6 +12,7 @@ import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
 import pe.cp.core.service.messages.ActualizarIncidenciaRequest;
 import pe.cp.core.service.messages.EliminarIncidenciaRequest;
+import pe.cp.core.service.messages.EliminarOperacionRequest;
 import pe.cp.core.service.messages.EnviarAprobarOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionResponse;
@@ -44,6 +43,7 @@ public interface OperacionService {
 	Response actualizarOperacion(ActualizarOperacionRequest request);
 	Response enviarAprobarOperacion(EnviarAprobarOperacionRequest request);
 	Response aprobarOperacion(AprobarOperacionRequest request);
+	Response eliminarOperacion(EliminarOperacionRequest request);
 	String getConstanteEstadoEnProceso();
 	String getConstanteEstadoPorAprobar();
 	String getConstanteEstadoAprobada();

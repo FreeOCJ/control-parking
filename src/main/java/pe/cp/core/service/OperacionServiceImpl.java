@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.apache.poi.ss.formula.functions.Odd;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,7 @@ import pe.cp.core.service.messages.BuscarOperacionResponse;
 import pe.cp.core.service.messages.BuscarOperacionesRequest;
 import pe.cp.core.service.messages.ActualizarIncidenciaRequest;
 import pe.cp.core.service.messages.EliminarIncidenciaRequest;
+import pe.cp.core.service.messages.EliminarOperacionRequest;
 import pe.cp.core.service.messages.EnviarAprobarOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionRequest;
 import pe.cp.core.service.messages.ObtenerDetalleOperacionResponse;
@@ -621,6 +623,30 @@ public class OperacionServiceImpl implements OperacionService {
 		} catch (Exception e) {
 			response.setResultadoEjecucion(false);
 			response.setMensaje("Error al aprobar la operación");
+			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
+			e.printStackTrace();
+		}
+		
+		return response;
+	}
+
+	@Override
+	public Response eliminarOperacion(EliminarOperacionRequest request) {
+		Response response = new Response();
+
+		try {
+			Operacion op = opdao.buscar(request.getIdOperacion());
+			if (!op.getEstado().equals(ESTADO_EN_PROCESO)) {
+				response.setMensaje("Sólo se pueden eliminar operaciones con estado En Proceso");
+				response.setResultadoEjecucion(false);
+			} else {
+				opdao.eliminar(request.getIdOperacion());
+				response.setMensaje("Se eliminó la operación");
+				response.setResultadoEjecucion(true);
+			}
+		} catch (Exception e) {
+			response.setMensaje("Error al eliminar la operación");
+			response.setResultadoEjecucion(false);
 			Logger.getAnonymousLogger().log(Level.SEVERE, e.getMessage());
 			e.printStackTrace();
 		}

@@ -12,4 +12,5 @@ public interface IBuscarOperacionesHandler {
 	void validarUsuario();
 	void cargar();
 	void buscar();
+	void eliminar(int idOperacion);
 }
