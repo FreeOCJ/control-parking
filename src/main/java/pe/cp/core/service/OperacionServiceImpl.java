@@ -513,6 +513,7 @@ public class OperacionServiceImpl implements OperacionService {
 			mensajeError = validarEnvioAprobacion(op);
 			if (mensajeError != null) {
 				response.setResultadoEjecucion(false);
+				response.setMensaje(mensajeError);
 			} else {
 				op.setEstado(ESTADO_POR_APROBAR);
 				opdao.modificar(op);
