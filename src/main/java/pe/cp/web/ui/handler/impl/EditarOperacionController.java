@@ -86,7 +86,11 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 	private static final String HORA_INCIDENCIA = "Hora";
 	private static final String DETALLE_INCIDENCIA = "Detalle";
 	private static final String BOTONES_INCIDENCIA = "";
+	private final String OCUPACION = "Ocupación";
 	private final String WARNING_EDICION = "La operación está aprobada y no puede ser modificada";
+	private final String ERROR_CAPACIDAD_SUPERADA = "La cantidad de carros supera a la capacidad de la unidad operativa";
+	private final String ERROR_MAS_SALIDAS_QUE_INGRESOS = "La cantidad de vehículos que salen no puede ser mayor al total de vehículos dentro de la unidad operativa";
+	private final String ERROR_TICKETS_NEGATIVO = "La diferencia no puede ser negativa";
 	
 	private boolean esModoEdicion = true;
 	
@@ -133,8 +137,8 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				opService.obtener(new ObtenerOperacionRequest(view.getIdOperacion()));
 		if (response.isResultadoEjecucion()) {
 			cargarCabecera(response.getOperacionView());
-			cargarIngresoSalidas();
 			cargarDatosOperacion();
+			cargarIngresoSalidas();
 			cargarDatosTarifas();
 			cargarIncidencias();
 			configurarAccionesDisponibles(response.getOperacionView());
@@ -154,6 +158,7 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				unidadOpService.obtenerPorId(new ObtenerUnidadOperativaRequest(opView.getIdUnidadOperativa()));
 		if (response.isResultadoEjecucion()) {
 			view.getLblNombreUnidadOp().setValue(response.getUnidadOpView().getNombre());
+			view.getLblCapacidad().setValue(String.valueOf(response.getUnidadOpView().getNroCajones()));
 		} else {
 			//TODO
 		}
@@ -165,6 +170,12 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 		
 		ObtenerDetalleOperacionResponse response = 
 				opService.obtenerDetalles(new ObtenerDetalleOperacionRequest(view.getIdOperacion()));
+		
+		//Se considera como numero inicial a la cantidad de carros pernoctados del dia anterior
+		int totalIngresos = Integer.valueOf(view.getTxtPernoctadosAnteriores().getValue().toString());
+		int totalSalidas = 0;
+		int capacidad = Integer.valueOf(view.getLblCapacidad().getValue().toString());
+		
 		if (response.isResultadoEjecucion()) {
 			for (OperacionDetalleView detalleView : response.getDetallesView()) {
 				Item detalle = controlHorasContainer.getItem(controlHorasContainer.addItem());
@@ -177,10 +188,19 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				txtCantidadSalidas.setWidth("80px");
 				TextField txtCantidadPersonas = new TextField();
 				txtCantidadPersonas.setWidth("80px");
+				TextField txtOcupacion = new TextField();
+				txtOcupacion.setWidth("80px");
+				txtOcupacion.setEnabled(false);
+				
+				totalIngresos += detalleView.getCantidadIngreso();
+				totalSalidas += detalleView.getCantidadSalida();
 				
 				txtCantidadIngresos.setValue(String.valueOf(detalleView.getCantidadIngreso()));
 				txtCantidadSalidas.setValue(String.valueOf(detalleView.getCantidadSalida()));
 				txtCantidadPersonas.setValue(String.valueOf(detalleView.getCantidadPersonas()));
+				
+				float ocupacion = (((float)totalIngresos - (float)totalSalidas)/(float)capacidad)*100f;
+				txtOcupacion.setValue(String.format("%.2f%%", ocupacion));
 				
 				txtCantidadIngresos.addValueChangeListener(new ValueChangeListener() {
 					@Override
@@ -206,10 +226,12 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				txtCantidadIngresos.setImmediate(true);
 				txtCantidadSalidas.setImmediate(true);
 				txtCantidadPersonas.setImmediate(true);
+				txtOcupacion.setImmediate(true);
 				
 				detalle.getItemProperty(INGRESO_DETALLE).setValue(txtCantidadIngresos);
 				detalle.getItemProperty(SALIDA_DETALLE).setValue(txtCantidadSalidas);
 				detalle.getItemProperty(PERSONAS_DETALLE).setValue(txtCantidadPersonas);
+				detalle.getItemProperty(OCUPACION).setValue(txtOcupacion);
 			}
 		} else {
 			//TODO
@@ -458,9 +480,10 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 		controlHorasContainer.addContainerProperty(INGRESO_DETALLE,TextField.class, new TextField());
 		controlHorasContainer.addContainerProperty(SALIDA_DETALLE,TextField.class, new TextField());
 		controlHorasContainer.addContainerProperty(PERSONAS_DETALLE,TextField.class, new TextField());
+		controlHorasContainer.addContainerProperty(OCUPACION,TextField.class, new TextField());
 		
 		view.getTblOperacionesPorHorario().setContainerDataSource(controlHorasContainer);
-		Object[] visibleHeaders = {HORARIO_DETALLE, INGRESO_DETALLE, SALIDA_DETALLE, PERSONAS_DETALLE};
+		Object[] visibleHeaders = {HORARIO_DETALLE, INGRESO_DETALLE, SALIDA_DETALLE, PERSONAS_DETALLE, OCUPACION};
 		view.getTblOperacionesPorHorario().setVisibleColumns(visibleHeaders);
 	}
 	
@@ -497,6 +520,14 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 			int ticketFin = Integer.valueOf(view.getTxtTicketFinal().getValue());
 			int cantidad = ticketFin - ticketInicio;
 			view.getTxtTotalDia().setValue(String.valueOf(cantidad));
+			
+			if (cantidad < 0) {
+				setearAvisoErrorTextField(ERROR_TICKETS_NEGATIVO, view.getTxtTicketInicial());
+				setearAvisoErrorTextField(ERROR_TICKETS_NEGATIVO, view.getTxtTicketInicial());
+			} else {
+				setearAvisoErrorTextField(null, view.getTxtTicketInicial());
+				setearAvisoErrorTextField(null, view.getTxtTicketFinal());
+			}
 		} catch(Exception e) {
 			Logger.getAnonymousLogger().log(Level.WARNING, "Formato incorrecto");
 		}
@@ -506,6 +537,8 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 	@Override
 	public void calcularTotalIngresoSalidas() {
 		int totalEntradas = 0, totalSalidas = 0, totalPersonas = 0;
+		int pernoctados = Integer.valueOf(view.getTxtPernoctadosAnteriores().getValue().toString());
+		int capacidad = Integer.valueOf(view.getLblCapacidad().getValue().toString());
 		
 		try {
 			for (Iterator i = view.getTblOperacionesPorHorario().getItemIds().iterator(); i.hasNext();) {
@@ -515,17 +548,60 @@ public class EditarOperacionController implements IEditarOperacionHandler {
 				TextField txtIngreso = (TextField) (item.getItemProperty(INGRESO_DETALLE).getValue());
 				TextField txtSalida = (TextField) (item.getItemProperty(SALIDA_DETALLE).getValue());
 				TextField txtPersonas = (TextField) (item.getItemProperty(PERSONAS_DETALLE).getValue());
+				TextField txtOcupacion = (TextField) (item.getItemProperty(OCUPACION).getValue());
 				
-				totalEntradas += Integer.valueOf(txtIngreso.getValue());
-				totalSalidas += Integer.valueOf(txtSalida.getValue());
-				totalPersonas += Integer.valueOf(txtPersonas.getValue());
+				int ingresosFila = Integer.valueOf(txtIngreso.getValue());
+				int salidasFila = Integer.valueOf(txtSalida.getValue());
+				int personasFila = Integer.valueOf(txtPersonas.getValue());
+				
+				totalEntradas += ingresosFila;
+				totalSalidas += salidasFila;
+				totalPersonas += personasFila;
+				
+				int ocupacion = totalEntradas - totalSalidas;
+				if (ocupacion < 0) {
+					setearAvisoErrorTextField(ERROR_MAS_SALIDAS_QUE_INGRESOS, txtIngreso);
+					setearAvisoErrorTextField(ERROR_MAS_SALIDAS_QUE_INGRESOS, txtSalida);
+				} else {
+					setearAvisoErrorTextField(null, txtIngreso);
+					setearAvisoErrorTextField(null, txtSalida);
+					
+					if (ocupacion > capacidad) {
+						setearAvisoErrorTextField(ERROR_CAPACIDAD_SUPERADA, txtIngreso);
+						setearAvisoErrorTextField(ERROR_CAPACIDAD_SUPERADA, txtSalida);
+					} else {
+						setearAvisoErrorTextField(null, txtIngreso);
+						setearAvisoErrorTextField(null, txtSalida);
+					}
+				}
+				
+				float porcOcupacion = ((float)ocupacion/(float)capacidad)*100f;
+				txtOcupacion.setValue(String.format("%.2f%%", porcOcupacion));
 			}
 			
 			view.gdtTxtTotalIngresos().setValue(String.valueOf(totalEntradas));
 			view.getTxtTotalSalidas().setValue(String.valueOf(totalSalidas));
 			view.getTxtTotalPersonas().setValue(String.valueOf(totalPersonas));
+			
+			if (totalEntradas + pernoctados < totalSalidas) {
+				view.gdtTxtTotalIngresos().addStyleName("error");
+				view.getTxtTotalSalidas().addStyleName("error");
+			} else {
+				view.gdtTxtTotalIngresos().removeStyleName("error");
+				view.getTxtTotalSalidas().removeStyleName("error");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void setearAvisoErrorTextField(String error, TextField txt) {
+		if (error == null) {
+			txt.removeStyleName("error");
+			txt.setDescription("");
+		} else {
+			txt.addStyleName("error");
+			txt.setDescription(error);
 		}
 	}
 

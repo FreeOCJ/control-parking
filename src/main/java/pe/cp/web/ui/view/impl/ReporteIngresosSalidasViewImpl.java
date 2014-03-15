@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
 import com.vaadin.ui.Alignment;
-import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.CssLayout;
@@ -29,7 +28,6 @@ public class ReporteIngresosSalidasViewImpl extends HorizontalLayout implements 
 	private IReporteIngresosSalidasHandler handler;
 	
 	private DateField dfFechaFiltro;
-	private BrowserFrame browserFrame;
 	private Button btnExportarPDF;
 	private Button btnExportarExcel;
 	private ComboBox cbVista;
@@ -115,11 +113,6 @@ public class ReporteIngresosSalidasViewImpl extends HorizontalLayout implements 
 	@Override
 	public Button getBtnExportarExcel() {
 		return btnExportarExcel;
-	}
-
-	@Override
-	public BrowserFrame getBrowserFrame() {
-		return browserFrame;
 	}
 
 	@Override

@@ -226,7 +226,7 @@ public class ReporteIngresosSalidasController implements
 				StreamResource resource = new StreamResource(streamSource, rutaArchivo + ".pdf");
 				BrowserFrame frameReporte = new BrowserFrame("",resource);
 				frameReporte.setWidth("100%");
-				frameReporte.setHeight("700px");
+				frameReporte.setHeight("560px");
 				view.getLayoutReporte().removeAllComponents();
 				view.getLayoutReporte().addComponent(frameReporte);
 				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cpr_ingresos_salidas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb4bc0f8-3fa6-466a-8d24-f8c378517ab3">
-	<property name="ireport.zoom" value="2.0"/>
-	<property name="ireport.x" value="107"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="17"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -69,8 +69,8 @@ WHERE
 			<fieldDescription><![CDATA[]]></fieldDescription>
 		</field>
 		<variable name="porcentaje" class="java.lang.Float">
-			<variableExpression><![CDATA[$V{ocupacion}.floatValue() / $P{ocupacion_cajones}]]></variableExpression>
-			<initialValueExpression><![CDATA[0]]></initialValueExpression>
+			<variableExpression><![CDATA[$V{ocupacion} / $P{ocupacion_cajones}]]></variableExpression>
+			<initialValueExpression><![CDATA[$P{ocupacion_pernoctados} / $P{ocupacion_cajones}]]></initialValueExpression>
 		</variable>
 		<variable name="ocupacion" class="java.lang.Integer" calculation="Sum">
 			<variableExpression><![CDATA[$F{INGRESOS} - $F{SALIDAS}]]></variableExpression>
@@ -84,6 +84,12 @@ WHERE
 			<variableExpression><![CDATA[$F{SALIDAS}]]></variableExpression>
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
+		<variable name="porc_final" class="java.lang.Float">
+			<variableExpression><![CDATA[($V{total_ingreso}-$V{total_salida})/$P{ocupacion_cajones}]]></variableExpression>
+		</variable>
+		<variable name="pornoctado" class="java.lang.Integer">
+			<variableExpression><![CDATA[$V{total_ingreso}-$V{total_salida}]]></variableExpression>
+		</variable>
 	</subDataset>
 	<parameter name="P_FECHA_OPERACION" class="java.util.Date">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -91,7 +97,6 @@ WHERE
 	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
-	<parameter name="P_LOGO" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT
    o.IDOPERACION, o.FECOPERACION, o.DESOFERTA, o.TICKETINICIO,
@@ -145,7 +150,7 @@ WHERE
 			</rectangle>
 			<image>
 				<reportElement x="13" y="12" width="123" height="92" uuid="e7e951f2-7fff-4d7f-8de9-ad991c9ea6f3"/>
-				<imageExpression><![CDATA[$P{P_LOGO}]]></imageExpression>
+				<imageExpression><![CDATA["/Users/juan/Dropbox/Proyectos/Sistema Parking/00 - Documentos Referencia/LogoCP.jpg"]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement x="142" y="23" width="309" height="20" uuid="962017e8-1e86-415f-9cc6-d32c9cb2c2b9"/>
@@ -155,118 +160,84 @@ WHERE
 				<text><![CDATA[REPORTE DE INGRESO Y SALIDA VEHICULAR]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="435" y="49" width="35" height="22" backcolor="#999999" uuid="248dfc73-113e-4358-bac3-45395bfd2dc1"/>
+				<reportElement x="524" y="49" width="35" height="22" backcolor="#999999" uuid="248dfc73-113e-4358-bac3-45395bfd2dc1"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="435" y="71" width="35" height="22" backcolor="#999999" uuid="535a0d6c-a995-4a5d-a013-aae1ac343228"/>
+				<reportElement x="524" y="71" width="35" height="22" backcolor="#999999" uuid="535a0d6c-a995-4a5d-a013-aae1ac343228"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="470" y="49" width="64" height="22" uuid="d563dfc8-ad14-46f1-9324-064057ccfd6a"/>
+				<reportElement x="559" y="49" width="64" height="22" uuid="d563dfc8-ad14-46f1-9324-064057ccfd6a"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="470" y="71" width="64" height="22" uuid="a0d7a6c1-6259-4f3a-9db7-d500496724aa"/>
+				<reportElement x="559" y="71" width="64" height="22" uuid="a0d7a6c1-6259-4f3a-9db7-d500496724aa"/>
 			</rectangle>
 			<textField>
-				<reportElement x="474" y="52" width="61" height="20" uuid="0c48ae87-bad6-4260-860c-4ee009e56ab6"/>
+				<reportElement x="563" y="52" width="61" height="20" uuid="0c48ae87-bad6-4260-860c-4ee009e56ab6"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TICKETINICIO}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="473" y="73" width="61" height="20" uuid="0756737d-22ca-4107-ab5d-a2046a302b9e"/>
+				<reportElement x="562" y="73" width="61" height="20" uuid="0756737d-22ca-4107-ab5d-a2046a302b9e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{TICKETFIN}]]></textFieldExpression>
 			</textField>
-			<textField pattern="dd-MMM">
-				<reportElement x="370" y="73" width="55" height="20" uuid="460b458a-831c-42fc-a6f0-5cff3cc6a62e"/>
-				<textElement textAlignment="Right">
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
-			</textField>
-			<textField pattern="EEEEE">
-				<reportElement x="370" y="51" width="55" height="20" uuid="e12d1463-1b0e-4092-b4ee-e37ef2e9ab1e"/>
-				<textElement textAlignment="Right">
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement x="439" y="50" width="31" height="20" forecolor="#FFFFFF" uuid="081a90cf-0600-4f9c-90b6-4801035d3326"/>
+				<reportElement x="526" y="50" width="31" height="20" forecolor="#FFFFFF" uuid="081a90cf-0600-4f9c-90b6-4801035d3326"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Inicio]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="438" y="72" width="32" height="20" forecolor="#FFFFFF" uuid="91d406e0-c8c1-4509-af2c-11611710f2dc"/>
+				<reportElement x="525" y="72" width="32" height="20" forecolor="#FFFFFF" uuid="91d406e0-c8c1-4509-af2c-11611710f2dc"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Fin]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="544" y="49" width="80" height="22" backcolor="#999999" uuid="54d81435-e7d1-4af8-9131-8bb89073fa92"/>
+				<reportElement x="633" y="49" width="80" height="22" backcolor="#999999" uuid="54d81435-e7d1-4af8-9131-8bb89073fa92"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="544" y="71" width="80" height="22" uuid="c9fb4c5b-8dab-4750-b74c-4574c6b75f5e"/>
+				<reportElement x="633" y="71" width="80" height="22" uuid="c9fb4c5b-8dab-4750-b74c-4574c6b75f5e"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="546" y="50" width="76" height="20" forecolor="#FFFFFF" uuid="eff8d3f3-1876-423c-a496-445a0a32fdc8"/>
+				<reportElement x="635" y="50" width="76" height="20" forecolor="#FFFFFF" uuid="eff8d3f3-1876-423c-a496-445a0a32fdc8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Total Vehiculos]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="633" y="71" width="80" height="22" uuid="3ca16fe7-9c38-4152-8bfb-f55ed515366e"/>
+				<reportElement x="722" y="71" width="80" height="22" uuid="3ca16fe7-9c38-4152-8bfb-f55ed515366e"/>
 			</rectangle>
 			<rectangle>
-				<reportElement x="633" y="49" width="80" height="22" backcolor="#999999" uuid="773925c2-0676-4aab-b601-2e4a97214555"/>
+				<reportElement x="722" y="49" width="80" height="22" backcolor="#999999" uuid="773925c2-0676-4aab-b601-2e4a97214555"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="633" y="50" width="80" height="20" forecolor="#FFFFFF" uuid="f758b1fa-726b-4d15-a5e6-912b6e7128d3"/>
+				<reportElement x="722" y="50" width="80" height="20" forecolor="#FFFFFF" uuid="f758b1fa-726b-4d15-a5e6-912b6e7128d3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Cajones]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="633" y="73" width="80" height="20" uuid="f61601a3-2598-4567-9162-7583e25b7cea"/>
+				<reportElement x="722" y="73" width="80" height="20" uuid="f61601a3-2598-4567-9162-7583e25b7cea"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{NROCAJONES}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="545" y="73" width="77" height="20" uuid="3111ccb7-2b42-41da-8437-a88bb8b8a7c3"/>
+				<reportElement x="634" y="73" width="77" height="20" uuid="3111ccb7-2b42-41da-8437-a88bb8b8a7c3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{VEHICULOSENTRADA}]]></textFieldExpression>
-			</textField>
-			<rectangle>
-				<reportElement x="722" y="70" width="80" height="22" uuid="4ef2094e-e823-486b-9a4f-1f537eee6e4a"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="722" y="49" width="80" height="22" backcolor="#999999" uuid="90e1fba2-74b0-4f92-af9e-d5b8251d37dd"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="725" y="50" width="77" height="20" forecolor="#FFFFFF" uuid="437e34db-4a3a-4228-af23-40791a19e040"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Pernoctados]]></text>
-			</staticText>
-			<textField>
-				<reportElement x="725" y="73" width="77" height="20" uuid="c4f4f3fb-9237-4bec-82bf-0fcfa439dd91"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{PERNOCTADOSINICIO}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="142" y="49" width="45" height="20" forecolor="#FFFFFF" uuid="e11910cc-39f9-40a3-80a6-a82e6f1fe4db"/>
@@ -298,12 +269,55 @@ WHERE
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{NOMBRECOMERCIAL}]]></textFieldExpression>
 			</textField>
+			<rectangle>
+				<reportElement x="374" y="49" width="48" height="22" backcolor="#999999" uuid="f4c088fc-aabe-485b-8e6b-52c269d33b17"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="374" y="71" width="48" height="22" backcolor="#999999" uuid="37605d06-b95a-4ab3-be35-3d46a375c8a2"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="422" y="71" width="91" height="22" uuid="efb4e80a-3079-4130-a38d-729cc601c99d"/>
+			</rectangle>
+			<rectangle>
+				<reportElement x="422" y="49" width="91" height="22" uuid="538296b4-cba4-468e-bfc7-932cda009b4d"/>
+			</rectangle>
+			<textField pattern="EEEEE">
+				<reportElement x="422" y="49" width="91" height="20" uuid="e12d1463-1b0e-4092-b4ee-e37ef2e9ab1e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd-MMM-yy">
+				<reportElement x="422" y="71" width="91" height="20" uuid="460b458a-831c-42fc-a6f0-5cff3cc6a62e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="381" y="51" width="36" height="20" forecolor="#FFFFFF" uuid="0b0bd38c-1d1b-4712-bb91-cd3791519c14"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Día]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="381" y="72" width="36" height="20" forecolor="#FFFFFF" uuid="8c4432a5-6b6d-4395-a513-651f3ef52857"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Fecha]]></text>
+			</staticText>
 		</band>
 	</title>
 	<summary>
 		<band height="425" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="142" height="22" backcolor="#999999" uuid="90e1fba2-74b0-4f92-af9e-d5b8251d37dd"/>
+			</rectangle>
 			<componentElement>
-				<reportElement key="table" style="table" x="0" y="0" width="349" height="370" uuid="0a8ea950-6934-4499-ae21-372b2728223f"/>
+				<reportElement key="table" style="table" x="0" y="29" width="349" height="370" uuid="0a8ea950-6934-4499-ae21-372b2728223f"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
 					<datasetRun subDataset="ocupacion" uuid="ce272c5e-7f38-477e-9eaf-4bb43644c8cd">
 						<datasetParameter name="ocupacion_id_operacion">
@@ -328,24 +342,24 @@ WHERE
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:detailCell style="table_TD" height="17" rowSpan="1">
 							<textField pattern="HH.mm">
-								<reportElement x="43" y="2" width="30" height="20" uuid="ef037ccd-8944-4994-a7dc-00770349a79e"/>
+								<reportElement x="43" y="2" width="30" height="15" uuid="ef037ccd-8944-4994-a7dc-00770349a79e"/>
 								<textElement verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{HORAFIN}]]></textFieldExpression>
 							</textField>
 							<textField pattern="HH.mm">
-								<reportElement x="2" y="2" width="30" height="20" uuid="16be536e-2d28-4d28-8776-e8f32aabd6b3"/>
+								<reportElement x="2" y="2" width="30" height="15" uuid="16be536e-2d28-4d28-8776-e8f32aabd6b3"/>
 								<textElement verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{HORAINICIO}]]></textFieldExpression>
 							</textField>
 							<staticText>
-								<reportElement x="34" y="2" width="8" height="20" uuid="802f414e-6a9c-463f-a8d1-6da6d47054b5"/>
+								<reportElement x="34" y="2" width="8" height="15" uuid="802f414e-6a9c-463f-a8d1-6da6d47054b5"/>
 								<textElement verticalAlignment="Middle"/>
 								<text><![CDATA[a]]></text>
 							</staticText>
 							<staticText>
-								<reportElement x="74" y="2" width="21" height="20" uuid="efdeecd4-a128-4be7-9943-a7ac54f9a1ae"/>
+								<reportElement x="74" y="2" width="21" height="15" uuid="efdeecd4-a128-4be7-9943-a7ac54f9a1ae"/>
 								<textElement verticalAlignment="Middle"/>
 								<text><![CDATA[Hrs.]]></text>
 							</staticText>
@@ -361,14 +375,14 @@ WHERE
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="64" height="20" forecolor="#FFFFFF" uuid="55caa023-c7ce-4925-9681-fb13873ba88f"/>
+								<reportElement x="0" y="0" width="64" height="30" forecolor="#FFFFFF" uuid="55caa023-c7ce-4925-9681-fb13873ba88f"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$V{total_ingreso}]]></textFieldExpression>
 							</textField>
 						</jr:columnFooter>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:detailCell style="table_TD" height="17" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="2" width="64" height="20" uuid="73fa2dee-d6e8-404f-9ad9-9097a31ac3f3"/>
+								<reportElement x="0" y="2" width="64" height="15" uuid="73fa2dee-d6e8-404f-9ad9-9097a31ac3f3"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{INGRESOS}]]></textFieldExpression>
 							</textField>
@@ -384,14 +398,14 @@ WHERE
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="64" height="20" forecolor="#FFFFFF" uuid="a6117814-1d77-4b43-bfd1-dd3dfc15cd3b"/>
+								<reportElement x="0" y="0" width="64" height="30" forecolor="#FFFFFF" uuid="a6117814-1d77-4b43-bfd1-dd3dfc15cd3b"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$V{total_salida}]]></textFieldExpression>
 							</textField>
 						</jr:columnFooter>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:detailCell style="table_TD" height="17" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="2" width="64" height="20" uuid="b9d65869-4d5a-4e83-b841-7db34f3df458"/>
+								<reportElement x="0" y="2" width="64" height="15" uuid="b9d65869-4d5a-4e83-b841-7db34f3df458"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{SALIDAS}]]></textFieldExpression>
 							</textField>
@@ -400,7 +414,7 @@ WHERE
 					<jr:column width="39" uuid="ee37ccd4-9f9b-498c-a4f4-c0b0dd8c678c">
 						<jr:columnHeader height="19" rowSpan="1"/>
 						<jr:columnFooter height="30" rowSpan="1"/>
-						<jr:detailCell height="23" rowSpan="1"/>
+						<jr:detailCell height="17" rowSpan="1"/>
 					</jr:column>
 					<jr:column width="55" uuid="5ccef93e-3771-4e0a-b629-b33204ebf753">
 						<jr:columnHeader style="table_CH" height="19" rowSpan="1">
@@ -410,10 +424,16 @@ WHERE
 								<text><![CDATA[Ocupación]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1">
+							<textField evaluationTime="Report">
+								<reportElement x="0" y="0" width="55" height="30" forecolor="#FFFFFF" uuid="15a792bf-bac3-4f8f-84ef-4c39d2a7b77e"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{pornoctado}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="17" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="3" width="55" height="20" uuid="76bd8fd5-83cc-43ba-b3c9-ef0a5933f2b2"/>
+								<reportElement x="0" y="2" width="55" height="15" uuid="76bd8fd5-83cc-43ba-b3c9-ef0a5933f2b2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$V{ocupacion}]]></textFieldExpression>
 							</textField>
@@ -429,10 +449,16 @@ WHERE
 								<text><![CDATA[%]]></text>
 							</staticText>
 						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table_TD" height="23" rowSpan="1">
+						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1">
+							<textField evaluationTime="Report" pattern="#,##0.00 %">
+								<reportElement x="0" y="0" width="60" height="30" uuid="57de67fd-206a-48ac-83c0-49f5c424b18b"/>
+								<textElement textAlignment="Center" verticalAlignment="Middle"/>
+								<textFieldExpression><![CDATA[$V{porc_final}]]></textFieldExpression>
+							</textField>
+						</jr:columnFooter>
+						<jr:detailCell style="table_TD" height="17" rowSpan="1">
 							<textField pattern="#,##0.00 %">
-								<reportElement x="0" y="3" width="60" height="20" uuid="6bc4204b-cff4-4be4-b17e-37559c1ba591"/>
+								<reportElement x="0" y="2" width="60" height="15" uuid="6bc4204b-cff4-4be4-b17e-37559c1ba591"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$V{porcentaje}]]></textFieldExpression>
 							</textField>
@@ -442,7 +468,7 @@ WHERE
 			</componentElement>
 			<lineChart>
 				<chart isShowLegend="false">
-					<reportElement x="410" y="0" width="392" height="200" uuid="78e8246f-c310-40ff-8608-3bec7868c47a"/>
+					<reportElement x="410" y="0" width="392" height="190" uuid="78e8246f-c310-40ff-8608-3bec7868c47a"/>
 					<box>
 						<pen lineWidth="1.0" lineStyle="Solid"/>
 						<topPen lineWidth="1.0" lineStyle="Solid"/>
@@ -451,7 +477,7 @@ WHERE
 						<rightPen lineWidth="1.0" lineStyle="Solid"/>
 					</box>
 					<chartTitle position="Top">
-						<titleExpression><![CDATA["Ingreso Vehicular"]]></titleExpression>
+						<titleExpression><![CDATA["Ingreso Vehicular por Hora"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
 					<chartLegend position="Bottom"/>
@@ -492,7 +518,7 @@ WHERE
 			</lineChart>
 			<lineChart>
 				<chart isShowLegend="false">
-					<reportElement x="410" y="225" width="392" height="200" uuid="290f19b2-a54c-4fbb-aa7a-608cd53f084d"/>
+					<reportElement x="410" y="202" width="392" height="190" uuid="290f19b2-a54c-4fbb-aa7a-608cd53f084d"/>
 					<box>
 						<pen lineWidth="1.0"/>
 						<topPen lineWidth="1.0"/>
@@ -501,7 +527,7 @@ WHERE
 						<rightPen lineWidth="1.0"/>
 					</box>
 					<chartTitle position="Top">
-						<titleExpression><![CDATA["Ocupación"]]></titleExpression>
+						<titleExpression><![CDATA["Ocupación por Hora"]]></titleExpression>
 					</chartTitle>
 					<chartSubtitle/>
 					<chartLegend/>
@@ -527,7 +553,7 @@ WHERE
 $F{HORAINICIO}.getMinutes().toString() + " - " +
 $F{HORAFIN}.getHours().toString() + ":" +
 $F{HORAFIN}.getMinutes().toString()]]></categoryExpression>
-						<valueExpression><![CDATA[$F{PERSONAS}]]></valueExpression>
+						<valueExpression><![CDATA[$V{ocupacion}/$P{ocupacion_cajones}]]></valueExpression>
 					</categorySeries>
 				</categoryDataset>
 				<linePlot>
@@ -540,6 +566,23 @@ $F{HORAFIN}.getMinutes().toString()]]></categoryExpression>
 					</valueAxisFormat>
 				</linePlot>
 			</lineChart>
+			<rectangle>
+				<reportElement x="142" y="0" width="238" height="22" uuid="4ef2094e-e823-486b-9a4f-1f537eee6e4a"/>
+			</rectangle>
+			<staticText>
+				<reportElement x="0" y="2" width="142" height="20" forecolor="#FFFFFF" uuid="437e34db-4a3a-4228-af23-40791a19e040"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<text><![CDATA[Pernoctados día anterior]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="146" y="1" width="228" height="20" uuid="c4f4f3fb-9237-4bec-82bf-0fcfa439dd91"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{PERNOCTADOSINICIO}]]></textFieldExpression>
+			</textField>
 		</band>
 	</summary>
 </jasperReport>

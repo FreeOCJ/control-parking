@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="cpr_ingresos_salidas" language="groovy" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="cb4bc0f8-3fa6-466a-8d24-f8c378517ab3">
-	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="24"/>
+	<property name="ireport.y" value="32"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -57,12 +57,10 @@
 	</style>
 	<subDataset name="recaudacion" uuid="b6c2d217-f750-4e77-b1e3-62d67282436d">
 		<parameter name="P_ID_UNIDAD" class="java.lang.Integer" isForPrompting="false"/>
-		<parameter name="P_MES" class="java.lang.Integer" isForPrompting="false"/>
 		<parameter name="P_ANHO" class="java.lang.Integer" isForPrompting="false"/>
 		<queryString>
 			<![CDATA[SELECT
-    DAYNAME(op.FECOPERACION) AS dia,
-    DAYOFMONTH(op.FECOPERACION) as diademes,
+    MONTH(op.FECOPERACION) AS mes,
     sum(opt.CANTIDADTICKETS),
     sum(opt.MONTOTOTAL)
 FROM
@@ -73,11 +71,9 @@ WHERE
     op.IDUNIDAD = u.IDUNIDAD and
     opt.IDTARIFA = t.IDTARIFA and
     u.IDUNIDAD = $P{P_ID_UNIDAD} and
-    MONTH(op.FECOPERACION) = $P{P_MES} and
     YEAR(op.FECOPERACION) = $P{P_ANHO}]]>
 		</queryString>
-		<field name="dia" class="java.lang.String"/>
-		<field name="diademes" class="java.lang.Long"/>
+		<field name="mes" class="java.lang.Long"/>
 		<field name="sum(opt.CANTIDADTICKETS)" class="java.math.BigDecimal"/>
 		<field name="sum(opt.MONTOTOTAL)" class="java.lang.Double"/>
 		<variable name="V_TOTAL_TICKETS" class="java.lang.Integer">
@@ -89,9 +85,6 @@ WHERE
 			<initialValueExpression><![CDATA[0]]></initialValueExpression>
 		</variable>
 	</subDataset>
-	<parameter name="P_MES" class="java.lang.Integer">
-		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
-	</parameter>
 	<parameter name="P_ID_UNIDAD" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -104,7 +97,6 @@ FROM
    operacion o, unidadoperativa u, cliente c
 WHERE
    o.IDUNIDAD = u.IDUNIDAD and
-   MONTH(o.FECOPERACION) = $P{P_MES} and
    u.IDCLIENTE = c.IDCLIENTE and
    u.idunidad = $P{P_ID_UNIDAD} and
    YEAR(o.FECOPERACION) = $P{P_ANHO}]]>
@@ -157,20 +149,7 @@ WHERE
 				<textElement>
 					<font size="14"/>
 				</textElement>
-				<text><![CDATA[REPORTE DE RECAUDACION MENSUAL]]></text>
-			</staticText>
-			<rectangle>
-				<reportElement x="371" y="71" width="80" height="22" uuid="4ef2094e-e823-486b-9a4f-1f537eee6e4a"/>
-			</rectangle>
-			<rectangle>
-				<reportElement x="371" y="50" width="80" height="22" backcolor="#999999" uuid="90e1fba2-74b0-4f92-af9e-d5b8251d37dd"/>
-			</rectangle>
-			<staticText>
-				<reportElement x="374" y="51" width="77" height="20" forecolor="#FFFFFF" uuid="437e34db-4a3a-4228-af23-40791a19e040"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="10"/>
-				</textElement>
-				<text><![CDATA[Mes]]></text>
+				<text><![CDATA[REPORTE DE RECAUDACION ANUAL]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="142" y="49" width="45" height="20" forecolor="#FFFFFF" uuid="e11910cc-39f9-40a3-80a6-a82e6f1fe4db"/>
@@ -203,25 +182,20 @@ WHERE
 				<textFieldExpression><![CDATA[$F{NOMBRECOMERCIAL}]]></textFieldExpression>
 			</textField>
 			<rectangle>
-				<reportElement x="465" y="51" width="80" height="22" backcolor="#999999" uuid="16e25fbe-70e3-4f49-ab10-0442c4a0a3c7"/>
+				<reportElement x="371" y="49" width="80" height="22" backcolor="#999999" uuid="16e25fbe-70e3-4f49-ab10-0442c4a0a3c7"/>
 			</rectangle>
 			<staticText>
-				<reportElement x="468" y="51" width="77" height="20" forecolor="#FFFFFF" uuid="a87abb2c-cadd-45dc-9cf7-2857d3e36a76"/>
+				<reportElement x="374" y="49" width="77" height="20" forecolor="#FFFFFF" uuid="a87abb2c-cadd-45dc-9cf7-2857d3e36a76"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<text><![CDATA[Año]]></text>
 			</staticText>
 			<rectangle>
-				<reportElement x="465" y="72" width="80" height="22" uuid="e0955e9a-1e10-4fae-b473-bbe6ced8d942"/>
+				<reportElement x="371" y="70" width="80" height="22" uuid="e0955e9a-1e10-4fae-b473-bbe6ced8d942"/>
 			</rectangle>
-			<textField pattern="MMMMM">
-				<reportElement x="371" y="74" width="80" height="18" uuid="5950e861-45e0-4496-8ee8-eb08486b237c"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
-			</textField>
 			<textField pattern="yyyy">
-				<reportElement x="468" y="74" width="77" height="20" uuid="ef4b7aee-e39a-4b3a-9200-68f4e82adf4e"/>
+				<reportElement x="374" y="72" width="77" height="20" uuid="ef4b7aee-e39a-4b3a-9200-68f4e82adf4e"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{FECOPERACION}]]></textFieldExpression>
 			</textField>
@@ -232,40 +206,36 @@ WHERE
 			<componentElement>
 				<reportElement key="table 1" style="table 1" x="0" y="0" width="360" height="425" uuid="2edf66ad-33a4-4238-85cd-44461f4afa43"/>
 				<jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
-					<datasetRun subDataset="recaudacion" uuid="777d89f9-3f19-4f39-be07-44b5307f327d">
+					<datasetRun subDataset="recaudacion" uuid="0ac1e317-0ed0-4f7c-b24a-c60822aa54ed">
+						<datasetParameter name="P_ID_UNIDAD">
+							<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="P_ANHO">
+							<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
+						</datasetParameter>
 						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 					</datasetRun>
-					<jr:column width="52" uuid="c89f97ca-9ea0-47c9-9292-0d5ffa7232b7">
-						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
-							<staticText>
-								<reportElement x="0" y="0" width="52" height="30" uuid="e2cc85f5-63d6-42cd-9d33-7af27cf608d6"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Fecha]]></text>
-							</staticText>
-						</jr:columnHeader>
-						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
-							<textField>
-								<reportElement x="0" y="0" width="52" height="20" uuid="c5351fe5-8263-43ee-a21e-3e4f9cb179d7"/>
-								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{diademes}]]></textFieldExpression>
-							</textField>
-						</jr:detailCell>
+					<jr:column width="0" uuid="42dd8cda-6969-4664-859f-a91b9dcb6e19">
+						<jr:tableHeader height="0" rowSpan="1"/>
+						<jr:tableFooter height="0" rowSpan="1"/>
+						<jr:columnHeader height="30" rowSpan="1"/>
+						<jr:columnFooter height="30" rowSpan="1"/>
+						<jr:detailCell height="30" rowSpan="1"/>
 					</jr:column>
-					<jr:column width="90" uuid="3056f9c6-e34a-4bfa-851a-539a2a48b533">
+					<jr:column width="76" uuid="c89f97ca-9ea0-47c9-9292-0d5ffa7232b7">
 						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
 							<staticText>
-								<reportElement x="0" y="0" width="90" height="30" uuid="f027d936-4315-4423-ac1d-9cdc2f4c5481"/>
+								<reportElement x="0" y="0" width="76" height="30" uuid="e2cc85f5-63d6-42cd-9d33-7af27cf608d6"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<text><![CDATA[Día]]></text>
+								<text><![CDATA[Mes]]></text>
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_INV" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="90" height="20" uuid="16c25070-8c7f-440e-8e50-cd7279e1455c"/>
+								<reportElement x="0" y="0" width="76" height="30" uuid="64bd47d6-b7d1-4c9c-ba98-7608eff34548"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
-								<textFieldExpression><![CDATA[$F{dia}]]></textFieldExpression>
+								<textFieldExpression><![CDATA[$F{mes}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
@@ -278,15 +248,15 @@ WHERE
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="90" height="20" uuid="71d7b3a2-404f-4523-9ddc-c2b5f64ec2b2"/>
+								<reportElement x="0" y="0" width="90" height="30" uuid="71d7b3a2-404f-4523-9ddc-c2b5f64ec2b2"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{sum(opt.CANTIDADTICKETS)}]]></textFieldExpression>
 							</textField>
 						</jr:detailCell>
 					</jr:column>
-					<jr:column width="90" uuid="cdffcd56-4581-411f-9438-fd5d53dc54cf">
+					<jr:column width="93" uuid="cdffcd56-4581-411f-9438-fd5d53dc54cf">
 						<jr:columnHeader style="table_CH" height="30" rowSpan="1">
 							<staticText>
 								<reportElement x="0" y="0" width="90" height="30" uuid="ec01d16f-283a-40f7-bf23-82464b5a49ff"/>
@@ -295,9 +265,9 @@ WHERE
 							</staticText>
 						</jr:columnHeader>
 						<jr:columnFooter style="table_CH_TOTAL" height="30" rowSpan="1"/>
-						<jr:detailCell style="table 1_TD" height="20" rowSpan="1">
+						<jr:detailCell style="table 1_TD" height="30" rowSpan="1">
 							<textField>
-								<reportElement x="0" y="0" width="90" height="20" uuid="12511473-e7b0-4a5a-991d-d65c08774329"/>
+								<reportElement x="0" y="0" width="90" height="30" uuid="12511473-e7b0-4a5a-991d-d65c08774329"/>
 								<textElement textAlignment="Center" verticalAlignment="Middle"/>
 								<textFieldExpression><![CDATA[$F{sum(opt.MONTOTOTAL)}]]></textFieldExpression>
 							</textField>
@@ -305,6 +275,43 @@ WHERE
 					</jr:column>
 				</jr:table>
 			</componentElement>
+			<bar3DChart>
+				<chart isShowLegend="false">
+					<reportElement x="371" y="0" width="431" height="218" uuid="1f00fbe2-6b95-432d-8f94-f53e9c880a4c"/>
+					<chartTitle position="Top">
+						<titleExpression><![CDATA["Monto Recaudado por Mes"]]></titleExpression>
+					</chartTitle>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<categoryDataset>
+					<dataset>
+						<datasetRun subDataset="recaudacion" uuid="7f84173c-ce1d-4efb-b062-1c0b9008814a">
+							<datasetParameter name="P_ID_UNIDAD">
+								<datasetParameterExpression><![CDATA[$P{P_ID_UNIDAD}]]></datasetParameterExpression>
+							</datasetParameter>
+							<datasetParameter name="P_ANHO">
+								<datasetParameterExpression><![CDATA[$P{P_ANHO}]]></datasetParameterExpression>
+							</datasetParameter>
+						</datasetRun>
+					</dataset>
+					<categorySeries>
+						<seriesExpression><![CDATA[""]]></seriesExpression>
+						<categoryExpression><![CDATA[$F{mes}]]></categoryExpression>
+						<valueExpression><![CDATA[$F{sum(opt.MONTOTOTAL)}]]></valueExpression>
+					</categorySeries>
+				</categoryDataset>
+				<bar3DPlot>
+					<plot/>
+					<itemLabel/>
+					<categoryAxisFormat>
+						<axisFormat/>
+					</categoryAxisFormat>
+					<valueAxisFormat>
+						<axisFormat/>
+					</valueAxisFormat>
+				</bar3DPlot>
+			</bar3DChart>
 		</band>
 	</summary>
 </jasperReport>

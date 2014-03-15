@@ -40,6 +40,7 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	private Label lblCreador;
 	private Label lblEstado;
 	private Label lblFechaRegistro;
+	private Label lblCapacidad;
 	private TextField txtOferta;
 	private Table tblOperacionesPorHorario;
 	private TextField txtTicketInicial;
@@ -153,7 +154,9 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		FormLayout labels2 = new FormLayout();
 		FormLayout labels3 = new FormLayout();
 		FormLayout labels4 = new FormLayout();
+		FormLayout labels5 = new FormLayout();
 		cabeceraInformacion.addComponent(labels1);
+		cabeceraInformacion.addComponent(labels5);
 		cabeceraInformacion.addComponent(labels2);
 		cabeceraInformacion.addComponent(labels3);
 		cabeceraInformacion.addComponent(labels4);
@@ -161,6 +164,8 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		
 		lblNombreUnidad = new Label();
 		lblNombreUnidad.setCaption("Unidad Operativa");
+		lblCapacidad = new Label();
+		lblCapacidad.setCaption("Capacidad");
 		lblCreador = new Label();
 		lblCreador.setCaption("Registrado Por");
 		lblEstado = new Label("Estado");
@@ -169,6 +174,7 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		lblFechaRegistro.setCaption("Fecha Registro");
 		
 		labels1.addComponent(lblNombreUnidad);
+		labels5.addComponent(lblCapacidad);
 		labels2.addComponent(lblCreador);
 		labels3.addComponent(lblEstado);
 		labels4.addComponent(lblFechaRegistro);
@@ -224,8 +230,10 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		
 		txtPernoctadosAyer = new TextField("Pernoctados Acumulados");
 		txtPernoctadosAyer.setWidth("80px");
+		txtPernoctadosAyer.setDescription("Pernoctados del día anterior con los que se inicia la operación");
 		txtPernoctadosHoy = new TextField("Pernoctados Hoy");
 		txtPernoctadosHoy.setWidth("80px");
+		txtPernoctadosHoy.setDescription("Pernoctados con los que se cierra la operación");
 		txtTotalIngresos = new TextField("Total Ingresos");
 		txtTotalIngresos.setWidth("80px");
 		txtTotalSalidas = new TextField("Total Salidas");
@@ -234,6 +242,7 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 		txtTotalPersonas.setWidth("80px");
 		txtTotalCarrosTarifa = new TextField("Total Carros");
 		txtTotalCarrosTarifa.setWidth("80px");
+		txtTotalCarrosTarifa.setDescription("Total de carros que reportaron ingresos por tarifas");
 	    txtTotalRecaudacion = new TextField("Total Recaudación");
 	    txtTotalRecaudacion.setWidth("80px");
 		txtTotalDia.setEnabled(false);
@@ -449,5 +458,10 @@ public class EditarOperacionViewImpl extends HorizontalLayout implements IEditar
 	@Override
 	public Button getBtnAgregarIncidencia() {
 		return btnNuevaIncidencia;
+	}
+
+	@Override
+	public Label getLblCapacidad() {
+		return lblCapacidad;
 	}
 }

@@ -191,6 +191,7 @@ public class BuscarUsuarioController implements IBuscarUsuarioViewHandler {
 			    return botonesAccion;
 			}
 		} );
+	    tblUsuarios.setColumnWidth("", 130);
 	}
 
 	@Override

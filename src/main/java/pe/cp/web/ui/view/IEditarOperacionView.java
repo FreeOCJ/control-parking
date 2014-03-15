@@ -12,6 +12,7 @@ public interface IEditarOperacionView extends View {
    Label getLblCreador();
    Label getLblEstado();
    Label getFechaRegistro();
+   Label getLblCapacidad();
    TextField getTxtOferta();
    Table getTblOperacionesPorHorario();
    TextField getTxtTicketInicial();

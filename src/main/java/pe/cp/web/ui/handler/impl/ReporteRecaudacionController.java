@@ -110,7 +110,8 @@ public class ReporteRecaudacionController implements IReporteRecaudacionHandler 
 		cargarComboVista();
 	}
 	
-	private void generarReporteDiario(String formato) {
+	@Override
+	public void generarReporteDiario(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
 		if (view.getDfFiltro().getValue() != null){
@@ -129,7 +130,8 @@ public class ReporteRecaudacionController implements IReporteRecaudacionHandler 
 		
 	}
 
-	private void generarReporteSemanal(String formato) {
+	@Override
+	public void generarReporteSemanal(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
 		if (view.getDfFiltro().getValue() != null){
@@ -149,14 +151,15 @@ public class ReporteRecaudacionController implements IReporteRecaudacionHandler 
 		
 	}
 
-	private void generarReporteMensual(String formato) {
+	@Override
+	public void generarReporteMensual(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
 		if (view.getDfFiltro().getValue() != null){
 			cal.setTime(view.getDfFiltro().getValue());
 			
 			params.put(PARAM_ID_UNIDAD, idUnidadOp);
-			params.put(PARAM_MES, cal.get(Calendar.MONTH));
+			params.put(PARAM_MES, cal.get(Calendar.MONTH) + 1);
 			params.put(PARAM_ANHO, cal.get(Calendar.YEAR));
 			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
@@ -168,7 +171,8 @@ public class ReporteRecaudacionController implements IReporteRecaudacionHandler 
 		}		
 	}
 
-	private void generarReporteAnual(String formato) {
+	@Override
+	public void generarReporteAnual(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		Calendar cal = Calendar.getInstance();
 		if (view.getDfFiltro().getValue() != null){

@@ -209,6 +209,7 @@ public class EditarClienteViewImpl extends HorizontalLayout implements IEditarCl
 			}
 		} ); 
 	    
+	    tblUnidadesOperativas.setColumnWidth("", 130);
 	    tblUnidadesOperativas.setVisibleColumns((Object[]) EditarClienteController.obtenerColumnasVisiblesUnidadOp());
              			    
 		areaPrincipal.addComponent(barraTituloUnidadesOp);

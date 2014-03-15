@@ -166,6 +166,7 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
 			    return botonesAccion;
 			}
 		} ); 
+        tblOperaciones.setColumnWidth("", 130);
         tblOperaciones.setVisibleColumns((Object []) BuscarOperacionesController.obtenerColumnasVisibles());
         areaPrincipal.addComponent(tblOperaciones); 
         

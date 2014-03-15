@@ -1,7 +1,6 @@
 package pe.cp.web.ui.view;
 
 import com.vaadin.navigator.View;
-import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
@@ -14,5 +13,4 @@ public interface IReportesIngresosSalidasView extends View {
     DateField getDfFiltro();
     Button getBtnExportarPdf();
     Button getBtnExportarExcel();
-    BrowserFrame getBrowserFrame();
 }
