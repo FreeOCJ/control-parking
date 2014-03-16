@@ -1,5 +1,6 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -14,12 +15,17 @@ import org.springframework.stereotype.Component;
 import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
 import pe.cp.core.service.UnidadOperativaService;
+import pe.cp.core.service.UsuarioService;
 import pe.cp.core.service.domain.ClienteView;
 import pe.cp.core.service.domain.UnidadOperativaView;
 import pe.cp.core.service.messages.BuscarClienteRequest;
 import pe.cp.core.service.messages.BuscarClienteResponse;
 import pe.cp.core.service.messages.ObtenerUnidadOpPorClienteRequest;
+import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarRequest;
+import pe.cp.core.service.messages.ObtenerUnidadesOpProcesarResponse;
 import pe.cp.core.service.messages.ObtenerUnidadpOpPorClienteResponse;
+import pe.cp.core.service.messages.ObtenerUsuarioRequest;
+import pe.cp.core.service.messages.ObtenerUsuarioResponse;
 import pe.cp.web.ui.NavegacionUtil;
 import pe.cp.web.ui.handler.IReportesViewHandler;
 import pe.cp.web.ui.view.IReportesView;
@@ -53,12 +59,16 @@ public class ReportesController implements IReportesViewHandler{
 	private ClienteService clienteservice;
 	
 	@Autowired
+	private UsuarioService usuarioservice;
+	
+	@Autowired
 	private UnidadOperativaService unidadopservice;
 	
 	public ReportesController(IReportesView view){
 		ac = new ClassPathXmlApplicationContext("classpath:WEB-INF/spring/context.xml");
 		clienteservice = ac.getBean(ClienteService.class);
 		unidadopservice = ac.getBean(UnidadOperativaService.class);
+		usuarioservice = ac.getBean(UsuarioService.class);
 		this.view = view;
 	}
 
@@ -81,7 +91,18 @@ public class ReportesController implements IReportesViewHandler{
 				nuevoItemCombo.getItemProperty("ID").setValue(clienteview.getId());  
 				nuevoItemCombo.getItemProperty("NOMBRE").setValue(clienteview.getNombreComercial());
 			}			
-		}		
+		}
+		Subject currentUser = SecurityUtils.getSubject();		
+		if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
+			int idUsuario = (Integer)currentUser.getSession().getAttribute("id_usuario");
+			ObtenerUsuarioResponse userresponse = usuarioservice.buscar(new ObtenerUsuarioRequest(idUsuario));
+			if (userresponse.isResultadoEjecucion()){
+				int idCliente = userresponse.getUsuarioView().getCliente().getId();
+				view.getCbCliente().setValue(idCliente);
+				cargarUnidadesOperativaPorCliente();
+			}
+			view.getCbCliente().setEnabled(false);
+		}
 	}
 	
 	private Container prepararContainerComboCliente() {
@@ -105,16 +126,33 @@ public class ReportesController implements IReportesViewHandler{
 		Object clienteSelectId = view.getCbCliente().getValue();
 		Object valor = view.getCbCliente().getItem(clienteSelectId).getItemProperty("ID").getValue();
 		int idCliente = Integer.valueOf(valor.toString());
-		ObtenerUnidadOpPorClienteRequest request = new ObtenerUnidadOpPorClienteRequest(idCliente);
-		ObtenerUnidadpOpPorClienteResponse response = unidadopservice.obtenerUnidadesPorCliente(request);
-		
-		if (response.isResultadoEjecucion()){
-			for(UnidadOperativaView unidadOpView : response.getUnidadesOpView()){
-				Item nuevoItemCombo = cbUnidadOpContainers.getItem(cbUnidadOpContainers.addItem());
-				nuevoItemCombo.getItemProperty("ID").setValue(unidadOpView.getId());  
-				nuevoItemCombo.getItemProperty("NOMBRE").setValue(unidadOpView.getNombre());
+		Subject currentUser = SecurityUtils.getSubject();
+		if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
+			String login = (String)currentUser.getSession().getAttribute("login");				
+			ObtenerUnidadesOpProcesarRequest request = new ObtenerUnidadesOpProcesarRequest(login, currentUser.hasRole(Rol.APROBADOR), 
+														currentUser.hasRole(Rol.OPERADOR));
+			ObtenerUnidadesOpProcesarResponse response = unidadopservice.obtenerParaProcesar(request);
+			
+			if (response.isResultadoEjecucion()) {
+				for (UnidadOperativaView unidadOpView : response.getUnidadesOpViews()) {
+					Item nuevoItemCombo = cbUnidadOpContainers.getItem(cbUnidadOpContainers.addItem());
+					nuevoItemCombo.getItemProperty("ID").setValue(unidadOpView.getId());  
+					nuevoItemCombo.getItemProperty("NOMBRE").setValue(unidadOpView.getNombre());
+				}
 			}
-		}
+		}else{
+			ObtenerUnidadOpPorClienteRequest request = new ObtenerUnidadOpPorClienteRequest(idCliente);
+			ObtenerUnidadpOpPorClienteResponse response = unidadopservice.obtenerUnidadesPorCliente(request);
+					
+			if (response.isResultadoEjecucion()){
+				List<UnidadOperativaView> listaUnidades = response.getUnidadesOpView();			
+				for(UnidadOperativaView unidadOpView : listaUnidades){
+					Item nuevoItemCombo = cbUnidadOpContainers.getItem(cbUnidadOpContainers.addItem());
+					nuevoItemCombo.getItemProperty("ID").setValue(unidadOpView.getId());  
+					nuevoItemCombo.getItemProperty("NOMBRE").setValue(unidadOpView.getNombre());
+				}
+			}
+		}	
 	}
 
 	@SuppressWarnings("unchecked")
