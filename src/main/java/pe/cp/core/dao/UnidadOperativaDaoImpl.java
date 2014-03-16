@@ -61,7 +61,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 
 	@Override
 	public void actualizar(UnidadOperativa unidadOp) {
-		jdbcTemplate.update("UPDATE UNIDADOPERATIVA SET NROCAJONES = ?,DIRECCION = ?, " +
+		jdbcTemplate.update("UPDATE unidadoperativa SET NROCAJONES = ?,DIRECCION = ?, " +
 				"DEPARTAMENTO= ?,PROVINCIA= ?, DISTRITO = ?,  HORAINICIO = ?, " +
 				"HORAFIN = ?, NOMBRE = ? WHERE IDUNIDAD = ?",unidadOp.getNumeroCajones(),
 				unidadOp.getDireccion(),unidadOp.getDepartamento(),unidadOp.getProvincia(),
@@ -71,7 +71,7 @@ public class UnidadOperativaDaoImpl implements UnidadOperativaDao {
 
 	@Override
 	public void eliminar(int idUnidadOp) {
-		jdbcTemplate.update("UPDATE UNIDADOPERATIVA SET ELIMINADO = 'T' WHERE IDUNIDAD = ?",idUnidadOp);
+		jdbcTemplate.update("UPDATE unidadoperativa SET ELIMINADO = 'T' WHERE IDUNIDAD = ?",idUnidadOp);
 	}
 
 	@Override

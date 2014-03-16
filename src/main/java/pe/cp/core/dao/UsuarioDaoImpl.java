@@ -54,14 +54,14 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	@Override
 	public void actualizar(Usuario usuario) {
 		if (usuario.getCliente() != null && usuario.getCliente().getId() > 0)
-			jdbcTemplate.update("UPDATE USUARIO SET EMAIL = ?,NOMBRES = ?," +
+			jdbcTemplate.update("UPDATE usuario SET EMAIL = ?,NOMBRES = ?," +
 								"APELLIDOS = ?,CARGO = ?,LOGIN = ?,PASSWORD = ?," +
 								"IDCLIENTE = ? WHERE IDUSUARIO = ?",
 					            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
 					            usuario.getCargo(),usuario.getLogin(),usuario.getPassword(),
 					            usuario.getCliente().getId(),usuario.getId());
 		else
-			jdbcTemplate.update("UPDATE USUARIO SET EMAIL = ?,NOMBRES = ?," +
+			jdbcTemplate.update("UPDATE usuario SET EMAIL = ?,NOMBRES = ?," +
 					"APELLIDOS = ?,CARGO = ?,LOGIN = ?,PASSWORD = ? " +
 					"WHERE IDUSUARIO = ?",
 		            usuario.getEmail(),usuario.getNombres(),usuario.getApellidos(),
@@ -87,7 +87,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscar(String nombre) {
-		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre and ELIMINADO='F'";		
+		final String sql = "SELECT * FROM usuario WHERE NOMBRES LIKE :nombre OR APELLIDOS LIKE :nombre and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		SqlParameterSource args = new MapSqlParameterSource("nombre","%" + nombre + "%");		
 		usuarios = namedParameterJdbcTemplate.query(sql, args, new RowMapper<Usuario>(){
@@ -102,13 +102,13 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public void eliminar(int id) {
-		final String sql = "UPDATE USUARIO SET ELIMINADO = 'T' WHERE IDUSUARIO = ?";		
+		final String sql = "UPDATE usuario SET ELIMINADO = 'T' WHERE IDUSUARIO = ?";		
 		jdbcTemplate.update(sql,id);		
 	}
 
 	@Override
 	public Usuario buscar(int idUsuario) {
-		final String sql = "SELECT * FROM USUARIO WHERE IDUSUARIO = ? AND ELIMINADO = 'F'";
+		final String sql = "SELECT * FROM usuario WHERE IDUSUARIO = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {idUsuario};
 		usuario = jdbcTemplate.queryForObject(sql, args, new RowMapper<Usuario>(){
@@ -123,7 +123,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public Usuario buscarPorLogin(String login) {
-		final String sql = "SELECT * FROM USUARIO WHERE LOGIN = ? AND ELIMINADO = 'F'";
+		final String sql = "SELECT * FROM usuario WHERE LOGIN = ? AND ELIMINADO = 'F'";
 		Usuario usuario = null;
 		Object[] args = {login};
 		try{
@@ -154,7 +154,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscarOr(UsuarioFilter filtro) {
-		final String sql = "SELECT * FROM USUARIO WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos and ELIMINADO='F'";		
+		final String sql = "SELECT * FROM usuario WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("nombres", "%" +  filtro.getNombres() + "%");
@@ -212,7 +212,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 	@Override
 	public List<Usuario> obtenerRevisores(int idUnidadOperativa) {
 		final String sql = "select u.IDUSUARIO, u.EMAIL, u.NOMBRES, u.APELLIDOS, u.CARGO, u.LOGIN, u.PASSWORD, " +
-								  "u.IDCLIENTE, u.ELIMINADO from cp_core_db.usuario u, cp_core_db.uoxuser uo " + 
+								  "u.IDCLIENTE, u.ELIMINADO from usuario u, uoxuser uo " + 
 						    "where uo.IDUSUARIO = u.IDUSUARIO and APROBAR = 'T' and ELIMINADO = 'F' and uo.IDUNIDAD = :idUnidad";		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
@@ -275,7 +275,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 			sql = "select * from usuario where idcliente is null";	
 		else{
 			StringBuilder sb = new StringBuilder();
-			sb.append("select * from cp_core_db.usuario u, cp_core_db.rol r, cp_core_db.rolxusuario ru ");
+			sb.append("select * from usuario u, rol r, rolxusuario ru ");
 			sb.append("where u.idcliente is null and r.IDROL = ru.IDROL and u.IDUSUARIO = ru.IDUSUARIO and r.DESROL = :rol and u.ELIMINADO='F'");
 			sql = sb.toString();
 			args.put("rol", rol);
