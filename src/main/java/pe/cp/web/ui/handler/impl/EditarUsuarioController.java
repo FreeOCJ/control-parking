@@ -92,7 +92,8 @@ public class EditarUsuarioController implements IEditarUsuarioViewHandler {
 		BeanItemContainer<RolView> rolBeans  = new BeanItemContainer<RolView>(RolView.class);
 		
 		for (RolView rolView : rolesView) {
-			rolBeans.addBean(rolView);
+			if (!rolView.getNombre().toUpperCase().equals("CLIENTE"))
+				rolBeans.addBean(rolView);
 		}
 		
 		view.getRoles().setContainerDataSource(rolBeans);		

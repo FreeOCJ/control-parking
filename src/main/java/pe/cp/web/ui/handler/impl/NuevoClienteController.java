@@ -79,7 +79,7 @@ public class NuevoClienteController implements INuevoClienteHandler {
 			return false;
 		}
 		
-		//4. No debe permitir ingresar el mismo RUC para dos empresas.
+		/*//4. No debe permitir ingresar el mismo RUC para dos empresas.
 		
 		
 		if (clienteService.existeCliente(view.getRuc().getValue())) {
@@ -87,7 +87,7 @@ public class NuevoClienteController implements INuevoClienteHandler {
 			Notification.show("El RUC " + view.getRuc().getValue() + " ya fue ingresado");
 			return false;
 			
-		}
+		}*/
 		
 		return true;
 				
@@ -97,7 +97,6 @@ public class NuevoClienteController implements INuevoClienteHandler {
 	public void guardar() {
 		Subject currentUser = SecurityUtils.getSubject();
 		int idUsuario = (Integer) currentUser.getSession().getAttribute("id_usuario");
-		Notification notification = null;
 		
 		System.out.println("1");
 		if(!validarDatosEntrada()) return;

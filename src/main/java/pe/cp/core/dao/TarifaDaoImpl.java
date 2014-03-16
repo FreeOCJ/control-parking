@@ -76,8 +76,8 @@ public class TarifaDaoImpl implements TarifaDao {
 	@Override
 	public List<Tarifa> obtenerTarifas(int idUnidadOperativa, String categoria) {
 		StringBuilder sbSql = new StringBuilder();
-		sbSql.append("select * from tarifa where IDUNIDADOP = :idUnidadOp");
-		if (categoria != null && !categoria.isEmpty()) sbSql.append(" and CATEGORIA = :categoria AND ELIMINADO = 'F'");
+		sbSql.append("select * from tarifa where IDUNIDADOP = :idUnidadOp AND ELIMINADO = 'F' ");
+		if (categoria != null && !categoria.isEmpty()) sbSql.append(" and CATEGORIA = :categoria ");
 		
 		Map<String, Object> parameters = new HashMap<String, Object>(2);
 		parameters.put("idUnidadOp", idUnidadOperativa);

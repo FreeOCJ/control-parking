@@ -121,7 +121,7 @@ public class NuevaOperacionController implements INuevaOperacionHandler {
 
 	@Override
 	public void cancelar() {
-		//TODO
+		NavegacionUtil.irOperaciones();
 	}
 
 }

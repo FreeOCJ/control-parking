@@ -38,6 +38,7 @@ public class ClienteServiceImpl implements ClienteService {
 	
 	private final String ERR_ELIMINAR_CLIENTE = "Error al eliminar al cliente";
 	private final String ERR_VALIDAR_CLIENTE = "Error al validar al cliente";
+	private final String ERR_RUC_DUPLICADO = "El RUC ya está registrado en otro cliente";
 	private final String EXITO_ELIMINAR_CLIENTE = "Se eliminó al cliente de manera satisfactoria";
 	private final String EXITO_INSERTAR_CLIENTE = "Se creó un registro del cliente en el sistema.";
 	private final String ERR_MODIFICAR_CLIENTE = "Error al modificar al cliente";
@@ -62,7 +63,7 @@ public class ClienteServiceImpl implements ClienteService {
 				response.setResultadoEjecucion(true);
 			}						
 		}else{
-			response.setMensaje(ERR_VALIDAR_CLIENTE);
+			response.setMensaje(ERR_RUC_DUPLICADO);
 			response.setResultadoEjecucion(false);
 		}
 				
@@ -131,8 +132,7 @@ public class ClienteServiceImpl implements ClienteService {
 
 	@Override
 	public boolean validarNuevoCliente(Cliente cliente) {
-		// TODO Auto-generated method stub
-		return true;
+		return !existeCliente(cliente.getRuc());
 	}
 
 	@Override
@@ -179,11 +179,7 @@ public class ClienteServiceImpl implements ClienteService {
 		return response;
 	}
 
-	public boolean existeCliente(String ruc) {
-		
-		System.out.println("Existe RUC");
-		System.out.println(cdao.existeCliente(ruc));
-		
+	public boolean existeCliente(String ruc) {		
 		if (cdao.existeCliente(ruc) > 0)
 			return true;
 		else

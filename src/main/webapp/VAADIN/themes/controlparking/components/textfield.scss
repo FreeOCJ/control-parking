@@ -1,5 +1,13 @@
 @mixin controlparking-textfield {
 	
+	.v-datefield-button {
+	   background-image:url('../img/calendar.png');
+	   background-repeat:no-repeat;
+	   width:25px;
+	   height:25px;
+	   padding-right:5px;
+	}
+	
 	.v-textfield,
 	.v-filterselect {
 		@include border-radius(3px);

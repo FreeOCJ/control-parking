@@ -6,7 +6,7 @@ public class NavegacionUtil {
    
 	//Usuarios
 	public static void irBuscarUsuarios() {
-		
+		UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.BUSCARUSUARIOS);
 	}
 	
 	public static void irAgregarUsuarioSistema() { 

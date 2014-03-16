@@ -78,7 +78,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	@Override
 	public int existeCliente(String ruc) {
 		
-		final String sql = "SELECT COUNT(1) FROM cliente WHERE IDCLIENTE= ? and ELIMINADO='F'";
+		final String sql = "SELECT COUNT(1) FROM cliente WHERE RUC= ? and ELIMINADO='F'";
 		Object[] args = {ruc};
 		return jdbcTemplate.queryForInt(sql, args);
 		
