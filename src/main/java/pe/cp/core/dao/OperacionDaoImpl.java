@@ -77,7 +77,7 @@ public class OperacionDaoImpl implements OperacionDao {
 
 	@Override
 	public void modificar(Operacion op) {
-		jdbcTemplate.update("UPDATE OPERACION SET FECOPERACION = ?,DESOFERTA = ?," +
+		jdbcTemplate.update("UPDATE operacion SET FECOPERACION = ?,DESOFERTA = ?," +
 				"VEHICULOSENTRADA = ?,VEHICULOSSALIDA = ?,TICKETINICIO = ?, " +
 				"TICKETFIN = ?,CONDUCTORESRAUDOS = ?,CANTIDADPERSONAS = ?," +
 				"PERNOCTADOSFIN = ?, ACTUALIZADOPOR = ?," +
@@ -94,7 +94,7 @@ public class OperacionDaoImpl implements OperacionDao {
 
 	@Override
 	public void eliminar(int idOperacion) {
-		jdbcTemplate.update("UPDATE OPERACION SET ELIMINADO = 'T' WHERE IDOPERACION = ?", idOperacion);
+		jdbcTemplate.update("UPDATE operacion SET ELIMINADO = 'T' WHERE IDOPERACION = ?", idOperacion);
 
 	}
 	
@@ -159,7 +159,7 @@ public class OperacionDaoImpl implements OperacionDao {
 	}
 	@Override
 	public void actualizarOperacionDetalle(OperacionDetalle opDetalle) {
-		jdbcTemplate.update("UPDATE OPDETALLE SET PERSONAS = ?, INGRESOS = ?, SALIDAS = ? WHERE IDDETALLE = ?", 
+		jdbcTemplate.update("UPDATE opdetalle SET PERSONAS = ?, INGRESOS = ?, SALIDAS = ? WHERE IDDETALLE = ?", 
 				opDetalle.getCantidadPersonas(), opDetalle.getCantidadIngresos(), opDetalle.getCantidadSalidas(),
 				opDetalle.getIdOpDetalle());
 	}
@@ -205,7 +205,7 @@ public class OperacionDaoImpl implements OperacionDao {
 	
 	@Override
 	public void actualizarOperacionPorTarifa(OperacionPorTarifa operacionPorTarifa) {
-		jdbcTemplate.update("UPDATE OPTARIFA SET CANTIDADTICKETS = ?, MONTOTOTAL = ? WHERE IDOPTARIFA = ?", 
+		jdbcTemplate.update("UPDATE optarifa SET CANTIDADTICKETS = ?, MONTOTOTAL = ? WHERE IDOPTARIFA = ?", 
 				operacionPorTarifa.getCantidadTickets(), operacionPorTarifa.getMonto(), operacionPorTarifa.getIdOperacionPorTarifa());
 	}
 	@Override

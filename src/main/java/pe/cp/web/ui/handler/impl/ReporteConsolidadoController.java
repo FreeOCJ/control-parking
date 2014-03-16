@@ -62,8 +62,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	private List<String>  files;
 	private Notification notification;
 	
-	private final String PDF = "pdf";
-	private final String XLS = "xls";
+	private final String PDF = "PDF";
 	private final String PARAM_ID_UNIDAD = "P_ID_UNIDAD";
 	private final String PARAM_MES = "P_MES";
 	private final String PARAM_ANHO = "P_ANHO";
@@ -101,7 +100,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 			@Override
 			public void buttonClick(ClickEvent event) {
 				files = new ArrayList<String>();
-				if (view.getChbIncidencias().getValue()){
+				if (view.getChbIncidencias().getValue()){					
 					generarReporteIncidencias(view.getCbFormato().getValue().toString());
 					files.add(rutaArchivoIncidencias);
 				}
@@ -275,8 +274,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 						      + currentUser.getSession().getAttribute("id_usuario").toString()						      
 						      + "-" + fecha;
 			}
-		}
-		
+		}		
 		return rutaArchivo;
 	}
 }

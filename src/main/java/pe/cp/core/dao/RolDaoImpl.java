@@ -54,7 +54,7 @@ public class RolDaoImpl implements RolDao {
 
 	@Override
 	public void eliminar(int idRol) {
-		jdbcTemplate.update("UPDATE ROL SET ELIMINADO='T' WHERE IDROL = ?",idRol);
+		jdbcTemplate.update("UPDATE rol SET ELIMINADO='T' WHERE IDROL = ?",idRol);
 	}
 
 	@Override
