@@ -45,6 +45,7 @@ public class ReportesViewImpl extends HorizontalLayout implements IReportesView 
 		handler = new ReportesController(this);
 		init();
 		handler.cargar();
+		handler.validarUsuario();
 	}
 	
 		

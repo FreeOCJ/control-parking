@@ -8,4 +8,5 @@ public interface IReportesViewHandler {
 	void irReporteConsolidado();
 	void cargar();
 	void cargarUnidadesOperativaPorCliente();
+	void validarUsuario();
 }

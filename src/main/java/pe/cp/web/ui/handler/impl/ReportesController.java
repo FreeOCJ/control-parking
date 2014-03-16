@@ -1,11 +1,17 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.service.ClienteService;
 import pe.cp.core.service.UnidadOperativaService;
 import pe.cp.core.service.domain.ClienteView;
@@ -27,6 +33,7 @@ import com.vaadin.server.Page;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification.Type;
 
 @Component
 @Scope("prototype")
@@ -238,5 +245,21 @@ public class ReportesController implements IReportesViewHandler{
 				irReporteVisitas();		
 			}
 		});
+	}
+
+	@Override
+	public void validarUsuario() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (!currentUser.isAuthenticated()) {
+			Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no autenticado, redireccionando a login");
+			NavegacionUtil.irLogin();
+		}else{
+			if (!currentUser.hasRole(Rol.CLIENTE) || !currentUser.hasRole(Rol.ADMINISTRADOR)){
+				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
+				NavegacionUtil.irMain();
+			}
+		}
 	}
 }

@@ -42,6 +42,7 @@ public class AuditoriaViewImpl extends HorizontalLayout implements IAuditoriaVie
 		handler = new AuditoriaController(this);
 		init();
 		handler.cargar();
+		handler.validarUsuario();
 	}
 	
 	@Override

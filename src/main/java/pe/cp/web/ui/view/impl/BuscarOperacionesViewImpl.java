@@ -50,6 +50,7 @@ public class BuscarOperacionesViewImpl extends HorizontalLayout implements IBusc
 		handler = new BuscarOperacionesController(this);
 		init();	
 		handler.cargar();
+		handler.validarUsuario();
 	}
 
 	@Override

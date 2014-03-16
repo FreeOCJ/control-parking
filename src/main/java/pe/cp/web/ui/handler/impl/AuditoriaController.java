@@ -2,7 +2,11 @@ package pe.cp.web.ui.handler.impl;
 
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -14,14 +18,18 @@ import com.vaadin.server.Page;
 import com.vaadin.shared.Position;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.Button.ClickListener;
+import com.vaadin.ui.Notification.Type;
 import com.vaadin.ui.Notification;
+import com.vaadin.ui.UI;
 
+import pe.cp.core.domain.Rol;
 import pe.cp.core.service.AuditoriaService;
 import pe.cp.core.service.domain.AuditoriaView;
 import pe.cp.core.service.domain.ClienteView;
 import pe.cp.core.service.messages.BuscarAuditoriaRequest;
 import pe.cp.core.service.messages.BuscarAuditoriaResponse;
 import pe.cp.core.service.messages.ObtenerTipoEventosResponse;
+import pe.cp.web.ui.ControlParkingUI;
 import pe.cp.web.ui.handler.IAuditHandler;
 import pe.cp.web.ui.view.IAuditoriaView;
 
@@ -120,5 +128,21 @@ public class AuditoriaController implements IAuditHandler {
 				view.getCbTipoEvento().addItem(tipoEvento);
 			}
 		}
+	}
+
+	@Override
+	public void validarUsuario() {
+		Subject currentUser = SecurityUtils.getSubject();
+
+		if (!currentUser.isAuthenticated()) {
+			Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no autenticado, redireccionando a login");
+			UI.getCurrent().getNavigator().navigateTo("");
+		}else{
+			if (!currentUser.hasRole(Rol.ADMINISTRADOR)){
+				Logger.getAnonymousLogger().log(Level.WARNING, "Usuario no tiene el Rol adecuado");
+				currentUser.getSession().setAttribute("mensaje",new Notification("Usuario no tiene el Rol adecuado",Type.ERROR_MESSAGE));
+				UI.getCurrent().getNavigator().navigateTo(ControlParkingUI.MAIN);
+			}
+		}		
 	}
 }
