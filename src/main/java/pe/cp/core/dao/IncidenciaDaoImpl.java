@@ -55,14 +55,14 @@ public class IncidenciaDaoImpl implements IncidenciaDao {
 
 	@Override
 	public void actualizar(Incidencia incidencia) {
-		jdbcTemplate.update("UPDATE INCIDENCIA SET DESINCIDENCIA = ?, IDTIPOINC = ?, FECHAINCIDENCIA = ?, ACCION = ? WHERE IDINCIDENCIA = ?", 
+		jdbcTemplate.update("UPDATE incidencia SET DESINCIDENCIA = ?, IDTIPOINC = ?, FECHAINCIDENCIA = ?, ACCION = ? WHERE IDINCIDENCIA = ?", 
 				incidencia.getDescripcion(), incidencia.getTipoIncidencia().getId(), incidencia.getFechaIncidencia(), 
 				incidencia.getAccionTomada(), incidencia.getId());
 	}
 
 	@Override
 	public void eliminar(int idIncidencia) {
-		jdbcTemplate.update("UPDATE INCIDENCIA SET ELIMINADO = 'T' WHERE IDINCIDENCIA = ?", idIncidencia);
+		jdbcTemplate.update("UPDATE incidencia SET ELIMINADO = 'T' WHERE IDINCIDENCIA = ?", idIncidencia);
 	}
 
 	@Override

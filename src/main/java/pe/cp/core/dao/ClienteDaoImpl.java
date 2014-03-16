@@ -59,7 +59,7 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public List<Cliente> buscar(String nombreComercial) {
-		final String sql = "SELECT * FROM CLIENTE WHERE NOMBRECOMERCIAL LIKE ? and ELIMINADO='F'";
+		final String sql = "SELECT * FROM cliente WHERE NOMBRECOMERCIAL LIKE ? and ELIMINADO='F'";
 		List<Cliente> clientes = null;
 		Object[] args = { "%" + nombreComercial + "%"};
 		clientes = jdbcTemplate.query(sql, args, new ClienteMapper());
@@ -68,7 +68,7 @@ public class ClienteDaoImpl implements ClienteDao {
 
 	@Override
 	public Cliente buscar(int idCliente) {
-		final String sql = "SELECT * FROM CLIENTE WHERE IDCLIENTE = ? AND ELIMINADO='F'";
+		final String sql = "SELECT * FROM cliente WHERE IDCLIENTE = ? AND ELIMINADO='F'";
 		Cliente cliente= null;
 		Object[] args = {idCliente};
 		cliente = jdbcTemplate.queryForObject(sql, args, new ClienteMapper());
@@ -78,7 +78,7 @@ public class ClienteDaoImpl implements ClienteDao {
 	@Override
 	public int existeCliente(String ruc) {
 		
-		final String sql = "SELECT COUNT(1) FROM CLIENTE WHERE IDCLIENTE= ? and ELIMINADO='F'";
+		final String sql = "SELECT COUNT(1) FROM cliente WHERE IDCLIENTE= ? and ELIMINADO='F'";
 		Object[] args = {ruc};
 		return jdbcTemplate.queryForInt(sql, args);
 		

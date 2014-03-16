@@ -94,7 +94,7 @@ public class AuditoriaDaoImpl implements AuditoriaDao {
 	@Override
 	public List<Auditoria> buscar(String tipoEvento, Date fechaInicio, Date fechaFin, String login) {
         StringBuilder sb = new StringBuilder();
-        sb.append("SELECT * FROM AUDITORIA WHERE 1=1 ");
+        sb.append("SELECT * FROM auditoria WHERE 1=1 ");
         if (tipoEvento != null && !tipoEvento.isEmpty()) sb.append(" AND TIPOEVENTO=:tipoEvento");
         if (login != null && !login.isEmpty()) sb.append(" AND USUARIO=:login");
         if (fechaInicio != null) sb.append(" AND FECHA  >= :fechaInicio");
