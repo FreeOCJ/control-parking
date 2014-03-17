@@ -1,5 +1,6 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
@@ -15,9 +16,6 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
-
-
-
 
 
 
@@ -54,10 +52,6 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	int idUnidadOperativa;
 	Date fechaActual;
 
-	private String rutaArchivoIncidencias;
-	private String rutaArchivoVisitas;
-	private String rutaArchivoIngresoSalidas;
-	private String rutaArchivoRecaudacion;
 	private String rutaArchivoConsolidado;
 	private List<String>  files;
 	private Notification notification;
@@ -67,11 +61,15 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	private final String PARAM_MES = "P_MES";
 	private final String PARAM_ANHO = "P_ANHO";
 	private final String PARAM_LOGO= "P_LOGO";
+	private final String PARAM_FECHA_OPERACION = "P_FECHA_OPERACION";
 	private final String PARAM_REPORT_LOCALE = "REPORT_LOCALE";
 	private final String REP_INCIDENCIAS= "/pe/cp/reportes/cpr_incidencias_mensual.jrxml";
+	private final String REP_VISITAS_DIARIOS = "/pe/cp/reportes/cpr_visitas_diario.jrxml";
 	private final String REP_VISITAS_MENSUAL = "/pe/cp/reportes/cpr_visitas_mensual.jrxml";
 	private final String REP_ING_SAL_MENSUAL = "/pe/cp/reportes/cpr_ingresos_salidas_mensual.jrxml";
+	private final String REP_ING_SAL_DIARIOS = "/pe/cp/reportes/cpr_ingresos_salidas_diario.jrxml";
 	private final String REP_RECAUDACION_MENSUAL = "/pe/cp/reportes/cpr_recaudacion_mensual.jrxml";
+	private final String REP_RECAUDACION_DIARIOS = "/pe/cp/reportes/cpr_recaudacion_diario.jrxml";
 	private final String ERR_DATOS_DISPONIBLES = "No existe datos disponibles";
 	private final String LOGO = "/pe/cp/reportes/LogoCP.jpg";
 	
@@ -99,22 +97,36 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		view.getBtnGenerar().addClickListener(new ClickListener(){
 			@Override
 			public void buttonClick(ClickEvent event) {
+				Calendar fromDate = Calendar.getInstance();
+				fromDate.setTime(getFromDate());
+				Date toDate = getToDate();
 				files = new ArrayList<String>();
-				if (view.getChbIncidencias().getValue()){					
+				if (view.getChbIncidencias().getValue()){			
 					generarReporteIncidencias(view.getCbFormato().getValue().toString());
-					files.add(rutaArchivoIncidencias);
 				}
 				if (view.getChbVisitas().getValue()){
-					generarReporteVisistas(view.getCbFormato().getValue().toString());
-					files.add(rutaArchivoVisitas);
+					while (fromDate.before(toDate)) {
+						generarReporteDiarioVisitas(view.getCbFormato().getValue().toString(), 
+													fromDate.getTime());
+						fromDate.add(Calendar.DATE, 1);
+					}
+					generarReporteMensualVisitas(view.getCbFormato().getValue().toString());
 				}
 				if (view.getChbIngresosSalidas().getValue()){
-					generarReporteIngresoSalidas(view.getCbFormato().getValue().toString());
-					files.add(rutaArchivoIngresoSalidas);
+					while (fromDate.before(toDate)) {
+						generarReporteDiarioIngresoSalidas(view.getCbFormato().getValue().toString(), 
+													fromDate.getTime());
+						fromDate.add(Calendar.DATE, 1);
+					}
+					generarReporteMensualIngresoSalidas(view.getCbFormato().getValue().toString());
 				}
 				if (view.getChbRecaudacion().getValue()){
-					generarReporteRecaudacion(view.getCbFormato().getValue().toString());
-					files.add(rutaArchivoRecaudacion);
+					while (fromDate.before(toDate)) {
+						generarReporteDiarioRecaudacion(view.getCbFormato().getValue().toString(), 
+													fromDate.getTime());
+						fromDate.add(Calendar.DATE, 1);
+					}
+					generarReporteMensualRecaudacion(view.getCbFormato().getValue().toString());
 				}
 				generarReporteConsolidado();
 			}		
@@ -123,6 +135,30 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		cargarMeses();
 		cargarFormatos();
 		cargarDatos();
+	}
+	
+	private Date getFromDate(){
+		int anho = Integer.valueOf(view.getCbAnho().getValue().toString());
+		int mes = Integer.valueOf(view.getCbMes().getValue().toString());
+		
+		Calendar cal1 = Calendar.getInstance();
+		cal1.set(anho, mes-1,1);
+		cal1.add(Calendar.DAY_OF_MONTH, -1);		
+		
+		return cal1.getTime();
+	}
+	
+	private Date getToDate(){
+		int anho = Integer.valueOf(view.getCbAnho().getValue().toString());
+		int mes = Integer.valueOf(view.getCbMes().getValue().toString());
+		
+		Calendar cal1 = Calendar.getInstance();
+		
+		cal1.set(anho, mes-1,1);
+		cal1.add(Calendar.MONTH, 1);
+		cal1.add(Calendar.DAY_OF_MONTH, -1);		
+		
+		return cal1.getTime();
 	}
 	
 	private void generarReporteConsolidado(){
@@ -150,13 +186,16 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		view.getCbAnho().removeAllItems();
 		for (int anho = anhoActual; anho >= anhoInicio; anho--) {
 			view.getCbAnho().addItem(String.valueOf(anho));
+			view.getCbAnho().setValue(String.valueOf(anho));
 		}
 	}
 	
 	private void cargarMeses() {
+		Calendar cal = Calendar.getInstance();
 		view.getCbMes().removeAllItems();
 		for (int i = 1; i <= 12; i++) {
 			view.getCbMes().addItem(String.valueOf(i));
+			view.getCbMes().setValue(cal.get(Calendar.MONTH) + 1);
 		}
 	}
 	
@@ -195,10 +234,10 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
-		obtenerReporte(formato, params, REP_INCIDENCIAS,rutaArchivoIncidencias);		
+		obtenerReporte(formato, params, REP_INCIDENCIAS);		
 	}
 	
-	private void generarReporteVisistas(String formato) {
+	private void generarReporteMensualVisitas(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 			
 		params.put(PARAM_ID_UNIDAD, idUnidadOperativa);
@@ -207,10 +246,21 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
-		obtenerReporte(formato, params, REP_VISITAS_MENSUAL,rutaArchivoVisitas);
+		obtenerReporte(formato, params, REP_VISITAS_MENSUAL);
 	}
 	
-	public void generarReporteIngresoSalidas(String formato) {
+	private void generarReporteDiarioVisitas(String formato,Date fecha) {
+		HashMap<String, Object> params= new HashMap<String, Object>();
+			
+		params.put(PARAM_ID_UNIDAD, idUnidadOperativa);
+		params.put(PARAM_FECHA_OPERACION,fecha);
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+		obtenerReporte(formato, params, REP_VISITAS_DIARIOS);
+	}
+	
+	public void generarReporteMensualIngresoSalidas(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 			
 		params.put(PARAM_ID_UNIDAD, idUnidadOperativa);
@@ -219,10 +269,20 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
-		obtenerReporte(formato, params, REP_ING_SAL_MENSUAL,rutaArchivoIngresoSalidas);		
+		obtenerReporte(formato, params, REP_ING_SAL_MENSUAL);		
 	}
 	
-	public void generarReporteRecaudacion(String formato) {
+	public void generarReporteDiarioIngresoSalidas(String formato,Date fecha) {
+		HashMap<String, Object> params= new HashMap<String, Object>();
+		
+		params.put(PARAM_FECHA_OPERACION, fecha);
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+		obtenerReporte(formato, params, REP_ING_SAL_DIARIOS);
+	}
+	
+	public void generarReporteMensualRecaudacion(String formato) {
 		HashMap<String, Object> params= new HashMap<String, Object>();
 		
 		params.put(PARAM_ID_UNIDAD, idUnidadOperativa);
@@ -231,10 +291,21 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
-		obtenerReporte(formato, params, REP_RECAUDACION_MENSUAL,rutaArchivoRecaudacion);				
+		obtenerReporte(formato, params, REP_RECAUDACION_MENSUAL);				
 	}
 	
-	private void obtenerReporte(String formato,HashMap<String, Object> params, String rutaReporte,String rutaDocumento) {
+	public void generarReporteDiarioRecaudacion(String formato,Date fecha) {
+		HashMap<String, Object> params= new HashMap<String, Object>();
+		
+		params.put(PARAM_ID_UNIDAD, idUnidadOperativa);
+		params.put(PARAM_FECHA_OPERACION, fecha);
+		params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
+		params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
+			
+		obtenerReporte(formato, params, REP_RECAUDACION_DIARIOS);		
+	}
+	
+	private void obtenerReporte(String formato,HashMap<String, Object> params, String rutaReporte) {
 		ReportesPrint rprint = new ReportesPrint();
 		ReportesConexion rpconexion = new ReportesConexion();
 		
@@ -243,8 +314,10 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 			rpconexion.conectar();
 			
 			if (formato.equals(PDF)){
-				rutaDocumento = generarRuta();
-				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());
+				String ruta = generarRuta();
+				rprint.reporteaPDF(ruta + ".pdf", iStream, params, rpconexion.getConexion());
+				File f = new File(ruta + ".pdf");
+				if (f.exists()){files.add(ruta);}				
 			}else
 				rprint.reporteaExcel(generarRuta() + ".xls", iStream, params, rpconexion.getConexion());
 		} catch (FileNotFoundException fe) {
@@ -264,7 +337,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	
 	private String generarRuta(){
 		String rutaArchivo = "";
-		SimpleDateFormat sdf = new SimpleDateFormat("ddMMMyyyyhhmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("ddMMMyyyyhhmmssSSS");
 		String tempfolder = System.getProperty("catalina.home").replace("\\", "/") + "/temp/";
 		Subject currentUser = SecurityUtils.getSubject();
 		String fecha = sdf.format(Calendar.getInstance().getTime());
