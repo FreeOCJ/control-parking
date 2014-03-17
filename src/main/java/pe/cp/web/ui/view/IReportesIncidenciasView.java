@@ -1,6 +1,7 @@
 package pe.cp.web.ui.view;
 
 import com.vaadin.navigator.View;
+import com.vaadin.server.FileDownloader;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
@@ -13,4 +14,6 @@ public interface IReportesIncidenciasView extends View {
     Button getBtnExportarPdf();
     Button getBtnExportarExcel();
     BrowserFrame getBrowserFrame();
+    FileDownloader getFileDownloader();
+    Button getBtnDownload();
 }

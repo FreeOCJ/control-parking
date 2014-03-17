@@ -59,9 +59,7 @@ public class ReportesPrint implements Serializable{
 		//Gurdamos una copia en el computador Ejemplo c:/reportes.pdf 
 		jtrtf.setParameter(JRExporterParameter.OUTPUT_FILE_NAME, ruta); 
 		//este metodo exporta a los diferentes formatos en este caso pdf 
-		System.out.println("ruta " + ruta+".pdf");
 		jtrtf.exportReport(); 
-		System.out.println("export report");
 		//Metodo que se encarga de mostrar el reporte en la pantalla 
 		//JasperViewer.viewReport(this.print,false,Locale.getDefault()); 
 		return true;

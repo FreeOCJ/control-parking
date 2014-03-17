@@ -162,7 +162,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	
 	private void cargarFormatos() {
 		view.getCbFormato().addItem("PDF");
-		view.getCbFormato().addItem("XLS");
+		view.getCbFormato().setValue("PDF");
 	}
 	
 	private String obtenerNombreCliente(int idCliente) {

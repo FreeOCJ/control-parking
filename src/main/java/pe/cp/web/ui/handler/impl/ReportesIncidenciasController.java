@@ -4,14 +4,19 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import com.vaadin.server.FileDownloader;
 import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
@@ -67,23 +72,31 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 	
 	@SuppressWarnings("serial")
 	@Override
-	public void cargar() {
-		//generarReporteMensual(PDF);
+	public void cargar() {		
+		
 		view.getBtnExportarPdf().addClickListener(new ClickListener(){
 			@Override
 			public void buttonClick(ClickEvent event) {
-				generarReporteMensual(PDF);
+				generarReporteMensual(PDF);				
 			}		
 	    });
 		
-		view.getBtnExportarExcel().addClickListener(new ClickListener(){
-
-			@Override
-			public void buttonClick(ClickEvent event) {
-				generarReporteMensual(XLS);
-			}			
-		});
-		
+		FileDownloader filedownloader = new FileDownloader(new StreamResource(new StreamSource() {
+		 	@Override
+		 	public InputStream getStream () {
+		 		generarReporteMensual(XLS);
+		 		try {
+					return new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream(rutaArchivo + ".xls")));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+		 	}
+		}, "reporteincidencias.xls"));
+		filedownloader.extend(view.getBtnExportarExcel());		
 	}
 	
 	private void generarReporteMensual(String formato){
@@ -98,7 +111,8 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 			params.put(PARAM_REPORT_LOCALE, new Locale("es", "ES"));
 			params.put(PARAM_LOGO,this.getClass().getResource(LOGO));
 			
-			obtenerReporte(formato, params, REP_INCIDENCIAS);
+			obtenerReporte(formato, params, REP_INCIDENCIAS);			
+			
 		}else{
 			notification = new Notification("Seleccionar fecha");
 			notification.show(Page.getCurrent());
@@ -141,16 +155,19 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 				frameReporte.setHeight("700px");
 				view.getLayoutReporte().removeAllComponents();
 				view.getLayoutReporte().addComponent(frameReporte);
-				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());
-			}else
-				rprint.reporteaExcel(generarRuta() + ".xls", iStream, params, rpconexion.getConexion());
+				rprint.reporteaPDF(generarRuta() + ".pdf", iStream, params, rpconexion.getConexion());					
+			}else{
+				rutaArchivo = generarRuta();
+				rprint.reporteaExcel(rutaArchivo + ".xls", iStream, params, rpconexion.getConexion());
+			}	
+					
 		} catch (FileNotFoundException fe) {
 			notification = new Notification(ERR_DATOS_DISPONIBLES);
 			notification.show(Page.getCurrent());
 			fe.printStackTrace();
 		}  catch (Exception e) {
 			e.printStackTrace();
-		} finally{
+		} finally{ 
 			try {
 				if (!rpconexion.getConexion().isClosed()){
 					rpconexion.desconectar();
@@ -158,5 +175,6 @@ public class ReportesIncidenciasController implements IReportesIncidenciasViewHa
 			} catch (Exception e) {e.printStackTrace();}
 		}
 	}
+
 	
 }

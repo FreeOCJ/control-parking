@@ -1,11 +1,14 @@
 package pe.cp.web.ui.view.impl;
 
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.ViewChangeListener.ViewChangeEvent;
+import com.vaadin.server.FileDownloader;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.BrowserFrame;
 import com.vaadin.ui.Button;
@@ -28,6 +31,8 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	private CssLayout contenido;
 	private Button btnExportToPdf;
 	private Button btnExportToXls;
+	private Button btnDownload;
+	private FileDownloader fileDownloader;
 	private DateField dfFecha;
 	private VerticalLayout reporteLayout;
 	private BrowserFrame browserFrame;
@@ -76,6 +81,7 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	    btnExportToPdf.addStyleName("default");
 	    btnExportToXls = new Button("Excel");
 	    btnExportToXls.addStyleName("default");
+	   
 	    
 	    HorizontalLayout filtersLayout = new HorizontalLayout();
 	    filtersLayout.setSpacing(true);
@@ -124,6 +130,16 @@ public class ReportesIncidenciasViewImpl extends HorizontalLayout implements IRe
 	@Override
 	public BrowserFrame getBrowserFrame() {
 		return browserFrame;
+	}
+
+	@Override
+	public FileDownloader getFileDownloader() {		
+		return fileDownloader;
+	}
+
+	@Override
+	public Button getBtnDownload() {		
+		return btnDownload;
 	}
 
 }

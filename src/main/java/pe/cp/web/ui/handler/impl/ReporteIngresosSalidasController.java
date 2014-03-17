@@ -1,15 +1,20 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
+import com.vaadin.server.FileDownloader;
 import com.vaadin.server.Page;
 import com.vaadin.server.StreamResource;
 import com.vaadin.server.StreamResource.StreamSource;
@@ -92,22 +97,32 @@ public class ReporteIngresosSalidasController implements
 			}		
 	    });
 		
-		view.getBtnExportarExcel().addClickListener(new ClickListener(){
-			@Override
-			public void buttonClick(ClickEvent event) {
-				Object vista = view.getCbVista().getValue();
-				if (vista != null) {
-					if (vista.toString().equals(DIARIO)) 
-						generarReporteDiario(XLS);
-					else if (vista.toString().equals(SEMANAL)) 
-					    generarReporteSemanal(XLS);
-					else if (vista.toString().equals(MENSUAL)) 
-					    generarReporteMensual(XLS);
-					else if (vista.toString().equals(ANUAL)) 
-					    generarReporteAnual(XLS);
-				}						
-			}		
-	    });
+		FileDownloader filedownloader = new FileDownloader(new StreamResource(new StreamSource() {
+		 	@Override
+		 	public InputStream getStream () {
+		 		try {
+		 			Object vista = view.getCbVista().getValue();
+		 			if (vista != null) {
+		 				if (vista.toString().equals(DIARIO)) 
+		 					generarReporteDiario(XLS);
+		 				else if (vista.toString().equals(SEMANAL)) 
+		 					generarReporteSemanal(XLS);
+		 				else if (vista.toString().equals(MENSUAL)) 
+		 					generarReporteMensual(XLS);
+		 				else if (vista.toString().equals(ANUAL)) 
+		 					generarReporteAnual(XLS);
+		 			}		 		
+					return new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream(rutaArchivo + ".xls")));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+		 	}
+		}, "reporteingresosalidas.xls"));
+		filedownloader.extend(view.getBtnExportarExcel());	
 		
 		cargarComboVista();
 	}
