@@ -18,9 +18,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.Tarifa;
-import pe.cp.core.domain.Usuario;
 import pe.cp.core.mapper.TarifaMapper;
 
 @Repository
@@ -128,13 +126,8 @@ public class TarifaDaoImpl implements TarifaDao {
 		msp.addValue("monto", tarifa.getMonto());
 		msp.addValue("idUnidadOp", tarifa.getIdUnidadOperativa());
 		msp.addValue("idCategoria", tarifa.getCategoria());
-		
-		SqlParameterSource namedParameters = msp;
 
 		return (int)namedParameterJdbcTemplate.queryForInt(sql, msp);
-				//.queryForObject(sql, namedParameters, new TarifaMapper());
-			
-		
 	}
 
 		

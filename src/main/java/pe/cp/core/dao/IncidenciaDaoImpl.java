@@ -19,9 +19,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Incidencia;
-import pe.cp.core.domain.OperacionDetalle;
 import pe.cp.core.domain.TipoIncidencia;
-import pe.cp.core.domain.Usuario;
 
 @Repository
 public class IncidenciaDaoImpl implements IncidenciaDao {

@@ -14,7 +14,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Cliente;
-import pe.cp.core.domain.filters.ClienteFilter;
 import pe.cp.core.mapper.ClienteMapper;
 
 @Repository

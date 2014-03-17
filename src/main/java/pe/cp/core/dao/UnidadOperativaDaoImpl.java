@@ -19,7 +19,6 @@ import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Rol;
 import pe.cp.core.domain.UnidadOperativa;
-import pe.cp.core.domain.Usuario;
 
 @Repository
 public class UnidadOperativaDaoImpl implements UnidadOperativaDao {

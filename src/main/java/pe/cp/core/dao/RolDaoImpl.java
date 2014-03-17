@@ -17,9 +17,7 @@ import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
-import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.Rol;
-import pe.cp.core.domain.Usuario;
 
 @Repository
 public class RolDaoImpl implements RolDao {

@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 import pe.cp.core.domain.Auditoria;
-import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.IAuditInfo;
 import pe.cp.core.domain.Usuario;
 

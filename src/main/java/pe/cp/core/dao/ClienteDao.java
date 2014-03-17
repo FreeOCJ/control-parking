@@ -3,7 +3,6 @@ package pe.cp.core.dao;
 import java.util.List;
 
 import pe.cp.core.domain.Cliente;
-import pe.cp.core.domain.filters.ClienteFilter;
 
 public interface ClienteDao {
 	int agregar(Cliente cliente);

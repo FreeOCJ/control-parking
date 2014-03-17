@@ -38,7 +38,6 @@ public class SideBarController implements ISideBarHandler {
 		Subject currentUser = SecurityUtils.getSubject();
 		
 		if (currentUser.isAuthenticated()){
-			Logger.getAnonymousLogger().log(Level.INFO, currentUser.getSession().getAttribute("nombre_completo").toString());
 			view.getLabelUsuario().setCaption(currentUser.getSession().getAttribute("nombre_completo").toString());	
 		} else {
 			Logger.getAnonymousLogger().log(Level.INFO, "usuario no autenticado");

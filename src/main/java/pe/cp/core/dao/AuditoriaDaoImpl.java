@@ -20,7 +20,6 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import pe.cp.core.domain.Auditoria;
-import pe.cp.core.domain.Cliente;
 import pe.cp.core.domain.IAuditInfo;
 import pe.cp.core.domain.Usuario;
 
