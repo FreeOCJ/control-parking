@@ -1,7 +1,10 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -11,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +24,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 
 
+
+import com.vaadin.server.FileDownloader;
 import com.vaadin.server.Page;
+import com.vaadin.server.StreamResource;
+import com.vaadin.server.StreamResource.StreamSource;
 import com.vaadin.ui.Notification;
 import com.vaadin.ui.UI;
 import com.vaadin.ui.Button.ClickEvent;
@@ -94,7 +102,55 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	@SuppressWarnings("serial")
 	@Override
 	public void cargar() {
-		view.getBtnGenerar().addClickListener(new ClickListener(){
+		FileDownloader filedownloader = new FileDownloader(new StreamResource(new StreamSource() {
+		 	@Override
+		 	public InputStream getStream () {
+		 		try {
+		 			Calendar fromDate = Calendar.getInstance();
+					fromDate.setTime(getFromDate());
+					Date toDate = getToDate();
+					files = new ArrayList<String>();
+					if (view.getChbIncidencias().getValue()){			
+						generarReporteIncidencias(view.getCbFormato().getValue().toString());
+					}
+					if (view.getChbVisitas().getValue()){
+						while (fromDate.before(toDate)) {
+							generarReporteDiarioVisitas(view.getCbFormato().getValue().toString(), 
+														fromDate.getTime());
+							fromDate.add(Calendar.DATE, 1);
+						}
+						generarReporteMensualVisitas(view.getCbFormato().getValue().toString());
+					}
+					if (view.getChbIngresosSalidas().getValue()){
+						while (fromDate.before(toDate)) {
+							generarReporteDiarioIngresoSalidas(view.getCbFormato().getValue().toString(), 
+														fromDate.getTime());
+							fromDate.add(Calendar.DATE, 1);
+						}
+						generarReporteMensualIngresoSalidas(view.getCbFormato().getValue().toString());
+					}
+					if (view.getChbRecaudacion().getValue()){
+						while (fromDate.before(toDate)) {
+							generarReporteDiarioRecaudacion(view.getCbFormato().getValue().toString(), 
+														fromDate.getTime());
+							fromDate.add(Calendar.DATE, 1);
+						}
+						generarReporteMensualRecaudacion(view.getCbFormato().getValue().toString());
+					}
+					generarReporteConsolidado();	 		
+					return new ByteArrayInputStream(IOUtils.toByteArray(new FileInputStream(rutaArchivoConsolidado)));
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+					return null;
+				} catch (IOException e) {
+					e.printStackTrace();
+					return null;
+				}
+		 	}
+		}, "reporteconsolidado.pdf"));
+		filedownloader.extend(view.getBtnGenerar());
+		
+		/**view.getBtnGenerar().addClickListener(new ClickListener(){
 			@Override
 			public void buttonClick(ClickEvent event) {
 				Calendar fromDate = Calendar.getInstance();
@@ -130,7 +186,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 				}
 				generarReporteConsolidado();
 			}		
-		});				
+		});**/				
 		cargarAnhos();
 		cargarMeses();
 		cargarFormatos();
@@ -163,9 +219,10 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 	
 	private void generarReporteConsolidado(){
 		if (files != null && files.size()>0){
-			rutaArchivoConsolidado = generarRuta();
+			rutaArchivoConsolidado = generarRuta() + ".pdf";
 			PdfUtil pdfutil = new PdfUtil();
 			String[] filesArray = new String[ files.size() ];
+			files.toArray(filesArray);
 			pdfutil.concatenarPDFs(rutaArchivoConsolidado, filesArray);
 		}else{
 			notification = new Notification(ERR_DATOS_DISPONIBLES);
@@ -194,9 +251,9 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		Calendar cal = Calendar.getInstance();
 		view.getCbMes().removeAllItems();
 		for (int i = 1; i <= 12; i++) {
-			view.getCbMes().addItem(String.valueOf(i));
-			view.getCbMes().setValue(cal.get(Calendar.MONTH) + 1);
+			view.getCbMes().addItem(String.valueOf(i));			
 		}
+		view.getCbMes().setValue(String.valueOf(cal.get(Calendar.MONTH) + 1));
 	}
 	
 	private void cargarFormatos() {
@@ -317,7 +374,7 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 				String ruta = generarRuta();
 				rprint.reporteaPDF(ruta + ".pdf", iStream, params, rpconexion.getConexion());
 				File f = new File(ruta + ".pdf");
-				if (f.exists()){files.add(ruta);}				
+				if (f.exists()){files.add(ruta + ".pdf");}				
 			}else
 				rprint.reporteaExcel(generarRuta() + ".xls", iStream, params, rpconexion.getConexion());
 		} catch (FileNotFoundException fe) {
@@ -350,4 +407,6 @@ public class ReporteConsolidadoController implements IReporteConsolidadoHandler 
 		}		
 		return rutaArchivo;
 	}
+	
+
 }
