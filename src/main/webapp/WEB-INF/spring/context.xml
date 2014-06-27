@@ -17,10 +17,10 @@
     <bean id="dataSource"
 		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url" value="jdbc:mysql://162.248.52.142:3306/cp_core_db" />
+		<property name="url" value="jdbc:mysql://162.248.52.142:3306/cp_core_db?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="cpdb" />
 		<property name="password" value="cp!2013" /> 
-		<!-- <property name="url" value="jdbc:mysql://localhost:3306/cp_core_db" />
+		<!-- <property name="url" value="jdbc:mysql://localhost:3306/cp_core_db?useUnicode=true&amp;characterEncoding=UTF-8" />
 		<property name="username" value="root" />
 		<property name="password" value="mysql" /> -->
 	</bean>

@@ -1,6 +1,7 @@
 package pe.cp.core.service.domain;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import pe.cp.core.domain.Auditoria;
 import pe.cp.core.domain.Cliente;

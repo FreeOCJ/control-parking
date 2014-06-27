@@ -154,7 +154,7 @@ public class UsuarioDaoImpl implements UsuarioDao{
 
 	@Override
 	public List<Usuario> buscarOr(UsuarioFilter filtro) {
-		final String sql = "SELECT * FROM usuario WHERE NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos and ELIMINADO='F'";		
+		final String sql = "SELECT * FROM usuario WHERE (NOMBRES LIKE :nombres OR APELLIDOS LIKE :apellidos) and ELIMINADO='F'";		
 		List<Usuario> usuarios = null;
 		Map<String, Object> args = new HashMap<String, Object>();
 		args.put("nombres", "%" +  filtro.getNombres() + "%");

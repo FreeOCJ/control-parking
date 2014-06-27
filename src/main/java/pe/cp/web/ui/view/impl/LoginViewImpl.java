@@ -49,7 +49,6 @@ public class LoginViewImpl extends CssLayout implements ILoginView {
 		init();
 		handler = new LoginController(this);
 		handler.cargar();
-		Logger.getAnonymousLogger().log(Level.WARNING, "enter login view");
 	}
 
 	@Override

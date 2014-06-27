@@ -1,5 +1,6 @@
 package pe.cp.web.ui.handler.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -86,7 +87,7 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
     	container.addContainerProperty(CODIGO, Integer.class, "");
 		container.addContainerProperty(UNIDAD_OPERATIVA, String.class, "");
         container.addContainerProperty(CLIENTE, String.class, "");
-        container.addContainerProperty(FECHA, Date.class, new Date());
+        container.addContainerProperty(FECHA, String.class, new String());
         container.addContainerProperty(REGISTRADO_POR, String.class, ""); 
         container.addContainerProperty(ESTADO, String.class, ""); 
 		return container;
@@ -184,13 +185,15 @@ public class BuscarOperacionesController implements IBuscarOperacionesHandler {
 		BuscarOperacionResponse response = opService.buscar(request);
 		
 		if (response.isResultadoEjecucion()) {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+			
 			if (response.getOperacionesView().size() > 0)
 				for (OperacionView opView : response.getOperacionesView()) {
 					Item itemOperacion = container.getItem(container.addItem());
 					itemOperacion.getItemProperty(CODIGO).setValue(opView.getId());  
 					itemOperacion.getItemProperty(UNIDAD_OPERATIVA).setValue(opView.getNombreUnidadOperativa());
 					itemOperacion.getItemProperty(CLIENTE).setValue(opView.getNombreCliente());
-					itemOperacion.getItemProperty(FECHA).setValue(opView.getFechaTransaccion());
+					itemOperacion.getItemProperty(FECHA).setValue(sdf.format(opView.getFechaTransaccion()));
 					itemOperacion.getItemProperty(REGISTRADO_POR).setValue(opView.getCreador());
 					itemOperacion.getItemProperty(ESTADO).setValue(opView.getEstado());
 				}
